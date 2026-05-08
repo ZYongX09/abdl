@@ -1,0 +1,11 @@
+{
+  "name": "abdl-space",
+  "version": "4.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd client && npx vite",
+    "build": "cd client && npx vite build",
+    "preview": "cd client && npx vite preview",
+    "deploy": "cd client && npx vite build && npx wrangler pages deploy"
+  }
+}
