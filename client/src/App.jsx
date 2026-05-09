@@ -18,6 +18,7 @@ import AdminPage from './pages/AdminPage';
 import ComparePage from './pages/ComparePage';
 import MessagesPage from './pages/MessagesPage';
 import UserPage from './pages/UserPage';
+import About from './pages/About';
 
 function getInitialTheme() {
   const saved = localStorage.getItem('abdl_theme');
@@ -54,6 +55,7 @@ const ROUTE_TITLES = {
   '/messages': '私信 — ABDL Space',
   '/notifications': '通知 — ABDL Space',
   '/admin': '管理后台 — ABDL Space',
+  '/about': '关于 — ABDL Space',
 };
 
 function getTitle(pathname) {
@@ -61,6 +63,7 @@ function getTitle(pathname) {
   if (pathname.startsWith('/diaper/')) return '纸尿裤详情 — ABDL Space';
   if (pathname.startsWith('/forum/')) return '帖子详情 — ABDL Space';
   if (pathname.startsWith('/user/')) return '用户主页 — ABDL Space';
+  if (pathname.startsWith('/about')) return '关于 — ABDL Space';
   return 'ABDL Space';
 }
 
@@ -131,12 +134,13 @@ export default function App() {
             <Route path="/recommend" element={<Recommendations />} />
             <Route path="/termwiki" element={<TermWiki />} />
             <Route path="/user/:id" element={<UserPage />} />
+            <Route path="/about" element={<About />} />
             <Route path="/admin" element={<AdminPage />} />
           </Routes>
           </ErrorBoundary>
         </div>
         <footer style={{ textAlign: 'center', padding: 20, color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-          <i className="fa-solid fa-baby" style={{ color: 'var(--primary)' }} /> ABDL Space v5 · © {new Date().getFullYear()} · <a href="/" style={{ color: 'var(--link-color)' }}>论坛</a> · <a href="/termwiki" style={{ color: 'var(--link-color)' }}>术语</a> · <a href="https://github.com/ZYongX09/abdl" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--link-color)' }}><i className="fa-brands fa-github" /> GitHub</a>
+          <i className="fa-solid fa-baby" style={{ color: 'var(--primary)' }} /> ABDL Space v5 · © {new Date().getFullYear()} · <a href="/about" style={{ color: 'var(--link-color)' }}>关于</a> · <a href="/" style={{ color: 'var(--link-color)' }}>论坛</a> · <a href="/termwiki" style={{ color: 'var(--link-color)' }}>术语</a> · <a href="https://github.com/ZYongX09/abdl" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--link-color)' }}><i className="fa-brands fa-github" /> GitHub</a>
         </footer>
       </div>
       <ScrollProgress />
