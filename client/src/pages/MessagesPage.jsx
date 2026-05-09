@@ -155,7 +155,10 @@ export default function MessagesPage() {
 
         {/* Conversations */}
         {loading ? <LoadingSkeleton count={3} type="feed" /> : convs.length === 0 ? (
-          <p style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>暂无对话</p>
+          <div className="empty-state" style={{ padding: 40 }}>
+            <div className="icon"><i className="fa-regular fa-comment-dots" /></div>
+            <p>暂无对话，去论坛互动吧</p>
+          </div>
         ) : (
           convs.map(c => (
             <div key={c.id} onClick={() => openChat(c.other_id)} style={{
@@ -204,16 +207,19 @@ export default function MessagesPage() {
                   <h3>暂无通知</h3>
                 </div>
               ) : (
-                notifs.map(n => {
+                notifs.map((n, i) => {
                   const link = getNotifLink(n);
+                  const isClickable = link !== '#';
                   return (
-                    <div key={n.id} style={{
+                    <div key={n.id} className="stagger-item" style={{
                       padding: '10px 14px', borderRadius: 10, marginBottom: 6,
                       background: n.is_read ? 'transparent' : 'var(--primary-light)',
                       border: `1px solid ${n.is_read ? 'var(--border)' : 'var(--primary)'}`,
                       transition: 'all 0.2s ease, background 0.2s ease',
-                      fontSize: '0.9rem', cursor: 'default',
+                      fontSize: '0.9rem', cursor: isClickable ? 'pointer' : 'default',
+                      animationDelay: `${i * 0.04}s`,
                     }}
+                    onClick={() => { if (isClickable) window.location.href = link; }}
                     onMouseOver={e => { if (n.is_read) e.currentTarget.style.background = 'var(--input-bg)'; }}
                     onMouseOut={e => { if (n.is_read) e.currentTarget.style.background = 'transparent'; }}>
                       <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
@@ -249,7 +255,10 @@ export default function MessagesPage() {
             </div>
             <div ref={chatRef} style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
               {messages.length === 0 ? (
-                <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 40 }}>开始聊天吧</div>
+                <div className="empty-state" style={{ padding: 40 }}>
+                  <div className="icon"><i className="fa-regular fa-paper-plane" /></div>
+                  <p>开始聊天吧</p>
+                </div>
               ) : (
                 messages.map(m => (
                   <div key={m.id} style={{ display: 'flex', justifyContent: m.sender_id === user.id ? 'flex-end' : 'flex-start' }}>

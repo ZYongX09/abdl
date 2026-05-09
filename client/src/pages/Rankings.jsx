@@ -51,10 +51,12 @@ export default function Rankings() {
             </button>
           ))}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', marginBottom: 8 }}>
-          <span style={{ flex: '0 0 auto', width: 30, height: 1, background: 'var(--border)' }} />
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>按维度评分排序</span>
-          <span style={{ flex: '1', height: 1, background: 'var(--border)', maxWidth: 120 }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center', marginBottom: 8 }}>
+          <span style={{ flex: '0 0 auto', width: 36, height: 1, background: 'var(--border)' }} />
+          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', fontWeight: 500 }}>
+            <i className="fa-solid fa-bars-staggered" style={{ marginRight: 4, fontSize: '0.7rem' }} /> 按维度评分排序
+          </span>
+          <span style={{ flex: '1', height: 1, background: 'var(--border)', maxWidth: 140 }} />
         </div>
         <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
           {DIM_TABS.filter(t => !['hot','absorbency','popular'].includes(t.key)).map(t => (
@@ -100,7 +102,7 @@ export default function Rankings() {
                 {tab==='hot' && <div className="score-badge"><i className="fa-solid fa-star" /> {Number(item.avg_score||0).toFixed(1)}</div>}
                 {tab==='absorbency' && <div style={{ fontWeight: 700, color: 'var(--primary-dark)' }}>{item.absorbency_adult||item.absorbency_mfr}</div>}
                 {tab==='popular' && <div style={{ fontWeight: 700, color: 'var(--accent-dark)' }}>{item.rating_count} 评价</div>}
-                {!['hot','absorbency','popular'].includes(tab) && item.avg_score != null && <div className="score-badge"><i className="fa-solid fa-star" style="color: var(--warning); margin-right: 3px; font-size: 0.7rem;" />{Number(item.avg_score).toFixed(1)}</div>}
+                {!['hot','absorbency','popular'].includes(tab) && item.avg_score != null && <div className="score-badge"><i className="fa-solid fa-star" style={{color:'var(--warning)',marginRight:3,fontSize:'0.7rem'}} />{Number(item.avg_score).toFixed(1)}</div>}
               </div>
             </div>
           </Link>

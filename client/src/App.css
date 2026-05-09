@@ -1188,3 +1188,225 @@ select.form-control {
   background-size: 200% 100%;
   animation: navHighlight 2s ease infinite;
 }
+
+/* ================================================================
+   高级材质 v2 — 玻璃折射 + 液体惯性增强
+   ================================================================ */
+
+/* ---- 液体惯性：卡片将交由 LiquidScroll 组件驱动 ---- */
+/* 当 glass-enabled 时，撤消原有的 CSS transition，
+   让 JS 弹簧物理完全接管 transform */
+.glass-enabled .card,
+.glass-enabled .diaper-card,
+.glass-enabled .rank-item,
+.glass-enabled .hero-card,
+.glass-enabled .post-card {
+  transition: background 0.35s ease, backdrop-filter 0.35s ease, box-shadow 0.35s ease !important;
+  /* transform 由 LiquidScroll JS 控制 */
+  animation: none !important; /* 禁用入场动画，避免与液体惯性冲突 */
+}
+
+/* ---- 玻璃折射：多层伪元素光效 ---- */
+
+/* ① 折射光扫掠过效果 — 始终可见的光学折射条纹 */
+.glass-enabled .card::before,
+.glass-enabled .diaper-card::before,
+.glass-enabled .rank-item::before,
+.glass-enabled .hero-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+  background: linear-gradient(
+    105deg,
+    transparent 28%,
+    rgba(255,255,255,0.09) 34%,
+    rgba(255,255,255,0.18) 37%,
+    rgba(255,255,255,0.06) 40%,
+    transparent 46%
+  );
+  background-size: 220% 100%;
+  animation: glassRefractionSweep 3.5s ease-in-out infinite;
+}
+.glass-enabled .card:hover::before,
+.glass-enabled .diaper-card:hover::before,
+.glass-enabled .rank-item:hover::before,
+.glass-enabled .hero-card:hover::before {
+  opacity: 0.55;
+}
+
+@keyframes glassRefractionSweep {
+  0%   { background-position: 220% 0; }
+  100% { background-position: -120% 0; }
+}
+
+/* ② 棱镜色散边框 — 彩色光晕在玻璃边缘折射，始终可见 */
+.glass-enabled .card::after,
+.glass-enabled .diaper-card::after,
+.glass-enabled .rank-item::after,
+.glass-enabled .hero-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  background: linear-gradient(
+    135deg,
+    rgba(168,216,240,0.45) 0%,
+    rgba(255,183,197,0.35) 25%,
+    rgba(200,180,255,0.35) 50%,
+    rgba(168,240,200,0.3) 75%,
+    rgba(168,216,240,0.45) 100%
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  padding: 1px;
+  animation: prismaticShift 5s linear infinite;
+}
+.glass-enabled .card:hover::after,
+.glass-enabled .diaper-card:hover::after,
+.glass-enabled .rank-item:hover::after,
+.glass-enabled .hero-card:hover::after {
+  opacity: 0.8;
+}
+
+@keyframes prismaticShift {
+  0%   { filter: hue-rotate(0deg) brightness(1); }
+  50%  { filter: hue-rotate(25deg) brightness(1.2); }
+  100% { filter: hue-rotate(0deg) brightness(1); }
+}
+
+/* ③ 焦散波纹 — 模拟光穿过玻璃投射的波纹 */
+.glass-enabled .hero-card {
+  position: relative;
+  overflow: hidden;
+}
+.glass-enabled .hero-card .caustics-layer {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.15;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(168,216,240,0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 60%, rgba(255,183,197,0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(168,216,240,0.3) 0%, transparent 40%);
+  animation: causticsFloat 8s ease-in-out infinite;
+  filter: blur(30px);
+}
+
+@keyframes causticsFloat {
+  0%   { transform: translate(-5%, -5%) scale(1); }
+  25%  { transform: translate(8%, 3%) scale(1.15); }
+  50%  { transform: translate(5%, 10%) scale(0.9); }
+  75%  { transform: translate(-3%, -8%) scale(1.1); }
+  100% { transform: translate(-5%, -5%) scale(1); }
+}
+
+/* ④ 玻璃表面微闪光 — 随鼠标移动的镜面高光 */
+.glass-enabled .card,
+.glass-enabled .diaper-card,
+.glass-enabled .rank-item,
+.glass-enabled .hero-card,
+.glass-enabled .modal,
+.glass-enabled .sidebar-desktop,
+.glass-enabled .sidebar-mobile {
+  position: relative;
+  overflow: hidden;
+}
+
+/* 镜面高光层 (使用 JS 设置的 --glass-light-x/y) */
+.glass-enabled .card .specular-layer,
+.glass-enabled .diaper-card .specular-layer,
+.glass-enabled .rank-item .specular-layer,
+.glass-enabled .hero-card .specular-layer,
+.glass-enabled .modal .specular-layer {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.18;
+  background: radial-gradient(
+    circle at calc(var(--glass-light-x, 0.25) * 100%) calc(var(--glass-light-y, 0.25) * 100%),
+    rgba(255,255,255,0.9) 0%,
+    rgba(255,255,255,0.35) 20%,
+    rgba(255,255,255,0.08) 40%,
+    transparent 60%
+  );
+  transition: opacity 0.3s ease;
+}
+.glass-enabled .card:hover .specular-layer,
+.glass-enabled .diaper-card:hover .specular-layer,
+.glass-enabled .rank-item:hover .specular-layer,
+.glass-enabled .hero-card:hover .specular-layer {
+  opacity: 0.28;
+}
+
+/* ⑤ 深色模式下的折射适配 */
+.glass-enabled[data-theme="dark"] .card::before,
+.glass-enabled[data-theme="dark"] .diaper-card::before,
+.glass-enabled[data-theme="dark"] .rank-item::before,
+.glass-enabled[data-theme="dark"] .hero-card::before {
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(200,220,255,0.04) 35%,
+    rgba(200,220,255,0.08) 37%,
+    rgba(200,220,255,0.02) 40%,
+    transparent 45%
+  );
+  background-size: 200% 100%;
+}
+
+.glass-enabled[data-theme="dark"] .card::after,
+.glass-enabled[data-theme="dark"] .diaper-card::after,
+.glass-enabled[data-theme="dark"] .rank-item::after,
+.glass-enabled[data-theme="dark"] .hero-card::after {
+  background: linear-gradient(
+    135deg,
+    rgba(126,184,212,0.2) 0%,
+    rgba(245,152,158,0.15) 25%,
+    rgba(160,140,220,0.15) 50%,
+    rgba(126,200,160,0.12) 75%,
+    rgba(126,184,212,0.2) 100%
+  );
+}
+
+.glass-enabled[data-theme="dark"] .card .specular-layer,
+.glass-enabled[data-theme="dark"] .diaper-card .specular-layer,
+.glass-enabled[data-theme="dark"] .rank-item .specular-layer,
+.glass-enabled[data-theme="dark"] .hero-card .specular-layer {
+  background: radial-gradient(
+    circle at calc(var(--glass-light-x, 0.25) * 100%) calc(var(--glass-light-y, 0.25) * 100%),
+    rgba(180,200,255,0.6) 0%,
+    rgba(180,200,255,0.2) 20%,
+    rgba(180,200,255,0.05) 40%,
+    transparent 60%
+  );
+}
+
+/* ⑥ 液体惯性关闭/回位过渡 */
+.glass-enabled .card,
+.glass-enabled .diaper-card,
+.glass-enabled .rank-item,
+.glass-enabled .hero-card,
+.glass-enabled .post-card {
+  will-change: transform;
+}
+
+/* 当 glass-enabled 移除时恢复 transition（由 JS 清理 transform） */
+.glass-enabled .card:not([style*="transform"]),
+.glass-enabled .diaper-card:not([style*="transform"]),
+.glass-enabled .rank-item:not([style*="transform"]) {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.35s ease;
+}

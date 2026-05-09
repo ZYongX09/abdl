@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import BackToTop from './components/BackToTop';
 import ErrorBoundary from './components/ErrorBoundary';
 import GlobalMouseTracker from './components/GlobalMouseTracker';
+import LiquidScroll from './components/LiquidScroll';
 import ForumFeed from './pages/ForumFeed';
 import PostDetail from './pages/PostDetail';
 import NotificationsPage from './pages/NotificationsPage';
@@ -130,6 +131,7 @@ export default function App() {
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
       <GlobalMouseTracker />
+      <LiquidScroll />
       <ScrollToTop />
       <Sidebar />
       <div style={{ flex: 1, overflow: 'auto', position: 'relative' }}>
