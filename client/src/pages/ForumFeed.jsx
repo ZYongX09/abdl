@@ -30,16 +30,17 @@ export default function ForumFeed() {
   const [uploading, setUploading] = useState(false);
   const [msg, setMsg] = useState('');
   const [notifCount, setNotifCount] = useState(0);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const loadPosts = async (p = 1, append = false) => {
-    setLoading(true);
+    if (append) setLoadingMore(true); else setLoading(true);
     try {
       const params = { page: p, limit: 20 }; if (search) params.search = search;
       const d = await forumAPI.feed(params);
       setPosts(prev => append ? [...prev, ...d.posts] : d.posts);
       setHasMore(d.pagination.page < d.pagination.totalPages);
       setPage(p);
-    } catch(e) {} finally { setLoading(false); }
+    } catch(e) {} finally { setLoading(false); setLoadingMore(false); }
   };
 
   useEffect(() => { loadPosts(); loadNotifCount(); }, []);
@@ -65,7 +66,7 @@ export default function ForumFeed() {
 
   const handleLike = async (postId) => {
     if (!user) return;
-    try { await forumAPI.like('post', postId); loadPosts(page); } catch {}
+    try { await forumAPI.like({ target_type: 'post', target_id: postId }); loadPosts(page); } catch {}
   };
 
   const handleSearch = () => { loadPosts(); };
@@ -119,7 +120,13 @@ export default function ForumFeed() {
         </div>
       )}
 
-      {loading && posts.length === 0 ? <LoadingSkeleton type="feed" count={4} /> : (
+      {loading && posts.length === 0 ? <LoadingSkeleton type="feed" count={4} /> : posts.length === 0 ? (
+        <div className="empty-state">
+          <div className="icon"><i className="fa-solid fa-feather" /></div>
+          <h3>{search ? '没有找到匹配的帖子' : '还没有帖子'}</h3>
+          <p>{search ? '试试换个关键词搜索' : '成为第一个发帖的人吧'}</p>
+        </div>
+      ) : (
         posts.map(p => (
           <div key={p.id} className="card" style={{ marginBottom: 12 }}>
             <div style={{ display: 'flex', gap: 12 }}>
@@ -169,7 +176,9 @@ export default function ForumFeed() {
 
       {hasMore && !loading && (
         <div style={{ textAlign: 'center', padding: 16 }}>
-          <button className="btn btn-outline" onClick={() => loadPosts(page+1, true)}>加载更多</button>
+          <button className="btn btn-outline" onClick={() => loadPosts(page+1, true)} disabled={loadingMore}>
+            {loadingMore ? <><i className="fa-solid fa-spinner fa-spin" /> 加载中...</> : <><i className="fa-solid fa-chevron-down" /> 加载更多</>}
+          </button>
         </div>
       )}
     </div>

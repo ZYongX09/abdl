@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { diapersAPI, ratingsAPI, feelingsAPI } from '../api';
 import { useAuth } from '../AuthContext';
+import { useToast } from '../ToastContext';
 
 const DIMS = [
   { key: 'absorption_score', label: '吸水量', fa: 'fa-droplet', desc: '实际兜尿量满意度' },
@@ -40,6 +41,7 @@ function RadarChart({ stats }) {
 export default function DiaperDetail() {
   const { id } = useParams();
   const { user } = useAuth();
+  const { addToast } = useToast();
   const [diaper, setDiaper] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [stats, setStats] = useState(null);
@@ -121,14 +123,25 @@ export default function DiaperDetail() {
     <div>
       <Link to="/diapers" style={{ color: 'var(--primary-dark)', fontSize: '0.9rem' }}><i className="fa-solid fa-arrow-left" /> 返回列表</Link>
       <div className="card" style={{ marginTop: 12 }}>
-        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div style={{ flex: 1 }}>
+            <div className="brand">{diaper.brand}</div>
+            <h1 style={{ fontSize: '1.5rem', margin: '4px 0' }}>{diaper.model}</h1>
+          </div>
+          <button
+            className="btn btn-outline btn-sm"
+            onClick={() => { navigator.clipboard?.writeText(window.location.href).then(() => addToast('链接已复制到剪贴板', 'success', 2000)).catch(()=>{}); }}
+            title="复制本页链接" aria-label="复制纸尿裤链接"
+            style={{ flexShrink: 0, marginTop: 4 }}
+          >
+            <i className="fa-solid fa-share-nodes" /> 分享
+          </button>
+        </div>
+        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginTop: 12 }}>
           <div style={{ flex: '0 0 160px' }}>
             <img src={diaper.image_url||'https://placehold.co/160x160/A8D8F0/white?text=No+Image'} alt={diaper.model} loading="lazy" style={{ width: '100%', borderRadius: 12 }} onError={(e) => { e.target.src = 'https://placehold.co/160x160/A8D8F0/white?text=No+Image'; }} />
           </div>
           <div style={{ flex: 1, minWidth: 250 }}>
-            <div className="brand">{diaper.brand}</div>
-            <h1 style={{ fontSize: '1.5rem', margin: '4px 0' }}>{diaper.model}</h1>
-            {diaper.is_baby_diaper===1 && <div className="alert alert-info" style={{ fontSize: '0.85rem', marginTop: 6, padding: '8px 12px' }}><i className="fa-solid fa-baby" /> 婴儿纸尿裤，成人实际吸收量约{diaper.absorbency_adult||'厂家标称的50-60%'}</div>}
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '8px 0' }}>
               <span className="tag"><i className="fa-solid fa-tag" /> {diaper.product_type}</span>
               <span className="tag"><i className="fa-solid fa-ruler" /> 厚{diaper.thickness}/5</span>
@@ -141,6 +154,11 @@ export default function DiaperDetail() {
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 4 }}>
                   {diaper.sizes.map(s => <span key={s.label} className="tag">{s.label} ({s.waist_min}-{s.waist_max}cm)</span>)}
                 </div>
+              </div>
+            )}
+            {diaper.is_baby_diaper===1 && (
+              <div className="alert alert-info" style={{ fontSize: '0.85rem', marginTop: 10, padding: '8px 12px' }}>
+                <i className="fa-solid fa-baby" /> 婴儿纸尿裤，成人实际吸收量约{diaper.absorbency_adult||'厂家标称的50-60%'}
               </div>
             )}
           </div>

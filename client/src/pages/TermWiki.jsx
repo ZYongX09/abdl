@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { termWikiAPI } from '../api';
 import { useAuth } from '../AuthContext';
+import { useToast } from '../ToastContext';
 
 export default function TermWiki() {
   const { user } = useAuth();
+  const { addToast } = useToast();
   const [terms, setTerms] = useState([]);
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState('');
@@ -155,6 +157,18 @@ export default function TermWiki() {
                   相关: {t.related_terms}
                 </p>
               )}
+              <div style={{ marginTop: 8 }}>
+                <button
+                  className="btn btn-outline btn-sm"
+                  onClick={() => {
+                    const text = `${t.term}${t.abbreviation ? ` (${t.abbreviation})` : ''}: ${t.definition}`;
+                    navigator.clipboard?.writeText(text).then(() => addToast('术语已复制到剪贴板', 'success', 2000)).catch(() => {});
+                  }}
+                  title="复制术语定义" aria-label={`复制 ${t.term} 定义`}
+                >
+                  <i className="fa-regular fa-copy" /> 复制
+                </button>
+              </div>
             </div>
           ))}
         </div>

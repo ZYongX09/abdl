@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { rankingsAPI } from '../api';
+import LoadingSkeleton from '../components/LoadingSkeleton';
 
 const DIM_TABS = [
   { key: 'hot', fa: 'fa-fire', label: '热门' },
@@ -71,7 +72,7 @@ export default function Rankings() {
         </div>
       )}
       {loading ? (
-        <div className="loading-spinner"><div className="spinner" /><span>加载中</span></div>
+        <LoadingSkeleton count={6} type="rank" />
       ) : rankings.length === 0 ? (
         <div className="empty-state">
           <div className="icon"><i className="fa-solid fa-chart-bar" /></div>

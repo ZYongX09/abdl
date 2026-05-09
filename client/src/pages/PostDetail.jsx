@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { forumAPI } from '../api';
 import { useAuth } from '../AuthContext';
+import { useToast } from '../ToastContext';
 
 function timeAgo(d) {
   const diff = Date.now()-new Date(d).getTime();
@@ -13,6 +14,7 @@ function timeAgo(d) {
 export default function PostDetail() {
   const { id } = useParams();
   const { user } = useAuth();
+  const { addToast } = useToast();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,7 @@ export default function PostDetail() {
 
   const handleLike = async (type, targetId) => {
     if (!user) return;
-    try { await forumAPI.like(type, targetId); loadPost(); } catch {}
+    try { await forumAPI.like({ target_type: type, target_id: targetId }); loadPost(); } catch {}
   };
 
   const handleComment = async () => {
@@ -66,13 +68,23 @@ export default function PostDetail() {
             <i className="fa-solid fa-user-astronaut" />
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <Link to={`/user/${post.user?.id}`} style={{ fontWeight: 700, textDecoration: 'none', color: 'var(--text)' }}>
-                {post.user?.username}
-              </Link>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                @{post.user?.username} · {timeAgo(post.created_at)}
-              </span>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <Link to={`/user/${post.user?.id}`} style={{ fontWeight: 700, textDecoration: 'none', color: 'var(--text)' }}>
+                  {post.user?.username}
+                </Link>
+                <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                  @{post.user?.username} · {timeAgo(post.created_at)}
+                </span>
+              </div>
+              <button
+                className="btn btn-outline btn-sm"
+                onClick={() => { navigator.clipboard?.writeText(window.location.href).then(() => addToast('链接已复制到剪贴板', 'success', 2000)).catch(()=>{}); }}
+                title="复制帖子链接" aria-label="分享帖子"
+                style={{ flexShrink: 0 }}
+              >
+                <i className="fa-solid fa-share-nodes" />
+              </button>
             </div>
             <p style={{ margin: '12px 0', whiteSpace: 'pre-wrap', fontSize: '1.1rem', lineHeight: 1.6 }}>
               {post.content}

@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { forumAPI } from '../api';
 
-function SearchBar() {
+function SearchBar({ onSearch }) {
   const [q, setQ] = useState('');
   const navigate = useNavigate();
 
@@ -11,6 +12,7 @@ function SearchBar() {
     if (!q.trim()) return;
     navigate(`/diapers?search=${encodeURIComponent(q.trim())}`);
     setQ('');
+    if (onSearch) onSearch();
   };
 
   return (
@@ -45,12 +47,39 @@ export default function Sidebar() {
   const isActive = (path) => location.pathname === path;
   const closeMobile = () => setMobileOpen(false);
 
+  // Close mobile sidebar on Escape key
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e) => { if (e.key === 'Escape') closeMobile(); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [mobileOpen]);
+
+  const [notifCount, setNotifCount] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const d = await forumAPI.notifications();
+        if (!cancelled) setNotifCount(d.unread_count || 0);
+      } catch {}
+    };
+    load();
+    const timer = setInterval(load, 60000);
+    return () => { cancelled = true; clearInterval(timer); };
+  }, [user]);
+
   const links = [
     { path: '/', label: '论坛', icon: 'fa-regular fa-comments' },
     { path: '/diapers', label: '纸尿裤', icon: 'fa-solid fa-box' },
     { path: '/rankings', label: '排行榜', icon: 'fa-solid fa-trophy' },
     { path: '/recommend', label: 'AI推荐', icon: 'fa-solid fa-robot' },
-    ...(user ? [{ path: '/messages', label: '私信', icon: 'fa-regular fa-envelope' }] : []),
+    ...(user ? [
+      { path: '/messages', label: '私信', icon: 'fa-regular fa-envelope' },
+      { path: '/notifications', label: '通知', icon: 'fa-solid fa-bell', badge: notifCount },
+    ] : []),
     { path: '/compare', label: '对比工具', icon: 'fa-solid fa-chart-simple' },
     { path: '/termwiki', label: '术语百科', icon: 'fa-solid fa-book' },
     ...(user?.role === 'admin' ? [{ path: '/admin', label: '管理后台', icon: 'fa-solid fa-screwdriver-wrench' }] : []),
@@ -68,7 +97,7 @@ export default function Sidebar() {
       </Link>
 
       <div style={{ padding: '0 14px', marginBottom: 8 }}>
-        <SearchBar />
+        <SearchBar onSearch={closeMobile} />
       </div>
 
       <nav style={{ flex: 1 }}>
@@ -89,6 +118,9 @@ export default function Sidebar() {
           >
             <i className={l.icon} style={{ fontSize: '1.15rem', width: 24, textAlign: 'center' }} />
             <span>{l.label}</span>
+            {l.badge > 0 && (
+              <span className="notif-badge" style={{ marginLeft: 'auto' }}>{l.badge}</span>
+            )}
           </Link>
         ))}
       </nav>

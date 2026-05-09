@@ -181,11 +181,34 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
 
+/* ====== 键盘焦点样式 (无障碍) ====== */
+*:focus-visible {
+  outline: 2px solid var(--primary-dark);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--primary-dark);
+  outline-offset: 2px;
+}
+input[type="checkbox"]:focus-visible, input[type="radio"]:focus-visible {
+  outline: 2px solid var(--primary-dark);
+  outline-offset: 1px;
+}
+/* Remove focus-visible outline for mouse users on generic containers */
+div:focus-visible, span:focus-visible, main:focus-visible, section:focus-visible {
+  outline: none;
+}
+
 /* ====== 侧边栏 ====== */
 .sidebar-overlay {
-  display: none;
-  position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 199;
+  position: fixed; inset: 0; background: var(--overlay-bg); z-index: 199;
   backdrop-filter: blur(2px);
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.sidebar-overlay.open {
+  opacity: 1; visibility: visible;
 }
 .sidebar-toggle {
   display: none; position: fixed; top: 12px; left: 12px; z-index: 201;
@@ -473,7 +496,6 @@ select.form-control { cursor: pointer; color: var(--text); }
     box-shadow: 4px 0 20px rgba(0,0,0,0.15);
   }
   .sidebar.open { left: 0; }
-  .sidebar-overlay.open { display: block; }
 
   .diaper-grid { grid-template-columns: 1fr; }
   .container { padding: 12px; }

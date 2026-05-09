@@ -1,5 +1,36 @@
 # ABDL Space 更新日志
 
+## v5.1.3 — 2026-05-09
+
+### ✨ 新功能
+- **页面标题动态更新**：浏览器标签页标题随路由自动更新（如「论坛 — ABDL Space」）
+- **术语 Wiki 复制按钮**：每个术语卡片新增「复制」按钮，一键复制术语名称和定义
+- **排行榜骨架屏**：排行榜加载时使用骨架屏动画代替转圈加载，体验更流畅
+
+### ♿ 无障碍改进
+- **键盘焦点可见**：全局添加 `focus-visible` 样式，Tab 键导航时显示清晰的主题色焦点环
+
+### 🔧 修复与优化
+- **Sidebar 移动端**：遮罩层使用 opacity 过渡动画（替代 display:none），支持 Escape 键关闭
+- **路由切换滚动**：新增 ScrollToTop 组件，导航到新页面时自动滚动到顶部
+- **纸尿裤详情**：分享按钮移至标题行右侧，baby diaper 提示移到标签下方（布局更紧凑）
+- **帖子详情**：作者行添加分享按钮
+- **论坛加载更多**：「加载更多」按钮显示禁用态和加载动画
+- **首页空状态**：筛选无结果时显示友好空状态和「清除所有筛选」按钮
+- **API 修复**：`forumAPI.like` 调用签名修正为 `{ target_type, target_id }` 格式
+
+### 📝 文件变更
+- `App.jsx` — 新增 RouteTitles 映射 + ScrollToTop 组件
+- `App.css` — 新增 focus-visible 键盘焦点样式
+- `TermWiki.jsx` — 导入 useToast，卡片添加复制按钮
+- `Rankings.jsx` — 导入 LoadingSkeleton，加载时显示 rank 骨架
+- `LoadingSkeleton.jsx` — 新增 rank 类型骨架（圆形排名+文字行+分数）
+- `Sidebar.jsx` — Escape 关闭 + 搜索后关闭移动侧栏
+- `DiaperDetail.jsx` — 分享按钮 + 布局调整
+- `PostDetail.jsx` — 分享按钮 + like API 修复
+- `ForumFeed.jsx` — loadingMore 状态 + like API 修复
+- `Home.jsx` — 空状态 + 清除筛选按钮
+
 ## v5.1.2 — 2026-05-09
 
 ### ✨ 新功能

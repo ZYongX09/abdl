@@ -147,6 +147,19 @@ export default function Home() {
 
       {loading ? <LoadingSkeleton count={6} type="card" /> : (
         <>
+          {!initialLoading && diapers.length === 0 ? (
+            <div className="empty-state">
+              <div className="icon"><i className="fa-solid fa-magnifying-glass" /></div>
+              <h3>没有找到匹配的纸尿裤</h3>
+              <p>试试调整筛选条件或搜索其他关键词</p>
+              {(brandFilter || sizeFilter || sort !== 'popularity' || search) && (
+                <button className="btn btn-outline btn-sm" style={{ marginTop: 8 }} onClick={() => { setSearch(''); setBrandFilter(''); setSizeFilter(''); setSort('popularity'); }}>
+                  <i className="fa-solid fa-rotate-left" /> 清除所有筛选
+                </button>
+              )}
+            </div>
+          ) : (
+          <>
           {hotRankings.length > 0 && (
             <div style={{ marginBottom: 24 }}>
               <h3 style={{ marginBottom: 12 }}><i className="fa-solid fa-fire" /> 热门 TOP 5</h3>
@@ -202,6 +215,8 @@ export default function Home() {
           </div>
         </>
       )}
+</>
+)}
     </div>
   );
 }
