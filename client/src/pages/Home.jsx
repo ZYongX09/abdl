@@ -260,7 +260,7 @@ export default function Home() {
               <h3 style={{ marginBottom: 12 }}><i className="fa-solid fa-fire" /> 热门 TOP 5</h3>
               <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8 }}>
                 {hotRankings.map((d, i) => (
-                  <Link to={`/diaper/${d.id}`} key={d.id} style={{ textDecoration: 'none', color: 'inherit', minWidth: 200 }}>
+                  <Link to={`/diaper/${d.id}`} key={d.id} className="stagger-item" style={{ textDecoration: 'none', color: 'inherit', minWidth: 200, animationDelay: `${i * 0.06}s` }}>
                     <div className="diaper-card">
                       <div className="brand">TOP {i + 1}</div>
                       <div className="model">{d.brand} {d.model}</div>
@@ -279,8 +279,8 @@ export default function Home() {
             <i className="fa-solid fa-box" /> 全部纸尿裤 ({diapers.length})
           </h3>
           <div className="diaper-grid">
-            {diapers.map(d => (
-              <div key={d.id} style={{ position: 'relative' }}>
+            {diapers.map((d, i) => (
+              <div key={d.id} className="stagger-item" style={{ position: 'relative', animationDelay: `${i * 0.04}s` }}>
                 {compareMode && (
                   <label style={{
                     position: 'absolute', top: 8, left: 8, zIndex: 2,
