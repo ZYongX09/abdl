@@ -15,6 +15,7 @@ export default function Profile() {
   const [msg, setMsg] = useState('');
   const [myReviews, setMyReviews] = useState([]);
   const [myFeelings, setMyFeelings] = useState([]);
+  const [diaperMap, setDiaperMap] = useState({});
   const [activeTab, setActiveTab] = useState('profile');
   const [avatarUploading, setAvatarUploading] = useState(false);
   const fileRef = useRef(null);
@@ -32,8 +33,22 @@ export default function Profile() {
         bio: user.bio || '',
       });
       if (user.id) {
-        ratingsAPI.getForUser(user.id).then(d => setMyReviews(d.reviews)).catch(() => {});
-        feelingsAPI.getForUser(user.id).then(d => setMyFeelings(d.feelings || [])).catch(() => {});
+        ratingsAPI.getForUser(user.id).then(d => {
+          setMyReviews(d.reviews || []);
+          const map = {};
+          (d.reviews || []).forEach(r => {
+            if (r.diaper) map[r.diaper_id] = r.diaper;
+          });
+          if (Object.keys(map).length) setDiaperMap(prev => ({ ...prev, ...map }));
+        }).catch(() => {});
+        feelingsAPI.getForUser(user.id).then(d => {
+          setMyFeelings(d.feelings || []);
+          const map = {};
+          (d.feelings || []).forEach(f => {
+            if (f.diaper) map[f.diaper_id] = f.diaper;
+          });
+          if (Object.keys(map).length) setDiaperMap(prev => ({ ...prev, ...map }));
+        }).catch(() => {});
       }
     }
   }, [user]);
@@ -235,18 +250,24 @@ export default function Profile() {
                 </div>
               </div>
             ) : (
-              myReviews.map(r => (
+              myReviews.map(r => {
+                const d = diaperMap[r.diaper_id];
+                const dims = ['absorption_score','fit_score','comfort_score','thickness_score','appearance_score','value_score'];
+                const avgScore = dims.filter(k => r[k] != null).reduce((sum, k) => sum + (r[k] || 0), 0) / (dims.filter(k => r[k] != null).length || 1);
+                return (
                 <div key={r.id} style={{ padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <strong>{r.brand} {r.model}</strong>
+                    <strong>
+                      {d ? <Link to={`/diaper/${d.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>{d.brand} {d.model}</Link> : `纸尿裤 #${r.diaper_id}`}
+                    </strong>
                     <span style={{ color: 'var(--warning)', fontWeight: 600 }}>
-                      <i className="fa-solid fa-star" /> {r.score}/10
+                      <i className="fa-solid fa-star" /> {avgScore.toFixed(1)}/10
                     </span>
                   </div>
                   {r.review && <p style={{ margin: '4px 0', color: 'var(--text)' }}>{r.review}</p>}
                   <small style={{ color: 'var(--text-muted)' }}>{new Date(r.created_at).toLocaleDateString('zh-CN')}</small>
                 </div>
-              ))
+              )})
             )}
           </div>
         )}
@@ -264,12 +285,14 @@ export default function Profile() {
                 </Link>
               </div>
             ) : (
-              myFeelings.map(f => (
+              myFeelings.map(f => {
+                const d = diaperMap[f.diaper_id];
+                return (
                 <div key={f.id} style={{ padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <strong>
                       <Link to={`/diaper/${f.diaper_id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                        <i className="fa-solid fa-box" /> 纸尿裤 #{f.diaper_id}
+                        <i className="fa-solid fa-box" /> {d ? `${d.brand} ${d.model}` : `纸尿裤 #${f.diaper_id}`}
                       </Link>
                       <span className="tag" style={{ marginLeft: 8 }}>{f.size}码</span>
                     </strong>
@@ -282,8 +305,8 @@ export default function Profile() {
                       return (
                         <span key={key} style={{
                           padding: '2px 10px', borderRadius: 12, fontSize: '0.78rem', fontWeight: 600,
-                          background: val > 0 ? '#E8F8E8' : val < 0 ? '#FDE8E8' : '#F0F0F0',
-                          color: val > 0 ? '#2E7D32' : val < 0 ? '#C0392B' : '#666',
+                          background: val > 0 ? 'var(--success-bg)' : val < 0 ? 'var(--feeling-bg)' : 'var(--input-bg)',
+                          color: val > 0 ? 'var(--success)' : val < 0 ? 'var(--danger)' : 'var(--text-muted)',
                         }}>
                           {label}: {val > 0 ? '+' : ''}{val}
                         </span>
@@ -291,7 +314,7 @@ export default function Profile() {
                     })}
                   </div>
                 </div>
-              ))
+              )})
             )}
           </div>
         )}

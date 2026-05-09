@@ -45,6 +45,7 @@ export default function App() {
             className="theme-toggle-float"
             onClick={toggleTheme}
             title={theme === 'dark' ? '切换到浅色模式' : '切换到深色模式'}
+            aria-label={theme === 'dark' ? '切换到浅色模式' : '切换到深色模式'}
           >
             <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`} />
           </button>

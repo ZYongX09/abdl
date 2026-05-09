@@ -50,8 +50,8 @@ export default function MessagesPage() {
   );
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 100px)', borderRadius: 'var(--radius)', overflow: 'hidden', boxShadow: 'var(--shadow)', background: 'var(--bg-card)' }}>
-      <div style={{ width: 300, minWidth: 280, borderRight: '1px solid var(--border)', overflowY: 'auto' }}>
+    <div className="messages-layout" style={{ display: 'flex', height: 'calc(100vh - 100px)', minHeight: 400, borderRadius: 'var(--radius)', overflow: 'hidden', boxShadow: 'var(--shadow)', background: 'var(--bg-card)' }}>
+      <div className="messages-sidebar" style={{ width: 300, minWidth: 280, borderRight: '1px solid var(--border)', overflowY: 'auto' }}>
         <h3 style={{ padding: 16, borderBottom: '1px solid var(--border)', margin: 0 }}>
           <i className="fa-regular fa-envelope" /> 私信
         </h3>

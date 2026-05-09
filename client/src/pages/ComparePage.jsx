@@ -74,18 +74,40 @@ export default function ComparePage() {
         <p style={{ color: 'var(--text-muted)', marginBottom: 12 }}>
           选择 2-4 款纸尿裤进行对比 (已选 {selected.length}/4)
         </p>
+        {selected.length > 0 && (
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
+            {selected.map(id => {
+              const d = allDiapers.find(x => x.id === id);
+              return d ? (
+                <span key={id} className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                  onClick={() => toggleSelect(id)} title="点击移除">
+                  {d.brand} {d.model} <i className="fa-solid fa-xmark" style={{ fontSize: '0.7rem' }} />
+                </span>
+              ) : null;
+            })}
+          </div>
+        )}
         <div style={{ maxHeight: 200, overflowY: 'auto', marginBottom: 12 }}>
-          {allDiapers.map(d => (
-            <label key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', cursor: 'pointer' }}>
-              <input type="checkbox" checked={selected.includes(d.id)} onChange={() => toggleSelect(d.id)}
-                disabled={!selected.includes(d.id) && selected.length >= 4}
-                style={{ accentColor: 'var(--primary)' }} />
-              <span>{d.brand} {d.model}</span>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                <i className="fa-solid fa-star" style={{ color: 'var(--warning)', fontSize: '0.7rem' }} /> {Number(d.avg_score||0).toFixed(1)}
-              </span>
-            </label>
-          ))}
+          {allDiapers.length === 0 ? (
+            <div className="empty-state" style={{ padding: 30 }}>
+              <div className="icon"><i className="fa-solid fa-box-open" /></div>
+              <p>暂无纸尿裤数据</p>
+            </div>
+          ) : (
+            allDiapers.map(d => (
+              <label key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', cursor: 'pointer', borderRadius: 6, transition: 'background 0.15s' }}
+                onMouseOver={e => e.currentTarget.style.background = 'var(--input-bg)'}
+                onMouseOut={e => e.currentTarget.style.background = 'transparent'}>
+                <input type="checkbox" checked={selected.includes(d.id)} onChange={() => toggleSelect(d.id)}
+                  disabled={!selected.includes(d.id) && selected.length >= 4}
+                  style={{ accentColor: 'var(--primary)' }} aria-label={`选择 ${d.brand} ${d.model}`} />
+                <span>{d.brand} {d.model}</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <i className="fa-solid fa-star" style={{ color: 'var(--warning)', fontSize: '0.7rem' }} /> {Number(d.avg_score||0).toFixed(1)}
+                </span>
+              </label>
+            ))
+          )}
         </div>
         <button className="btn btn-accent" onClick={doCompare} disabled={selected.length < 2}>
           <i className="fa-solid fa-code-compare" /> 开始对比 ({selected.length}/4)
@@ -94,6 +116,13 @@ export default function ComparePage() {
 
       {loading && compared.length === 0 && (
         <div className="loading-spinner"><div className="spinner" /><span>对比中</span></div>
+      )}
+
+      {!loading && compared.length === 0 && selected.length >= 2 && (
+        <div className="card" style={{ textAlign: 'center', padding: 32, opacity: 0.7 }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: 12 }}><i className="fa-solid fa-hand-pointer" style={{ animation: 'floatUpDown 1.5s infinite' }} /></div>
+          <p style={{ color: 'var(--text-muted)' }}>已选择 {selected.length} 款纸尿裤，点击上方「开始对比」查看详细对比</p>
+        </div>
       )}
 
       {compared.length > 0 && (

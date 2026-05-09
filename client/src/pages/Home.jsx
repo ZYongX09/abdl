@@ -1,12 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { diapersAPI, rankingsAPI } from '../api';
 import LoadingSkeleton from '../components/LoadingSkeleton';
+
+function useDebounce(value, delay = 300) {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debounced;
+}
 
 export default function Home() {
   const [diapers, setDiapers] = useState([]);
   const [hotRankings, setHotRankings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [brands, setBrands] = useState([]);
   const [sizes, setSizes] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,6 +24,9 @@ export default function Home() {
   const [brandFilter, setBrandFilter] = useState(searchParams.get('brand') || '');
   const [sizeFilter, setSizeFilter] = useState(searchParams.get('size') || '');
   const [sort, setSort] = useState(searchParams.get('sort') || 'popularity');
+
+  // Debounce search to avoid excessive API calls while typing
+  const debouncedSearch = useDebounce(search, 300);
 
   // Read URL params whenever they change (sidebar search navigation triggers this)
   useEffect(() => {
@@ -63,13 +76,13 @@ export default function Home() {
       .finally(() => setLoading(false));
   };
 
-  // Auto-search on filter changes
+  // Auto-search on filter changes (debounced for search text)
   useEffect(() => {
     setLoading(true);
-    diapersAPI.list({ search, brand: brandFilter, size: sizeFilter, sort, limit: 50 })
-      .then(d => setDiapers(d.diapers))
+    diapersAPI.list({ search: debouncedSearch, brand: brandFilter, size: sizeFilter, sort, limit: 50 })
+      .then(d => { setDiapers(d.diapers); setInitialLoading(false); })
       .finally(() => setLoading(false));
-  }, [search, brandFilter, sizeFilter, sort]);
+  }, [debouncedSearch, brandFilter, sizeFilter, sort]);
 
   return (
     <div>

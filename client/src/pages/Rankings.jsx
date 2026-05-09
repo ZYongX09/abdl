@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { rankingsAPI } from '../api';
 
@@ -22,6 +22,8 @@ export default function Rankings() {
   const [rankings, setRankings] = useState([]);
   const [cached, setCached] = useState(false);
   const [loading, setLoading] = useState(true);
+  const tabRefs = useRef({});
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
   useEffect(() => {
     setLoading(true);
@@ -35,18 +37,33 @@ export default function Rankings() {
     }).finally(() => setLoading(false));
   }, [tab]);
 
+  // Update indicator position when tab changes
+  useEffect(() => {
+    const el = tabRefs.current[tab];
+    if (el) {
+      const parent = el.parentElement;
+      const pRect = parent.getBoundingClientRect();
+      const eRect = el.getBoundingClientRect();
+      setIndicatorStyle({ left: eRect.left - pRect.left, width: eRect.width });
+    }
+  }, [tab]);
+
   return (
     <div style={{ maxWidth: 700, margin: '0 auto' }}>
       <h2 style={{ textAlign: 'center', marginBottom: 20 }}>
         <i className="fa-solid fa-trophy" /> 排行榜
       </h2>
-      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginBottom: 20, flexWrap: 'wrap' }}>
+      <div style={{ position: 'relative', display: 'flex', gap: 6, justifyContent: 'center', marginBottom: 20, flexWrap: 'wrap', paddingBottom: 4 }}>
         {DIM_TABS.map(t => (
-          <button key={t.key} className={`btn ${tab===t.key?'btn-primary':'btn-outline'} btn-sm`}
+          <button key={t.key}
+            ref={el => tabRefs.current[t.key] = el}
+            className={`btn tab-btn ${tab===t.key?'btn-primary':'btn-outline'} btn-sm`}
+            style={{ position: 'relative', zIndex: 1 }}
             onClick={() => setTab(t.key)}>
             <i className={`fa-solid ${t.fa}`} style={{ marginRight: 4 }} />{t.label}
           </button>
         ))}
+        <div className="tab-indicator" style={{ left: indicatorStyle.left, width: indicatorStyle.width }} />
       </div>
       {cached && (
         <div className="alert alert-info" style={{ textAlign: 'center', fontSize: '0.85rem' }}>

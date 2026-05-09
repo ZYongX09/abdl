@@ -38,7 +38,7 @@ export default function Recommendations() {
     return (
       <div style={{ textAlign: 'center', padding: 60 }}>
         <h2><i className="fa-solid fa-robot" /> AI 智能推荐</h2>
-        <p style={{ color: '#999', marginTop: 12 }}>请先登录以获取个性化推荐</p>
+        <p style={{ color: 'var(--text-muted)', marginTop: 12 }}>请先登录以获取个性化推荐</p>
         <Link to="/login" className="btn btn-primary" style={{ marginTop: 20 }}>去登录</Link>
       </div>
     );
@@ -120,8 +120,8 @@ export default function Recommendations() {
                 <label key={opt.key} style={{
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '10px 14px', borderRadius: 10,
-                  background: dataSelection[opt.key] ? 'var(--primary-light)' : '#F5F5F5',
-                  border: `2px solid ${dataSelection[opt.key] ? 'var(--primary)' : '#E8E8E8'}`,
+                  background: dataSelection[opt.key] ? 'var(--primary-light)' : 'var(--input-bg)',
+                  border: `2px solid ${dataSelection[opt.key] ? 'var(--primary)' : 'var(--border)'}`,
                   cursor: 'pointer', transition: 'all 0.2s',
                 }}>
                   <input
@@ -135,7 +135,7 @@ export default function Recommendations() {
                       <i className={`fa-solid ${opt.icon}`} style={{ marginRight: 6, color: 'var(--primary-dark)' }} />
                       {opt.label}
                     </div>
-                    <div style={{ fontSize: '0.8rem', color: '#999' }}>{opt.desc}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{opt.desc}</div>
                   </div>
                 </label>
               ))}
@@ -155,7 +155,7 @@ export default function Recommendations() {
             </div>
             {!anySelected() && (
               <p style={{ color: 'var(--danger)', fontSize: '0.8rem', marginTop: 8, textAlign: 'center' }}>
-                ⚠️ 必须至少选择一项数据才能使用 AI 推荐
+                <i className="fa-solid fa-triangle-exclamation" /> 必须至少选择一项数据才能使用 AI 推荐
               </p>
             )}
           </div>
@@ -164,7 +164,7 @@ export default function Recommendations() {
 
       <div className="hero-card" style={{ textAlign: 'center' }}>
         <h2 style={{ fontSize: '1.6rem', marginBottom: 8 }}><i className="fa-solid fa-robot" /> AI 智能推荐</h2>
-        <p style={{ color: '#666', marginBottom: 16, fontSize: '0.9rem' }}>
+        <p style={{ color: 'var(--text-muted)', marginBottom: 16, fontSize: '0.9rem' }}>
           根据你的身材数据和偏好，AI 为你挑选最合适的纸尿裤
         </p>
         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 16, flexWrap: 'wrap' }}>
@@ -186,7 +186,7 @@ export default function Recommendations() {
 
       {/* Streaming output */}
       {statusText && (
-        <div className="card" style={{ marginBottom: 16, maxHeight: 300, overflowY: 'auto', background: '#FAFCFF', fontSize: '0.9rem', lineHeight: 1.6, fontFamily: 'var(--font)' }}>
+        <div className="card" style={{ marginBottom: 16, maxHeight: 300, overflowY: 'auto', background: 'var(--rating-bg)', fontSize: '0.9rem', lineHeight: 1.6, fontFamily: 'var(--font)' }}>
           {statusText.split('\n').map((line, i) => <p key={i} style={{ margin: 0 }}>{line}</p>)}
           <div ref={chatEndRef} />
         </div>
@@ -211,10 +211,10 @@ export default function Recommendations() {
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 700, fontSize: '1.05rem' }}>{rec.brand} — {rec.model}</div>
-                    {rec.reason && <div style={{ fontSize: '0.88rem', color: '#555', marginTop: 4 }}><i className="fa-solid fa-thumbs-up" style={{ color: 'var(--accent)', marginRight: 4 }} />{rec.reason}</div>}
+                    {rec.reason && <div style={{ fontSize: '0.88rem', color: 'var(--text)', marginTop: 4 }}><i className="fa-solid fa-thumbs-up" style={{ color: 'var(--accent)', marginRight: 4 }} />{rec.reason}</div>}
                   </div>
                   <div style={{
-                    padding: '6px 14px', borderRadius: 20, background: rec.matchScore >= 90 ? '#E8F8E8' : rec.matchScore >= 70 ? '#FFF8E1' : '#F0F0F0',
+                    padding: '6px 14px', borderRadius: 20, background: rec.matchScore >= 90 ? 'var(--success-bg)' : rec.matchScore >= 70 ? 'var(--warning-bg)' : 'var(--input-bg)',
                     fontWeight: 700, fontSize: '1.1rem', whiteSpace: 'nowrap'
                   }}>
                     {rec.matchScore}%
@@ -238,10 +238,10 @@ export default function Recommendations() {
         <div className="card" style={{ marginTop: 16 }}>
           <h3 style={{ marginBottom: 12 }}><i className="fa-solid fa-clock-rotate-left" /> 推荐历史</h3>
           {history.map((h, i) => (
-            <div key={i} style={{ padding: '10px 0', borderBottom: i < history.length-1 ? '1px solid #F0F0F0' : 'none', cursor: 'pointer' }}
+            <div key={i} style={{ padding: '10px 0', borderBottom: i < history.length-1 ? '1px solid var(--border)' : 'none', cursor: 'pointer' }}
               onClick={() => setResult(h.data)}>
-              <div style={{ fontSize: '0.85rem', color: '#999' }}>{new Date(h.time).toLocaleString('zh-CN')}</div>
-              <div style={{ fontSize: '0.9rem', color: '#555' }}>{h.preview || '查看推荐结果'}</div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{new Date(h.time).toLocaleString('zh-CN')}</div>
+              <div style={{ fontSize: '0.9rem', color: 'var(--text)' }}>{h.preview || '查看推荐结果'}</div>
             </div>
           ))}
         </div>

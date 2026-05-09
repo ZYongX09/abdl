@@ -1,5 +1,28 @@
 # ABDL Space 更新日志
 
+## v5.1.1 — 2026-05-09
+
+### 🐛 Bug 修复
+- **Profile 深色模式修复**：使用感受标签的硬编码颜色（绿/红）替换为 CSS 变量 `--success-bg`/`--feeling-bg`，深色模式下正确显示
+
+### ✨ 新功能
+- **分享按钮 Toast 反馈**：论坛帖子点击分享后，弹出「链接已复制到剪贴板」提示
+- **回到顶部按钮淡出动画**：按钮消失时播放流畅的 fadeOutDown 动画，不再突然消失
+- **排行榜标签滑动指示器**：切换排行榜分类时，底部出现平滑滑动的下划线指示器
+- **对比工具引导提示**：选择 2+ 款纸尿裤后，在未点击对比前显示友好引导文案
+
+### 🎨 UI/UX 优化
+- BackToTop 组件增加退出动画状态管理（exiting 状态 + CSS transition）
+- Rankings 标签按钮动画更流畅（cubic-bezier 过渡）
+
+### 📝 文件变更
+- `Profile.jsx` — 感受标签颜色变量化
+- `ForumFeed.jsx` — 集成 useToast，分享按钮添加反馈
+- `BackToTop.jsx` — 新增淡出动画逻辑
+- `Rankings.jsx` — 新增标签滑动指示器（useRef + indicatorStyle）
+- `ComparePage.jsx` — 新增对比前引导提示
+- `App.css` — 新增 fadeOutDown 关键帧、tab-indicator/tab-btn 样式
+
 ## v5.1.0 — 2026-05-09
 
 ### 🐛 Bug 修复

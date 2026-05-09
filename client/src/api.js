@@ -234,18 +234,20 @@ export const forumAPI = {
     posts.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
     const total = posts.length;
     const users = LS.get('users') || {};
+    const allComments = LS.get('comments') || {};
     const enriched = posts.slice((page-1)*limit, page*limit).map(p => {
       const u = Object.values(users).find(u => u.id === p.user_id);
       const likes = LS.get('likes') || {};
       const likeCount = Object.values(likes).filter(l => l.target_type === 'post' && l.target_id === p.id).length;
+      const commentCount = Object.values(allComments).filter(c => c.post_id === p.id).length;
       const currentUser = LS.get('currentUser');
       const hasLiked = currentUser ? Object.values(likes).some(l => l.user_id === currentUser.id && l.target_type === 'post' && l.target_id === p.id) : false;
-      return { ...p, images: [], user: { id: u?.id, username: u?.username }, like_count: likeCount, has_liked: hasLiked, diaper: null };
+      return { ...p, images: [], user: { id: u?.id, username: u?.username }, like_count: likeCount, has_liked: hasLiked, comment_count: commentCount, diaper: null };
     });
     return { posts: enriched, pagination: { page, limit, total, totalPages: Math.ceil(total/limit) } };
   },
   getPost: (id) => {
-    const posts = LS.get('posts') || {};
+    const posts = LS.get('posts') || [];
     const post = posts.find(p => p.id === Number(id));
     if (!post) throw new Error('帖子不存在');
     const users = LS.get('users') || {};
@@ -262,7 +264,7 @@ export const forumAPI = {
       return { ...c, username: cu?.username, like_count: cl, has_liked: false };
     });
 
-    return { post: { ...post, images: [], user: { id: u?.id, username: u?.username }, like_count: likeCount, has_liked, diaper: null }, comments: postComments };
+    return { post: { ...post, images: [], user: { id: u?.id, username: u?.username }, like_count: likeCount, has_liked, comment_count: postComments.length, diaper: null }, comments: postComments };
   },
   create: ({ content, diaper_id }) => {
     const user = LS.get('currentUser');
@@ -317,16 +319,50 @@ export const levelsAPI = {
   all: () => loadJSON('/data/levels.json'),
 };
 
-// ====== 术语（只读） ======
+// ====== 术语（localStorage 读写） ======
 export const termWikiAPI = {
   list: async (params = {}) => {
     if (!_terms) await loadData();
     let list = [..._terms];
+    // Merge in any user-added terms
+    const custom = LS.get('customTerms') || [];
+    list = [...list, ...custom];
     if (params.search) { const s = params.search.toLowerCase(); list = list.filter(t => t.term.toLowerCase().includes(s) || t.definition.toLowerCase().includes(s)); }
     if (params.category) list = list.filter(t => t.category === params.category);
     return { terms: list };
   },
   categories: async () => { if (!_terms) await loadData(); return { categories: [...new Set(_terms.map(t => t.category))] }; },
+  create: async (form) => {
+    const user = LS.get('currentUser');
+    if (!user || user.role !== 'admin') throw new Error('仅管理员可添加术语');
+    if (!form.term || !form.definition) throw new Error('术语名称和定义为必填');
+    const custom = LS.get('customTerms') || [];
+    const term = { id: Date.now(), ...form, created_by: user.id, created_at: new Date().toISOString() };
+    custom.push(term);
+    LS.set('customTerms', custom);
+    return { message: '术语已添加', term };
+  },
+  update: async (id, form) => {
+    const user = LS.get('currentUser');
+    if (!user || user.role !== 'admin') throw new Error('仅管理员可编辑术语');
+    if (!form.term || !form.definition) throw new Error('术语名称和定义为必填');
+    const custom = LS.get('customTerms') || [];
+    const idx = custom.findIndex(t => t.id === id);
+    if (idx === -1) throw new Error('术语不存在（仅可编辑自定义添加的术语）');
+    custom[idx] = { ...custom[idx], ...form, updated_at: new Date().toISOString() };
+    LS.set('customTerms', custom);
+    return { message: '术语已更新' };
+  },
+  delete: async (id) => {
+    const user = LS.get('currentUser');
+    if (!user || user.role !== 'admin') throw new Error('仅管理员可删除术语');
+    let custom = LS.get('customTerms') || [];
+    const before = custom.length;
+    custom = custom.filter(t => t.id !== id);
+    if (custom.length === before) throw new Error('术语不存在');
+    LS.set('customTerms', custom);
+    return { message: '已删除' };
+  },
 };
 
 // ====== 猜你喜欢 ======
@@ -551,7 +587,7 @@ export const adminAPI = {
   },
   banUser: () => ({ message: '功能简化中' }),
   deleteUser: (id) => ({ message: '已删除' }),
-  posts: () => { const p = LS.get('posts')||[]; return { posts: p.map(p => ({ ...p, username: 'user', comment_count: 0, like_count: 0 })) }; },
+  posts: () => { const p = LS.get('posts')||[]; const comments = LS.get('comments')||{}; const likes = LS.get('likes')||{}; return { posts: p.map(post => ({ ...post, username: 'user', comment_count: Object.values(comments).filter(c => c.post_id === post.id).length, like_count: Object.values(likes).filter(l => l.target_type === 'post' && l.target_id === post.id).length })) }; },
   pinPost: () => ({ message: '已置顶' }),
   deletePost: (id) => { let p = LS.get('posts')||[]; p = p.filter(x => x.id !== id); LS.set('posts', p); return { message: '已删除' }; },
   comments: () => ({ comments: [] }),

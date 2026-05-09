@@ -24,14 +24,14 @@ function RadarChart({ stats }) {
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       {[1,2,3,4,5].map(lvl => {
         const rr = r * lvl / 5;
-        return <polygon key={lvl} points={gridAngles.map(a => `${cx+rr*Math.cos(a)},${cy+rr*Math.sin(a)}`).join(' ')} fill="none" stroke="#E8F0F8" strokeWidth="1" />;
+        return <polygon className="radar-grid" key={lvl} points={gridAngles.map(a => `${cx+rr*Math.cos(a)},${cy+rr*Math.sin(a)}`).join(' ')} fill="none" strokeWidth="1" />;
       })}
-      {gridAngles.map((a, i) => <line key={i} x1={cx} y1={cy} x2={cx+r*Math.cos(a)} y2={cy+r*Math.sin(a)} stroke="#E8F0F8" strokeWidth="1" />)}
-      <polygon points={points.map(p => `${p.x},${p.y}`).join(' ')} fill="rgba(168,216,240,0.35)" stroke="#7EB8D4" strokeWidth="2" />
-      {points.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="4" fill="#7EB8D4" />)}
+      {gridAngles.map((a, i) => <line className="radar-grid" key={i} x1={cx} y1={cy} x2={cx+r*Math.cos(a)} y2={cy+r*Math.sin(a)} strokeWidth="1" />)}
+      <polygon className="radar-fill" points={points.map(p => `${p.x},${p.y}`).join(' ')} strokeWidth="2" />
+      {points.map((p, i) => <circle className="radar-dot" key={i} cx={p.x} cy={p.y} r="4" />)}
       {points.map((p, i) => {
         const lx = cx + (r+28)*Math.cos(p.angle), ly = cy + (r+28)*Math.sin(p.angle);
-        return <text key={i} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle" fontSize="10" fill="#555">{p.label} {p.val.toFixed(1)}</text>;
+        return <text className="radar-label" key={i} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle" fontSize="10">{p.label} {p.val.toFixed(1)}</text>;
       })}
     </svg>
   );
@@ -123,7 +123,7 @@ export default function DiaperDetail() {
       <div className="card" style={{ marginTop: 12 }}>
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
           <div style={{ flex: '0 0 160px' }}>
-            <img src={diaper.image_url||'https://placehold.co/160x160/A8D8F0/white?text=No+Image'} alt={diaper.model} style={{ width: '100%', borderRadius: 12 }} />
+            <img src={diaper.image_url||'https://placehold.co/160x160/A8D8F0/white?text=No+Image'} alt={diaper.model} loading="lazy" style={{ width: '100%', borderRadius: 12 }} onError={(e) => { e.target.src = 'https://placehold.co/160x160/A8D8F0/white?text=No+Image'; }} />
           </div>
           <div style={{ flex: 1, minWidth: 250 }}>
             <div className="brand">{diaper.brand}</div>
@@ -175,14 +175,14 @@ export default function DiaperDetail() {
           {msg && <div className={`alert ${msg.includes('成功')?'alert-success':'alert-danger'}`}>{msg}</div>}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12, margin: '12px 0' }}>
             {DIMS.map(d => (
-              <div key={d.key} style={{ padding: '10px 14px', borderRadius: 10, background: '#F8FBFF', border: '1px solid #E8F0F8' }}>
+              <div key={d.key} className="rating-dim-card" style={{ padding: '10px 14px', borderRadius: 10 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
                   <span style={{ fontWeight: 600, fontSize: '0.9rem' }}><i className={`fa-solid ${d.fa}`} /> {d.label}</span>
-                  <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#7EB8D4' }}>{scores[d.key] || '-'}</span>
+                  <span className="rating-dim-score" style={{ fontSize: '1.1rem', fontWeight: 800 }}>{scores[d.key] || '-'}</span>
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#999', marginBottom: 4 }}>{d.desc}</div>
-                <input type="range" min="1" max="10" value={scores[d.key]||5} onChange={e => setScore(d.key, Number(e.target.value))} style={{ width: '100%', accentColor: '#A8D8F0' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: '#BBB' }}><span>1</span><span>5</span><span>10</span></div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>{d.desc}</div>
+                <input type="range" min="1" max="10" value={scores[d.key]||5} onChange={e => setScore(d.key, Number(e.target.value))} style={{ width: '100%' }} />
+                <div className="range-labels" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem' }}><span>1</span><span>5</span><span>10</span></div>
               </div>
             ))}
           </div>
@@ -195,7 +195,7 @@ export default function DiaperDetail() {
       {user && (
         <div className="card">
           <h3><i className="fa-solid fa-heart" /> 使用感受记录 (-5 到 5)</h3>
-          <p style={{ fontSize: '0.85rem', color: '#999', marginBottom: 12 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: 12 }}>
             记录你使用某个尺码的真实感受，帮助自己和他人更好地选择。感受数据以10%权重计入综合评分。
           </p>
           <div className="form-group">
@@ -209,27 +209,27 @@ export default function DiaperDetail() {
             <>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12, margin: '12px 0' }}>
                 {FEELING_DIMS.map(d => (
-                  <div key={d.key} style={{ padding: '10px 14px', borderRadius: 10, background: '#FFF8F8', border: '1px solid #FFE0E8' }}>
+                  <div key={d.key} className="feeling-dim-card" style={{ padding: '10px 14px', borderRadius: 10 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
                       <span style={{ fontWeight: 600, fontSize: '0.9rem' }}><i className={`fa-solid ${d.icon}`} /> {d.label}</span>
-                      <span style={{ fontSize: '1.1rem', fontWeight: 800, color: feelings[d.key] > 0 ? '#7BC67E' : feelings[d.key] < 0 ? '#E8837C' : '#999' }}>
+                      <span style={{ fontSize: '1.1rem', fontWeight: 800, color: feelings[d.key] > 0 ? 'var(--success)' : feelings[d.key] < 0 ? 'var(--danger)' : 'var(--text-muted)' }}>
                         {feelings[d.key] != null ? (feelings[d.key] > 0 ? '+' : '') + feelings[d.key] : '-'}
                       </span>
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: '#999', marginBottom: 4 }}>{d.desc}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>{d.desc}</div>
                     <input type="range" min="-5" max="5" step="1" value={feelings[d.key] ?? 0}
                       onChange={e => setFeeling(d.key, Number(e.target.value))}
-                      style={{ width: '100%', accentColor: feelings[d.key] > 0 ? '#7BC67E' : feelings[d.key] < 0 ? '#E8837C' : '#A8D8F0' }} />
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: '#BBB' }}>
+                      style={{ width: '100%' }} />
+                    <div className="range-labels" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem' }}>
                       <span>{d.lowLabel} -5</span><span>0 中性</span><span>{d.highLabel} +5</span>
                     </div>
                   </div>
                 ))}
               </div>
               <button className="btn btn-accent" onClick={handleFeelingSubmit}>
-                {myFeeling ? '✏️ 更新感受' : '💾 保存感受'}
+                {myFeeling ? <><i className="fa-solid fa-pen-to-square" /> 更新感受</> : <><i className="fa-solid fa-floppy-disk" /> 保存感受</>}
               </button>
-              {myFeeling && <span style={{ marginLeft: 12, fontSize: '0.85rem', color: '#999' }}>已记录 {selectedSize}码 感受 ({new Date(myFeeling.created_at).toLocaleDateString('zh-CN')})</span>}
+              {myFeeling && <span style={{ marginLeft: 12, fontSize: '0.85rem', color: 'var(--text-muted)' }}>已记录 {selectedSize}码 感受 ({new Date(myFeeling.created_at).toLocaleDateString('zh-CN')})</span>}
             </>
           )}
         </div>
@@ -243,17 +243,17 @@ export default function DiaperDetail() {
             {FEELING_DIMS.map(d => {
               const val = feelingsStats?.[d.key] || 0;
               return (
-                <div key={d.key} style={{ flex: '1 1 140px', textAlign: 'center', padding: 12, borderRadius: 10, background: '#F8FBFF', border: '1px solid #E8F0F8' }}>
-                  <div style={{ fontSize: '0.8rem', color: '#999' }}><i className={`fa-solid ${d.icon}`} /> {d.label}</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: val > 1 ? '#7BC67E' : val < -1 ? '#E8837C' : '#F0C040' }}>
+                <div key={d.key} className="rating-dim-card" style={{ flex: '1 1 140px', textAlign: 'center', padding: 12, borderRadius: 10 }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}><i className={`fa-solid ${d.icon}`} /> {d.label}</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: val > 1 ? 'var(--success)' : val < -1 ? 'var(--danger)' : 'var(--warning)' }}>
                     {val > 0 ? '+' : ''}{val.toFixed(1)}
                   </div>
                   <div className="score-bar" style={{ marginTop: 4 }}>
-                    <div className="score-bar-fill" style={{
+                    <div className="score-bar-fill feel-bar" style={{
                       width: `${(val + 5) * 10}%`,
                       background: val > 0
-                        ? 'linear-gradient(90deg, #F0C040, #7BC67E)'
-                        : 'linear-gradient(90deg, #E8837C, #F0C040)'
+                        ? `linear-gradient(90deg, var(--warning), var(--success))`
+                        : `linear-gradient(90deg, var(--danger), var(--warning))`
                     }} />
                   </div>
                 </div>
@@ -266,18 +266,18 @@ export default function DiaperDetail() {
       <div className="card">
         <h3><i className="fa-regular fa-message" /> 用户评价 ({reviews.length})</h3>
         {reviews.map(r => (
-          <div key={r.id} style={{ padding: '10px 0', borderBottom: '1px solid #F0F0F0' }}>
+          <div key={r.id} style={{ padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <strong>{r.username}{r.role==='admin' && <span className="tag" style={{ background: '#FFE0E0', color: '#C0392B', marginLeft: 6, fontSize: '0.7rem' }}>管理员</span>}</strong>
-              <span style={{ fontSize: '0.85rem', color: '#999' }}>{new Date(r.created_at).toLocaleDateString('zh-CN')}</span>
+              <strong>{r.username}{r.role==='admin' && <span className="tag" style={{ background: '#FDE8E8', color: 'var(--danger)', marginLeft: 6, fontSize: '0.7rem' }}>管理员</span>}</strong>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{new Date(r.created_at).toLocaleDateString('zh-CN')}</span>
             </div>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '4px 0' }}>
               {DIMS.map(d => r[d.key] != null && <span key={d.key} className="tag" style={{fontSize:'0.7rem'}}><i className={`fa-solid ${d.fa}`} /> {r[d.key]}</span>)}
             </div>
-            {r.review && <p style={{ margin: '4px 0', color: '#555', fontSize: '0.9rem' }}>{r.review}</p>}
+            {r.review && <p style={{ margin: '4px 0', color: 'var(--text)', fontSize: '0.9rem' }}>{r.review}</p>}
           </div>
         ))}
-        {reviews.length===0 && <p style={{ color: '#999', textAlign: 'center', padding: 20 }}>暂无评价</p>}
+        {reviews.length===0 && <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: 20 }}>暂无评价</p>}
       </div>
     </div>
   );

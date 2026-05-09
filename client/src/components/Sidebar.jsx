@@ -22,6 +22,7 @@ function SearchBar() {
       <input
         value={q} onChange={e => setQ(e.target.value)}
         placeholder="搜索纸尿裤..."
+        aria-label="搜索纸尿裤"
         style={{
           width: '100%', padding: '8px 12px 8px 36px', borderRadius: 24,
           border: '1px solid var(--border)', background: 'var(--input-bg)',
@@ -104,10 +105,9 @@ export default function Sidebar() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem'
               }}>
                 {user.avatar ? (
-                  <img src={user.avatar} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
-                ) : (
-                  <i className="fa-solid fa-user" />
-                )}
+                  <img src={user.avatar} alt={user.username} loading="lazy" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
+                ) : null}
+                <i className="fa-solid fa-user" style={{ display: user.avatar ? 'none' : 'flex', alignItems: 'center', justifyContent: 'center' }} />
               </div>
               <div>
                 <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{user.username}</div>
@@ -138,7 +138,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <button className="sidebar-toggle" onClick={() => setMobileOpen(!mobileOpen)}>
+      <button className="sidebar-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label={mobileOpen ? '关闭菜单' : '打开菜单'}>
         <i className={`fa-solid ${mobileOpen ? 'fa-xmark' : 'fa-bars'}`} />
       </button>
       <div className={`sidebar-overlay ${mobileOpen ? 'open' : ''}`} onClick={closeMobile} />

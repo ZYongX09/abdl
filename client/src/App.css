@@ -29,6 +29,8 @@
   --input-bg: #F5F8FC;
   --rating-bg: #F8FBFF;
   --rating-border: #E8F0F8;
+  --success-bg: #E8F8E8;
+  --warning-bg: #FFF8E1;
   --feeling-bg: #FFF8F8;
   --feeling-border: #FFE0E8;
   /* Additional tokens */
@@ -72,6 +74,8 @@
   --input-bg: #2A2E35;
   --rating-bg: #2A3038;
   --rating-border: #383C44;
+  --success-bg: #1E3520;
+  --warning-bg: #353020;
   --feeling-bg: #30282A;
   --feeling-border: #483840;
   /* Additional tokens - dark */
@@ -163,6 +167,10 @@ body {
 @keyframes ripple {
   0% { transform: scale(0); opacity: 1; }
   100% { transform: scale(4); opacity: 0; }
+}
+@keyframes fadeOutDown {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(12px); }
 }
 
 /* 页面入场 */
@@ -376,6 +384,10 @@ select.form-control { cursor: pointer; color: var(--text); }
   animation: scaleIn 0.3s ease-out;
 }
 .back-to-top:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(168,216,240,0.6); }
+.back-to-top-exit {
+  animation: fadeOutDown 0.25s ease-in forwards;
+  pointer-events: none;
+}
 
 /* ====== 回复嵌套 ====== */
 .reply-thread { margin-left: 24px; padding-left: 12px; border-left: 2px solid var(--primary-light); }
@@ -461,6 +473,10 @@ select.form-control { cursor: pointer; color: var(--text); }
 
   .toast-container { left: 12px; right: 12px; }
   .toast { max-width: 100%; }
+
+  /* 私信页面移动端适配 */
+  .messages-layout { flex-direction: column !important; height: auto !important; min-height: calc(100vh - 100px); }
+  .messages-sidebar { width: 100% !important; min-width: unset !important; max-height: 200px; border-right: none !important; border-bottom: 1px solid var(--border); }
 }
 
 /* ====== 模态弹窗 ====== */
@@ -523,6 +539,44 @@ select.form-control { cursor: pointer; color: var(--text); }
 [data-theme="dark"] .theme-toggle { background: var(--bg-card); border-color: var(--border); }
 [data-theme="dark"] .tag { background: var(--tag-bg); color: var(--tag-color); }
 [data-theme="dark"] .sidebar-overlay { background: var(--overlay-bg); }
+
+/* ====== 雷达图（深色适配） ====== */
+.radar-grid { stroke: var(--border); }
+.radar-fill { fill: rgba(168,216,240,0.35); stroke: var(--primary-dark); }
+.radar-dot { fill: var(--primary-dark); }
+.radar-label { fill: var(--text-muted); }
+[data-theme="dark"] .radar-fill { fill: rgba(126,184,212,0.25); }
+
+/* ====== 评分维度卡片（深色适配） ====== */
+.rating-dim-card {
+  background: var(--rating-bg);
+  border: 1px solid var(--rating-border);
+}
+.rating-dim-score { color: var(--primary-dark); }
+
+/* ====== 感受维度卡片（深色适配） ====== */
+.feeling-dim-card {
+  background: var(--feeling-bg);
+  border: 1px solid var(--feeling-border);
+}
+
+/* ====== Range滑块标签 ====== */
+.range-labels { color: var(--text-muted); }
+
+/* ====== 感受进度条 ====== */
+.feel-bar { transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* ====== 排行榜标签滑动指示器 ====== */
+.tab-btn {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.tab-indicator {
+  position: absolute; bottom: 0;
+  height: 3px; border-radius: 3px;
+  background: var(--primary-dark);
+  transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+}
 
 /* ====== 通用辅助类 ====== */
 .text-muted { color: var(--text-muted); }

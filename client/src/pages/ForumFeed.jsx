@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { forumAPI, uploadImage } from '../api';
 import { useAuth } from '../AuthContext';
+import { useToast } from '../ToastContext';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import GuessYouLike from '../components/GuessYouLike';
 
@@ -16,6 +17,7 @@ function timeAgo(dateStr) {
 
 export default function ForumFeed() {
   const { user } = useAuth();
+  const { addToast } = useToast();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -133,7 +135,7 @@ export default function ForumFeed() {
                 </Link>
                 {p.images?.length > 0 && (
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 4, marginBottom: 8 }}>
-                    {p.images.map((img, i) => <img key={i} src={img.image_url} alt="" style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 8 }} />)}
+                    {p.images.map((img, i) => <img key={i} src={img.image_url} alt="" loading="lazy" style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 8 }} onError={(e) => { e.target.style.display = 'none'; }} />)}
                   </div>
                 )}
                 {p.diaper && (
@@ -150,9 +152,9 @@ export default function ForumFeed() {
                   <Link to={`/forum/${p.id}`} style={{ textDecoration: 'none', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                     <i className="fa-regular fa-comment" /> {p.comment_count}
                   </Link>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                    <i className="fa-solid fa-retweet" /> 0
-                  </span>
+                  <button onClick={(e) => { e.preventDefault(); navigator.clipboard?.writeText(window.location.origin + '/forum/' + p.id).then(() => addToast('链接已复制到剪贴板', 'success', 2000)).catch(()=>{}); }} title="复制链接" style={{ color: 'var(--text-muted)', fontSize: '0.9rem', background: 'none', border: 'none', cursor: 'pointer' }} aria-label="复制帖子链接">
+                    <i className="fa-solid fa-share-nodes" /> 分享
+                  </button>
                 </div>
               </div>
             </div>
