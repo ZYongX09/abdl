@@ -111,8 +111,22 @@ export default function ForumFeed() {
               {content.length}/5000
             </span>
           </div>
-          <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center' }}>
-            <input type="file" accept="image/*" onChange={e=>setImage(e.target.files[0])} style={{ fontSize: '0.85rem' }} />
+          <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+            <label className="btn btn-outline btn-sm" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <i className="fa-solid fa-image" /> 选择图片
+              <input type="file" accept="image/*" onChange={e=>setImage(e.target.files[0])} style={{ display: 'none' }} />
+            </label>
+            {image && (
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <img src={URL.createObjectURL(image)} alt="预览" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border)' }} />
+                <button onClick={() => setImage(null)} style={{
+                  position: 'absolute', top: -6, right: -6, width: 20, height: 20, borderRadius: '50%',
+                  border: 'none', background: 'var(--danger)', color: 'white', cursor: 'pointer',
+                  fontSize: '0.65rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  lineHeight: 1
+                }} title="移除图片" aria-label="移除图片"><i className="fa-solid fa-xmark" /></button>
+              </div>
+            )}
             <button className="btn btn-primary btn-sm" onClick={handlePost} disabled={uploading||!content.trim()}>
               {uploading ? '发布中...' : '发布'}
             </button>

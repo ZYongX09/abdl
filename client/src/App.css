@@ -361,6 +361,12 @@ select.form-control { cursor: pointer; color: var(--text); }
   box-shadow: 0 4px 16px rgba(0,0,0,0.15);
   animation: slideInLeft 0.3s ease-out;
   max-width: 380px; display: flex; align-items: center; gap: 10px;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.toast-exit {
+  opacity: 0;
+  transform: translateX(40px);
+  pointer-events: none;
 }
 .toast-success { background: var(--success); }
 .toast-error { background: var(--danger); }
@@ -506,8 +512,8 @@ select.form-control { cursor: pointer; color: var(--text); }
   .toast { max-width: 100%; }
 
   /* 私信页面移动端适配 */
-  .messages-layout { flex-direction: column !important; height: auto !important; min-height: calc(100vh - 100px); }
-  .messages-sidebar { width: 100% !important; min-width: unset !important; max-height: 200px; border-right: none !important; border-bottom: 1px solid var(--border); }
+  .messages-layout { flex-direction: column; height: auto; min-height: calc(100vh - 100px); }
+  .messages-sidebar { width: 100%; min-width: unset; max-height: 200px; border-right: none; border-bottom: 1px solid var(--border); }
 }
 
 /* ====== 模态弹窗 ====== */

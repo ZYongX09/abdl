@@ -121,7 +121,7 @@ export default function App() {
           </ErrorBoundary>
         </div>
         <footer style={{ textAlign: 'center', padding: 20, color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-          <i className="fa-solid fa-baby" style={{ color: 'var(--primary)' }} /> ABDL Space v5 · <a href="/forum" style={{ color: 'var(--link-color)' }}>论坛</a> · <a href="/termwiki" style={{ color: 'var(--link-color)' }}>术语</a> · <a href="https://github.com/ZYongX09/abdl" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--link-color)' }}><i className="fa-brands fa-github" /> GitHub</a>
+          <i className="fa-solid fa-baby" style={{ color: 'var(--primary)' }} /> ABDL Space v5 · © {new Date().getFullYear()} · <a href="/forum" style={{ color: 'var(--link-color)' }}>论坛</a> · <a href="/termwiki" style={{ color: 'var(--link-color)' }}>术语</a> · <a href="https://github.com/ZYongX09/abdl" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--link-color)' }}><i className="fa-brands fa-github" /> GitHub</a>
         </footer>
       </div>
       <ScrollProgress />

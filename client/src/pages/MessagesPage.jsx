@@ -16,6 +16,7 @@ export default function MessagesPage() {
   const [activeOther, setActiveOther] = useState(null);
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
+  const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
   const chatRef = useRef(null);
 
@@ -32,7 +33,8 @@ export default function MessagesPage() {
   };
 
   const sendMsg = async () => {
-    if (!text.trim() || !activeOther) return;
+    if (!text.trim() || !activeOther || sending) return;
+    setSending(true);
     try {
       await messagesAPI.send({ receiver_id: activeOther.id, content: text });
       setText('');
@@ -40,7 +42,7 @@ export default function MessagesPage() {
       setMessages(d.messages);
       loadConvs();
       setTimeout(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight; }, 100);
-    } catch {}
+    } catch {} finally { setSending(false); }
   };
 
   if (!user) return (
@@ -111,9 +113,10 @@ export default function MessagesPage() {
             </div>
             <div style={{ padding: 12, borderTop: '1px solid var(--border)', display: 'flex', gap: 8 }}>
               <input className="form-control" value={text} onChange={e=>setText(e.target.value)}
-                placeholder="输入消息..." onKeyDown={e => e.key==='Enter' && sendMsg()} />
-              <button className="btn btn-primary btn-sm" onClick={sendMsg}>
-                <i className="fa-solid fa-paper-plane" /> 发送
+                placeholder="输入消息..." onKeyDown={e => e.key==='Enter' && sendMsg()} disabled={sending} />
+              <button className="btn btn-primary btn-sm" onClick={sendMsg} disabled={sending || !text.trim()}>
+                {sending ? <i className="fa-solid fa-spinner fa-spin" /> : <i className="fa-solid fa-paper-plane" />}
+                {sending ? '发送中' : '发送'}
               </button>
             </div>
           </>

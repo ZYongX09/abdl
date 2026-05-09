@@ -80,9 +80,13 @@ export default function ComparePage() {
             {selected.map(id => {
               const d = allDiapers.find(x => x.id === id);
               return d ? (
-                <span key={id} className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4 }}
-                  onClick={() => toggleSelect(id)} title="点击移除">
-                  {d.brand} {d.model} <i className="fa-solid fa-xmark" style={{ fontSize: '0.7rem' }} />
+                <span key={id} className="tag" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                  <Link to={`/diaper/${d.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>{d.brand} {d.model}</Link>
+                  <span onClick={() => toggleSelect(id)} title="移除" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', opacity: 0.7, transition: 'opacity 0.15s' }}
+                    onMouseOver={e => e.currentTarget.style.opacity = '1'}
+                    onMouseOut={e => e.currentTarget.style.opacity = '0.7'}>
+                    <i className="fa-solid fa-xmark" style={{ fontSize: '0.7rem' }} />
+                  </span>
                 </span>
               ) : null;
             })}
