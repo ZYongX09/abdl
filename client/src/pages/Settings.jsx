@@ -222,6 +222,33 @@ export default function Settings() {
             <span>{user ? '@' + user.username : '未登录'}</span>
           </div>
         </div>
+
+        {/* 删除账户 */}
+        {user && (
+        <div style={{ marginTop: 32, padding: 20, border: '1px solid var(--danger)', borderRadius: 'var(--radius)', background: 'rgba(232,131,124,0.05)' }}>
+          <h3 style={{ color: 'var(--danger)', marginTop: 0 }}><i className="fa-solid fa-triangle-exclamation" /> 危险操作</h3>
+          <p style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>删除账户将永久移除你的所有数据，包括帖子、评论、评分和使用感受。此操作不可撤销。</p>
+          <button
+            className="btn btn-danger"
+            style={{ marginTop: 8 }}
+            onClick={async () => {
+              if (!confirm('确定要永久删除你的账户吗？此操作不可撤销！')) return;
+              if (!confirm('再次确认：真的要删除账户吗？')) return;
+              try {
+                await authAPI.deleteAccount(user.id);
+                localStorage.removeItem('abdl_token');
+                localStorage.removeItem('abdl_user');
+                alert('账户已删除');
+                window.location.href = '/';
+              } catch (e) {
+                alert('删除失败: ' + e.message);
+              }
+            }}
+          >
+            <i className="fa-solid fa-trash" /> 删除我的账户
+          </button>
+        </div>
+        )}
       </div>
     </div>
   );
