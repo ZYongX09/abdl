@@ -944,12 +944,42 @@ select.form-control {
   background: rgba(28,30,36,0.08);
   filter: brightness(0.85);
 }
-.glass-enabled .btn-outline {
-  background: rgba(255,255,255,0.04);
+.glass-enabled .btn-outline,
+.glass-enabled .btn-primary,
+.glass-enabled .btn-accent,
+.glass-enabled .btn-danger {
   backdrop-filter: blur(4px) saturate(150%) brightness(0.92);
   -webkit-backdrop-filter: blur(4px) saturate(150%) brightness(0.92);
-  box-shadow: inset 2px -2px 1px -1px rgba(255,255,255,0.6), inset -2px 2px 1px -1px rgba(255,255,255,0.6), inset 0 0 1px rgba(0,0,0,0.5);
-  filter: brightness(0.9);
+  box-shadow:
+    inset 2px -2px 1px -1px rgba(255,255,255,0.5),
+    inset -2px 2px 1px -1px rgba(255,255,255,0.5),
+    inset 0 0 2px rgba(0,0,0,0.4),
+    0 2px 6px rgba(0,0,0,0.1);
+  border: 1px solid rgba(51,51,51,0.08);
+}
+.glass-enabled .btn-outline {
+  background: rgba(255,255,255,0.05);
+}
+.glass-enabled .btn-primary {
+  background: rgba(168,216,240,0.25);
+}
+.glass-enabled .btn-accent {
+  background: rgba(255,183,197,0.25);
+}
+.glass-enabled .btn-danger {
+  background: rgba(232,131,124,0.2);
+}
+.glass-enabled[data-theme="dark"] .btn-outline {
+  background: rgba(28,30,36,0.12);
+}
+.glass-enabled[data-theme="dark"] .btn-primary {
+  background: rgba(126,184,212,0.2);
+}
+.glass-enabled[data-theme="dark"] .btn-accent {
+  background: rgba(245,152,158,0.2);
+}
+.glass-enabled[data-theme="dark"] .btn-danger {
+  background: rgba(211,95,90,0.18);
 }
 .glass-enabled .theme-toggle-float,
 .glass-enabled .back-to-top,
@@ -992,7 +1022,9 @@ select.form-control {
 /* 过渡 */
 .glass-enabled .card,.glass-enabled .diaper-card,.glass-enabled .rank-item,
 .glass-enabled .modal,.glass-enabled .sidebar-desktop,.glass-enabled .sidebar-mobile,
-.glass-enabled .hero-card,.glass-enabled .form-control,.glass-enabled .btn-outline,
+.glass-enabled .hero-card,.glass-enabled .form-control,
+.glass-enabled .btn-outline,.glass-enabled .btn-primary,
+.glass-enabled .btn-accent,.glass-enabled .btn-danger,
 .glass-enabled .tag,.glass-enabled .toast,.glass-enabled .alert,.glass-enabled .empty-state {
   transition: background 0.4s ease, backdrop-filter 0.4s ease, -webkit-backdrop-filter 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease;
 }
