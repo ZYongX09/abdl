@@ -834,21 +834,33 @@ select.form-control {
   .theme-toggle-float { top: auto; bottom: 80px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
 }
 
-/* ====== 侧边栏文本不可选中（防止点击高亮） ====== */
-.sidebar-desktop a, .sidebar-desktop button, .sidebar-desktop nav span,
-.sidebar-desktop *, .sidebar-mobile a, .sidebar-mobile button, .sidebar-mobile nav span,
-.sidebar-mobile * {
-  -webkit-tap-highlight-color: transparent !important;
-}
-.sidebar-desktop a, .sidebar-desktop button,
-.sidebar-mobile a, .sidebar-mobile button {
-  user-select: none;
-  -webkit-user-select: none;
-}
-/* 移除选中文字时的背景色 */
-.sidebar-desktop a::selection, .sidebar-desktop span::selection,
-.sidebar-mobile a::selection, .sidebar-mobile span::selection {
+/* ====== 侧边栏链接（纯CSS，无inline style冲突） ====== */
+.sidebar-link {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 20px; margin: 1px 8px; border-radius: 28px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 500;
+  font-size: 0.95rem;
   background: transparent;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none;
+}
+.sidebar-link:hover {
+  background: var(--primary-light);
+}
+.sidebar-link.active {
+  background: var(--primary);
+  color: white;
+  font-weight: 700;
+}
+.sidebar-link.active:hover {
+  background: var(--primary);
+}
+.sidebar-link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
 }
 
 /* ====== 禁用按钮颜色增强（防止看起来像不可点击） ====== */

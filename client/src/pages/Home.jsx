@@ -265,7 +265,7 @@ export default function Home() {
                       <div className="brand">TOP {i + 1}</div>
                       <div className="model">{d.brand} {d.model}</div>
                       <div className="meta">
-                        <span className="score-badge"><i className="fa-solid fa-star" style={{ color: 'var(--warning)' }} /> {d.composite_score || Number(d.avg_score).toFixed(1)}</span>
+                        <span className="score-badge"><i className="fa-solid fa-star" style={{ color: 'var(--warning)' }} /> {Number(d.avg_score||0).toFixed(1)}</span>
                         <span>{d.sizes?.[0]?.label || ''}码</span>
                       </div>
                     </div>

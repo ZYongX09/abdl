@@ -201,7 +201,7 @@ export const ratingsAPI = {
 export const rankingsAPI = {
   hot: async () => {
     const { diapers } = await diapersAPI.list({ limit: 100 });
-    const ranked = diapers.filter(d => d.rating_count > 0).sort((a,b) => b.avg_score - a.avg_score);
+    const ranked = [...diapers].sort((a,b) => b.avg_score - a.avg_score);
     return { rankings: ranked.slice(0, 20), cached: true };
   },
   absorbency: async () => {
@@ -212,12 +212,12 @@ export const rankingsAPI = {
   },
   popular: async () => {
     const { diapers } = await diapersAPI.list({ limit: 100 });
-    const ranked = diapers.sort((a,b) => b.rating_count - a.rating_count);
+    const ranked = [...diapers].sort((a,b) => b.rating_count - a.rating_count);
     return { rankings: ranked.slice(0,20), cached: true };
   },
   dimension: async (dim) => {
     const { diapers } = await diapersAPI.list({ limit: 100 });
-    const ranked = diapers.filter(d => d.rating_count > 0).sort((a,b) => {
+    const ranked = [...diapers].sort((a,b) => {
       const ratings = LS.get('ratings') || {};
       const avg = (id) => { const r = Object.values(ratings).filter(x => x.diaper_id === id).map(x => x[dim]).filter(v=>v!=null); return r.length ? r.reduce((a,b)=>a+b,0)/r.length : 0; };
       return avg(b.id) - avg(a.id);

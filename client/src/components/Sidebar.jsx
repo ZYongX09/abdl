@@ -110,18 +110,7 @@ export default function Sidebar() {
       <nav style={{ flex: 1 }}>
         {links.map(l => (
           <Link key={l.path} to={l.path} onClick={closeMobile}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 12,
-              padding: '11px 20px', margin: '1px 8px', borderRadius: 28,
-              textDecoration: 'none',
-              color: isActive(l.path) ? 'white' : 'var(--text)',
-              fontWeight: isActive(l.path) ? 700 : 500,
-              fontSize: '0.95rem',
-              background: isActive(l.path) ? 'var(--primary)' : 'transparent',
-              transition: 'all 0.15s',
-            }}
-            onMouseOver={e => { if (!isActive(l.path)) e.target.style.background = 'var(--primary-light)'; }}
-            onMouseOut={e => { if (!isActive(l.path)) e.target.style.background = 'transparent'; }}
+            className={isActive(l.path) ? 'sidebar-link active' : 'sidebar-link'}
           >
             <i className={l.icon} style={{ fontSize: '1.15rem', width: 24, textAlign: 'center' }} />
             <span>{l.label}</span>
