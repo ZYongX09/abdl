@@ -308,6 +308,9 @@ div:focus-visible, span:focus-visible, main:focus-visible, section:focus-visible
 .btn-danger { background: var(--danger); color: white; }
 .btn-danger:hover { opacity: 0.9; transform: translateY(-1px); }
 .btn-sm { padding: 6px 16px; font-size: 0.85rem; }
+.btn-copied { background: var(--success); color: white; border: 2px solid var(--success); animation: bounceIn 0.3s ease-out; }
+.btn-copied:hover { background: var(--success); opacity: 0.9; transform: translateY(-1px); }
+[data-theme="dark"] .btn-copied { background: var(--success); color: white; }
 .btn:active { transform: scale(0.97); }
 .btn:disabled, .btn[disabled] {
   opacity: 0.55; cursor: not-allowed;

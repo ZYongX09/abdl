@@ -15,11 +15,17 @@ export default function TermWiki() {
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({ term: '', abbreviation: '', definition: '', category: '', related_terms: '' });
   const [msg, setMsg] = useState('');
+  const [copiedId, setCopiedId] = useState(null);
 
   useEffect(() => {
     loadTerms();
     termWikiAPI.categories().then(d => setCategories(d.categories)).catch(() => {});
   }, []);
+
+  // Auto-search when category changes
+  useEffect(() => {
+    loadTerms();
+  }, [category]);
 
   const loadTerms = () => {
     setLoading(true);
@@ -84,7 +90,7 @@ export default function TermWiki() {
       <div className="search-bar">
         <input className="form-control" placeholder="搜索术语..." value={search}
           onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearch()} />
-        <select className="form-control" value={category} onChange={e => { setCategory(e.target.value); }}>
+        <select className="form-control" value={category} onChange={e => setCategory(e.target.value)}>
           <option value="">全部分类</option>
           {[...new Set([...categories, ...openCategories()])].map(c => <option key={c} value={c}>{c}</option>)}
         </select>
@@ -129,8 +135,8 @@ export default function TermWiki() {
       ) : (
         <div>
           <p style={{ color: 'var(--text-muted)', marginBottom: 16 }}>共 {terms.length} 个术语</p>
-          {terms.map(t => (
-            <div key={t.id} className="card" style={{ marginBottom: 12 }}>
+          {terms.map((t, i) => (
+            <div key={t.id} className="card stagger-item" style={{ marginBottom: 12, animationDelay: `${i * 0.05}s` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
                   <h3 style={{ margin: 0 }}>
@@ -159,14 +165,17 @@ export default function TermWiki() {
               )}
               <div style={{ marginTop: 8 }}>
                 <button
-                  className="btn btn-outline btn-sm"
+                  className={`btn btn-sm ${copiedId === t.id ? 'btn-copied' : 'btn-outline'}`}
                   onClick={() => {
                     const text = `${t.term}${t.abbreviation ? ` (${t.abbreviation})` : ''}: ${t.definition}`;
-                    navigator.clipboard?.writeText(text).then(() => addToast('术语已复制到剪贴板', 'success', 2000)).catch(() => {});
+                    navigator.clipboard?.writeText(text).then(() => {
+                      setCopiedId(t.id);
+                      setTimeout(() => setCopiedId(null), 2000);
+                    }).catch(() => {});
                   }}
                   title="复制术语定义" aria-label={`复制 ${t.term} 定义`}
                 >
-                  <i className="fa-regular fa-copy" /> 复制
+                  {copiedId === t.id ? <><i className="fa-solid fa-check" /> 已复制</> : <><i className="fa-regular fa-copy" /> 复制</>}
                 </button>
               </div>
             </div>
