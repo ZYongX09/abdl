@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { getRecommendStream } from '../api';
@@ -104,7 +105,7 @@ export default function Recommendations() {
   return (
     <div style={{ maxWidth: 720, margin: '0 auto' }}>
       {/* Permission Modal */}
-      {showPermission && (
+      {showPermission && createPortal(
         <div className="modal-overlay" onClick={() => setShowPermission(false)}>
           <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 520 }}>
             <h2 style={{ marginBottom: 8 }}><i className="fa-solid fa-shield-halved" style={{ color: 'var(--primary-dark)' }} /> 数据隐私说明</h2>
@@ -159,7 +160,8 @@ export default function Recommendations() {
               </p>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <div className="hero-card" style={{ textAlign: 'center' }}>
