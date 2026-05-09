@@ -23,8 +23,17 @@ export default function PostDetail() {
   const [replyTo, setReplyTo] = useState(null);
   const [commentImage, setCommentImage] = useState(null);
   const [commentImagePreview, setCommentImagePreview] = useState(null);
+  const [lightboxSrc, setLightboxSrc] = useState(null);
 
   useEffect(() => { loadPost(); }, [id]);
+
+  // Close lightbox on Escape
+  useEffect(() => {
+    if (!lightboxSrc) return;
+    const onKey = (e) => { if (e.key === 'Escape') setLightboxSrc(null); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [lightboxSrc]);
 
   const loadPost = async () => {
     setLoading(true);
@@ -107,7 +116,7 @@ export default function PostDetail() {
             </p>
             {post.images?.length > 0 && (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 6, marginBottom: 12 }}>
-                {post.images.map((img,i) => <img key={i} src={img.image_url} alt="" style={{ width:'100%', borderRadius:8 }} />)}
+                {post.images.map((img,i) => <img key={i} src={img.image_url} alt="" style={{ width:'100%', borderRadius:8, cursor:'pointer' }} onClick={() => setLightboxSrc(img.image_url)} />)}
               </div>
             )}
             <div style={{ display: 'flex', gap: 24, borderTop: '1px solid var(--border)', paddingTop: 12 }}>
@@ -186,7 +195,7 @@ export default function PostDetail() {
               </div>
               <p style={{ margin: '4px 0', fontSize: '0.95rem' }}>{c.content}</p>
               {c.image_url && (
-                <img src={c.image_url} alt="评论图片" style={{ maxWidth: 200, maxHeight: 200, borderRadius: 8, marginTop: 6, border: '1px solid var(--border)', objectFit: 'cover' }} />
+                <img src={c.image_url} alt="评论图片" style={{ maxWidth: 200, maxHeight: 200, borderRadius: 8, marginTop: 6, border: '1px solid var(--border)', objectFit: 'cover', cursor: 'pointer' }} onClick={() => setLightboxSrc(c.image_url)} />
               )}
               <div style={{ display: 'flex', gap: 16, fontSize: '0.85rem' }}>
                 <button onClick={() => handleLike('comment', c.id)}
@@ -209,7 +218,7 @@ export default function PostDetail() {
                   </div>
                   <p style={{ margin: '2px 0', fontSize: '0.9rem' }}>{sub.content}</p>
                   {sub.image_url && (
-                    <img src={sub.image_url} alt="评论图片" style={{ maxWidth: 160, maxHeight: 160, borderRadius: 8, marginTop: 4, border: '1px solid var(--border)', objectFit: 'cover' }} />
+                    <img src={sub.image_url} alt="评论图片" style={{ maxWidth: 160, maxHeight: 160, borderRadius: 8, marginTop: 4, border: '1px solid var(--border)', objectFit: 'cover', cursor: 'pointer' }} onClick={() => setLightboxSrc(sub.image_url)} />
                   )}
                 </div>
               ))}
@@ -217,6 +226,18 @@ export default function PostDetail() {
           </div>
         </div>
       ))}
+
+      {/* 图片灯箱 */}
+      {lightboxSrc && (
+        <>
+          <div className="lightbox-overlay" onClick={() => setLightboxSrc(null)}>
+            <img src={lightboxSrc} alt="查看大图" onClick={e => e.stopPropagation()} />
+          </div>
+          <button className="lightbox-close" onClick={() => setLightboxSrc(null)} aria-label="关闭灯箱">
+            <i className="fa-solid fa-xmark" />
+          </button>
+        </>
+      )}
     </div>
   );
 }

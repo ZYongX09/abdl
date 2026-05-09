@@ -1,5 +1,21 @@
 # ABDL Space 更新日志
 
+## v5.1.6 — 2026-05-09
+
+### ✨ 新功能
+- **图片灯箱**：帖子图片、评论图片、子评论图片均可点击放大查看，支持 Escape 键关闭
+- **灯箱动画**：半透明模糊遮罩层 + 居中缩放动画，右上角圆形关闭按钮 hover 放大
+
+### 🎨 UI/UX 优化
+- **交错入场动画**：论坛帖子列表、首页纸尿裤卡片、排行榜列表加载时逐个滑入（stagger fadeInUp）
+- **个人中心选项卡指示器**：Tab 下划线平滑跟随当前选中项移动，动画过渡流畅
+- **深色模式 placeholder**：输入框占位符颜色加深，提升深色主题下的可读性
+
+### 📝 重构
+- `Profile.jsx` — 选项卡重构为 `PROFILE_TABS` 配置数组 + ref-based 指示器定位
+- `PostDetail.jsx` — 新增 lightbox 状态管理 + Escape 键监听
+- `App.css` — 新增 `.stagger-item`、`.lightbox-overlay`、`.lightbox-close` 样式
+
 ## v5.1.5 — 2026-05-09
 
 ### ✨ 新功能

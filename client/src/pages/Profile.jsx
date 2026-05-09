@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { authAPI, ratingsAPI, feelingsAPI } from '../api';
 
+const PROFILE_TABS = [
+  { key: 'profile', icon: 'fa-address-card', label: '个人资料' },
+  { key: 'reviews', icon: 'fa-regular fa-comment-dots', label: '我的评价' },
+  { key: 'feelings', icon: 'fa-solid fa-heart', label: '使用感受' },
+];
+
 const FEELING_LABELS = {
   looseness: '宽松度', softness: '柔软度', dryness: '干爽度',
   odor_control: '气味控制', quietness: '声音大小',
@@ -19,6 +25,8 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState('profile');
   const [avatarUploading, setAvatarUploading] = useState(false);
   const fileRef = useRef(null);
+  const tabRefs = useRef({});
+  const [tabIndicatorStyle, setTabIndicatorStyle] = useState({ left: 0, width: 0 });
 
   useEffect(() => {
     if (user) {
@@ -52,6 +60,17 @@ export default function Profile() {
       }
     }
   }, [user]);
+
+  // Update tab indicator position when tab changes
+  useEffect(() => {
+    const el = tabRefs.current[activeTab];
+    if (el) {
+      const parent = el.parentElement;
+      const pRect = parent.getBoundingClientRect();
+      const eRect = el.getBoundingClientRect();
+      setTabIndicatorStyle({ left: eRect.left - pRect.left, width: eRect.width });
+    }
+  }, [activeTab, myReviews.length, myFeelings.length]);
 
   if (!user) {
     return (
@@ -158,19 +177,19 @@ export default function Profile() {
           )}
         </div>
 
-        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 20, flexWrap: 'wrap' }}>
-          <button className={`btn ${activeTab === 'profile' ? 'btn-primary' : 'btn-outline'} btn-sm`}
-            onClick={() => setActiveTab('profile')}>
-            <i className="fa-solid fa-address-card" /> 个人资料
-          </button>
-          <button className={`btn ${activeTab === 'reviews' ? 'btn-primary' : 'btn-outline'} btn-sm`}
-            onClick={() => setActiveTab('reviews')}>
-            <i className="fa-regular fa-comment-dots" /> 我的评价 ({myReviews.length})
-          </button>
-          <button className={`btn ${activeTab === 'feelings' ? 'btn-primary' : 'btn-outline'} btn-sm`}
-            onClick={() => setActiveTab('feelings')}>
-            <i className="fa-solid fa-heart" /> 使用感受 ({myFeelings.length})
-          </button>
+        <div style={{ position: 'relative', display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 20, flexWrap: 'wrap', paddingBottom: 4 }}>
+          {PROFILE_TABS.map(t => (
+            <button key={t.key}
+              ref={el => tabRefs.current[t.key] = el}
+              className={`btn tab-btn ${activeTab === t.key ? 'btn-primary' : 'btn-outline'} btn-sm`}
+              style={{ position: 'relative', zIndex: 1 }}
+              onClick={() => setActiveTab(t.key)}>
+              <i className={`fa-solid ${t.icon}`} /> {t.label}
+              {t.key === 'reviews' && ` (${myReviews.length})`}
+              {t.key === 'feelings' && ` (${myFeelings.length})`}
+            </button>
+          ))}
+          <div className="tab-indicator" style={{ left: tabIndicatorStyle.left, width: tabIndicatorStyle.width }} />
         </div>
 
         {activeTab === 'profile' && (

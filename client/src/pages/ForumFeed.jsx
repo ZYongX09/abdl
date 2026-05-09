@@ -141,8 +141,8 @@ export default function ForumFeed() {
           <p>{search ? '试试换个关键词搜索' : '成为第一个发帖的人吧'}</p>
         </div>
       ) : (
-        posts.map(p => (
-          <div key={p.id} className="card" style={{ marginBottom: 12 }}>
+        posts.map((p, i) => (
+          <div key={p.id} className="card stagger-item" style={{ marginBottom: 12, animationDelay: `${i * 0.05}s` }}>
             <div style={{ display: 'flex', gap: 12 }}>
               <div className="post-avatar">
                 <i className="fa-solid fa-user-astronaut" />

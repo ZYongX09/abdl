@@ -81,7 +81,7 @@ export default function Rankings() {
       ) : (
         rankings.map((item, i) => (
           <Link to={`/diaper/${item.id}`} key={item.id} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div className="rank-item">
+            <div className="rank-item stagger-item" style={{ animationDelay: `${i * 0.06}s` }}>
               <div className={`rank-number ${i===0?'top1':i===1?'top2':i===2?'top3':''}`}>
                 {i < 3 ? <i className={`fa-solid ${MEDALS[i]}`} style={{ color: MEDAL_COLORS[i], fontSize: '1.6rem' }} /> : `#${i+1}`}
               </div>

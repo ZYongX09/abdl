@@ -182,8 +182,8 @@ export default function Home() {
 
           <h3 style={{ marginBottom: 12 }}><i className="fa-solid fa-box" /> 全部纸尿裤 ({diapers.length})</h3>
           <div className="diaper-grid">
-            {diapers.map(d => (
-              <Link to={`/diaper/${d.id}`} key={d.id} className="diaper-card">
+            {diapers.map((d, i) => (
+              <Link to={`/diaper/${d.id}`} key={d.id} className="diaper-card stagger-item" style={{ animationDelay: `${i * 0.04}s` }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <div className="brand">{d.brand}</div>
                   {d.is_baby_diaper === 1 && (
