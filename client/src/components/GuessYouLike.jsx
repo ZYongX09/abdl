@@ -18,10 +18,10 @@ export default function GuessYouLike() {
       <h3 style={{ marginBottom: 12 }}>
         <i className="fa-solid fa-lightbulb" style={{ color: 'var(--warning)' }} /> 猜你喜欢 · 为你甄选
       </h3>
-      <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8 }}>
+      <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8, alignItems: 'stretch' }}>
         {items.map(d => (
-          <Link to={`/diaper/${d.id}`} key={d.id} style={{ textDecoration: 'none', color: 'inherit', minWidth: 200, maxWidth: 220 }}>
-            <div className="diaper-card" style={{ padding: 14 }}>
+          <Link to={`/diaper/${d.id}`} key={d.id} style={{ textDecoration: 'none', color: 'inherit', minWidth: 200, maxWidth: 220, flex: '0 0 auto' }}>
+            <div className="diaper-card" style={{ padding: 14, height: '100%', display: 'flex', flexDirection: 'column' }}>
               <div className="brand">{d.brand}</div>
               <div className="model" style={{ fontSize: '1rem' }}>{d.model}</div>
               <div className="meta" style={{ marginTop: 4 }}>

@@ -81,10 +81,10 @@ export default function Rankings() {
                 </div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                {tab==='hot' && <div className="score-badge"><i className="fa-solid fa-star" /> {item.composite_score}</div>}
+                {tab==='hot' && <div className="score-badge"><i className="fa-solid fa-star" /> {Number(item.avg_score||0).toFixed(1)}</div>}
                 {tab==='absorbency' && <div style={{ fontWeight: 700, color: 'var(--primary-dark)' }}>{item.absorbency_adult||item.absorbency_mfr}</div>}
                 {tab==='popular' && <div style={{ fontWeight: 700, color: 'var(--accent-dark)' }}>{item.rating_count} 评价</div>}
-                {!['hot','absorbency','popular'].includes(tab) && item.dim_avg > 0 && <div className="score-badge">{item.dim_avg}</div>}
+                {!['hot','absorbency','popular'].includes(tab) && item.avg_score > 0 && <div className="score-badge">{Number(item.avg_score).toFixed(1)}</div>}
               </div>
             </div>
           </Link>

@@ -238,13 +238,18 @@ div:focus-visible, span:focus-visible, main:focus-visible, section:focus-visible
 .card {
   background: var(--bg-card);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
   padding: 24px;
   margin-bottom: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
-  animation: fadeInUp 0.35s ease-out;
+  border: 1px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  animation: fadeInUp 0.4s ease-out;
 }
-.card:hover { box-shadow: var(--shadow-hover); }
+.card:hover {
+  box-shadow: 0 4px 16px rgba(168,216,240,0.2), 0 2px 4px rgba(0,0,0,0.06);
+  border-color: rgba(168,216,240,0.3);
+  transform: translateY(-1px);
+}
 
 /* 骨架加载 */
 .skeleton {
@@ -261,10 +266,11 @@ div:focus-visible, span:focus-visible, main:focus-visible, section:focus-visible
 /* ====== 按钮 ====== */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 10px 24px; border-radius: 24px;
+  padding: 10px 24px; border-radius: 12px;
   font-size: 0.95rem; font-weight: 600; cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   border: none; text-decoration: none; font-family: var(--font);
+  position: relative; overflow: hidden;
 }
 .btn-primary { background: var(--primary); color: white; }
 .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(168,216,240,0.4); }
@@ -578,6 +584,8 @@ select.form-control {
   background: var(--hero-bg);
   border-radius: var(--radius); padding: 28px; margin-bottom: 20px;
   animation: fadeInUp 0.4s ease-out;
+  border: 1px solid rgba(168,216,240,0.15);
+  box-shadow: 0 2px 8px rgba(168,216,240,0.15);
 }
 
 /* ====== 评分进度条动画 ====== */
@@ -823,15 +831,24 @@ select.form-control {
   .messages-layout { flex-direction: column !important; height: auto !important; min-height: calc(100vh - 80px) !important; }
   .messages-sidebar { width: 100% !important; min-width: unset !important; max-height: 180px !important; border-right: none !important; border-bottom: 1px solid var(--border) !important; }
   /* 主题切换按钮避免遮挡 */
-  .theme-toggle-float { top: 8px; right: 12px; width: 36px; height: 36px; font-size: 1rem; }
+  .theme-toggle-float { top: auto; bottom: 80px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
 }
 
 /* ====== 侧边栏文本不可选中（防止点击高亮） ====== */
 .sidebar-desktop a, .sidebar-desktop button, .sidebar-desktop nav span,
-.sidebar-mobile a, .sidebar-mobile button, .sidebar-mobile nav span {
+.sidebar-desktop *, .sidebar-mobile a, .sidebar-mobile button, .sidebar-mobile nav span,
+.sidebar-mobile * {
+  -webkit-tap-highlight-color: transparent !important;
+}
+.sidebar-desktop a, .sidebar-desktop button,
+.sidebar-mobile a, .sidebar-mobile button {
   user-select: none;
   -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
+}
+/* 移除选中文字时的背景色 */
+.sidebar-desktop a::selection, .sidebar-desktop span::selection,
+.sidebar-mobile a::selection, .sidebar-mobile span::selection {
+  background: transparent;
 }
 
 /* ====== 禁用按钮颜色增强（防止看起来像不可点击） ====== */
@@ -853,4 +870,96 @@ select.form-control {
 }
 [data-theme="dark"] .btn-accent:disabled {
   background: #6A4048;
+}
+
+/* ====== 现代化增强动画 ====== */
+/* 页面切换过渡 */
+@keyframes pageSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-enter { animation: pageSlideIn 0.35s ease-out; }
+
+/* 交错入场 */
+@keyframes staggerFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.stagger-item {
+  opacity: 0;
+  animation: staggerFadeIn 0.4s ease-out forwards;
+}
+
+/* 卡片悬停微升 */
+.diaper-card {
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+/* 平滑缩放反馈 */
+@keyframes tapFeedback {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+.btn:active, .diaper-card:active, .rank-item:active {
+  animation: tapFeedback 0.2s ease;
+}
+
+/* 骨架屏改进 */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+/* 空状态增强 */
+.empty-state .icon {
+  animation: floatUpDown 3s ease-in-out infinite;
+}
+
+/* 通知铃铛动画 */
+@keyframes bellShake {
+  0%, 100% { transform: rotate(0); }
+  10%, 50%, 90% { transform: rotate(-10deg); }
+  30%, 70% { transform: rotate(10deg); }
+}
+.notif-badge {
+  animation: pulse 2s infinite;
+}
+
+/* 输入框聚焦增强 */
+.form-control:focus {
+  box-shadow: 0 0 0 3px rgba(168,216,240,0.25);
+}
+
+/* 标签微交互 */
+.tag {
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+.tag:hover {
+  transform: translateY(-1px);
+}
+
+/* 移动端优化额外规则 */
+@media (max-width: 768px) {
+  .card { padding: 16px; border-radius: 12px; }
+  .hero-card { padding: 20px; }
+  .diaper-grid { gap: 10px; }
+  h2 { font-size: 1.3rem; }
+  h3 { font-size: 1.1rem; }
+  /* 增大触控区域 */
+  .rank-item { padding: 14px 12px; }
+  /* 水平滚动提示 */
+  [style*="overflow-x: auto"] {
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+  /* 确保容器不溢出 */
+  .container { max-width: 100% !important; overflow-x: hidden; }
 }
