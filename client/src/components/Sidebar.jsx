@@ -141,14 +141,7 @@ export default function Sidebar() {
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>@{user.username}</div>
               </div>
             </Link>
-            <button onClick={() => { logout(); navigate('/'); closeMobile(); }} style={{
-              width: '100%', padding: '8px', borderRadius: 20, border: '1px solid var(--border)',
-              background: 'transparent', cursor: 'pointer', fontSize: '0.85rem', color: 'var(--text-muted)',
-              transition: 'background 0.15s'
-            }}
-              onMouseOver={e => e.target.style.background = 'var(--input-bg)'}
-              onMouseOut={e => e.target.style.background = 'transparent'}
-            >
+            <button className="sidebar-logout-btn" onClick={() => { logout(); navigate('/'); closeMobile(); }}>
               <i className="fa-solid fa-right-from-bracket" style={{ marginRight: 6 }} />
               退出登录
             </button>

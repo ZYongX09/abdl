@@ -1150,6 +1150,44 @@ select.form-control {
   box-shadow: 0 0 0 3px rgba(168,216,240,0.25);
 }
 
+/* ====== 头像悬停遮罩 ====== */
+.avatar-container {
+  position: relative;
+  overflow: hidden;
+}
+.avatar-hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.avatar-container:hover .avatar-hover-overlay {
+  opacity: 1;
+}
+
+/* ====== 侧边栏退出按钮 ====== */
+.sidebar-logout-btn {
+  width: 100%;
+  padding: 8px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: var(--font);
+  color: var(--text-muted);
+  transition: background 0.15s ease;
+}
+.sidebar-logout-btn:hover {
+  background: var(--input-bg);
+}
+
 /* 标签微交互 */
 .tag {
   transition: transform 0.15s ease, background 0.2s ease;

@@ -128,12 +128,12 @@ export default function Profile() {
     <div style={{ maxWidth: 700, margin: '0 auto' }}>
       <div className="card">
         <div style={{ textAlign: 'center', marginBottom: 16 }}>
-          <div onClick={handleAvatarClick} style={{
+          <div className="avatar-container" onClick={handleAvatarClick} style={{
             width: 88, height: 88, borderRadius: '50%', margin: '0 auto 12px',
             background: user.avatar ? 'transparent' : 'var(--primary-light)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '2.5rem', cursor: editing ? 'pointer' : 'default',
-            overflow: 'hidden', position: 'relative',
+            overflow: 'hidden',
             border: editing ? '3px dashed var(--primary)' : '3px solid var(--primary-light)',
             transition: 'all 0.3s',
           }} title={editing ? '点击更换头像' : ''}>
@@ -145,15 +145,7 @@ export default function Profile() {
               <i className="fa-solid fa-baby" style={{ fontSize: '2rem' }} />
             )}
             {editing && (
-              <div style={{
-                position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.3)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                opacity: 0, transition: 'opacity 0.2s', borderRadius: '50%',
-              }}
-                className="avatar-hover-overlay"
-                onMouseOver={e => e.target.style.opacity = '1'}
-                onMouseOut={e => e.target.style.opacity = '0'}
-              >
+              <div className="avatar-hover-overlay">
                 <i className="fa-solid fa-camera" style={{ color: 'white', fontSize: '1.3rem' }} />
               </div>
             )}
