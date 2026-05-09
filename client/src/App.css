@@ -860,10 +860,14 @@ select.form-control {
     inset 0 0 3px rgba(0,0,0,0.5),
     0 4px 12px rgba(0,0,0,0.12);
   filter: brightness(0.92);
+  background-position: calc(--glass-light-x * 0.003) calc(--glass-light-y * 0.003);
+}
+
+/* 弹窗单独设置滚动 */
+.glass-enabled .modal {
   max-height: 85vh;
   overflow-y: auto;
   overscroll-behavior: contain;
-  background-position: calc(--glass-light-x * 0.003) calc(--glass-light-y * 0.003);
 }
 
 /* 玻璃边缘折射暗光晕 — ::before 暗边 */
