@@ -18,9 +18,11 @@ export default function PostDetail() {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const MAX_COMMENT_LEN = 500;
   const [commentText, setCommentText] = useState('');
   const [replyTo, setReplyTo] = useState(null);
   const [commentImage, setCommentImage] = useState(null);
+  const [commentImagePreview, setCommentImagePreview] = useState(null);
 
   useEffect(() => { loadPost(); }, [id]);
 
@@ -38,10 +40,24 @@ export default function PostDetail() {
   const handleComment = async () => {
     if (!commentText.trim()) return;
     try {
-      await forumAPI.comment(id, { content: commentText, parent_id: replyTo });
-      setCommentText(''); setReplyTo(null);
+      await forumAPI.comment(id, { content: commentText, parent_id: replyTo, image_url: commentImagePreview || null });
+      setCommentText(''); setReplyTo(null); setCommentImage(null); setCommentImagePreview(null);
       loadPost();
     } catch(e) { alert(e.message); }
+  };
+
+  const handleCommentImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) { setCommentImage(null); setCommentImagePreview(null); return; }
+    setCommentImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setCommentImagePreview(reader.result);
+    reader.readAsDataURL(file);
+  };
+
+  const clearCommentImage = () => {
+    setCommentImage(null);
+    setCommentImagePreview(null);
   };
 
   if (loading) return <div className="loading-spinner"><div className="spinner" /><span>加载中</span></div>;
@@ -116,9 +132,28 @@ export default function PostDetail() {
               <button className="btn btn-outline btn-sm" style={{ marginLeft: 8 }} onClick={() => setReplyTo(null)}>取消</button>
             </div>
           )}
-          <textarea className="form-control" rows={2} placeholder="写评论..." value={commentText} onChange={e=>setCommentText(e.target.value)} />
+          <textarea className="form-control" rows={2} placeholder="写评论..." value={commentText} onChange={e=>setCommentText(e.target.value)} maxLength={MAX_COMMENT_LEN} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', marginTop: 4 }}>
+            <span style={{ color: 'var(--text-muted)' }}>支持 Markdown</span>
+            <span style={{
+              color: commentText.length > MAX_COMMENT_LEN * 0.8 ? (commentText.length >= MAX_COMMENT_LEN ? 'var(--danger)' : 'var(--warning)') : 'var(--text-muted)'
+            }}>{commentText.length}/{MAX_COMMENT_LEN}</span>
+          </div>
+          {commentImagePreview && (
+            <div style={{ position: 'relative', display: 'inline-block', marginTop: 8 }}>
+              <img src={commentImagePreview} alt="预览" style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border)' }} />
+              <button onClick={clearCommentImage} style={{
+                position: 'absolute', top: -6, right: -6, width: 22, height: 22, borderRadius: '50%',
+                background: 'var(--danger)', color: '#fff', border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', padding: 0
+              }} title="移除图片" aria-label="移除图片">×</button>
+            </div>
+          )}
           <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center' }}>
-            <input type="file" accept="image/*" onChange={e=>setCommentImage(e.target.files[0])} style={{ fontSize: '0.85rem' }} />
+            <label className="btn btn-outline btn-sm" style={{ cursor: 'pointer', margin: 0 }}>
+              <i className="fa-solid fa-image" /> 图片
+              <input type="file" accept="image/*" onChange={handleCommentImageChange} style={{ display: 'none' }} />
+            </label>
             <button className="btn btn-primary btn-sm" onClick={handleComment} disabled={!commentText.trim()}>
               <i className="fa-solid fa-paper-plane" /> 评论
             </button>
@@ -150,6 +185,9 @@ export default function PostDetail() {
                 <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{timeAgo(c.created_at)}</span>
               </div>
               <p style={{ margin: '4px 0', fontSize: '0.95rem' }}>{c.content}</p>
+              {c.image_url && (
+                <img src={c.image_url} alt="评论图片" style={{ maxWidth: 200, maxHeight: 200, borderRadius: 8, marginTop: 6, border: '1px solid var(--border)', objectFit: 'cover' }} />
+              )}
               <div style={{ display: 'flex', gap: 16, fontSize: '0.85rem' }}>
                 <button onClick={() => handleLike('comment', c.id)}
                   style={{ background: 'none', border: 'none', cursor: 'pointer',
@@ -170,6 +208,9 @@ export default function PostDetail() {
                     <span style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>{timeAgo(sub.created_at)}</span>
                   </div>
                   <p style={{ margin: '2px 0', fontSize: '0.9rem' }}>{sub.content}</p>
+                  {sub.image_url && (
+                    <img src={sub.image_url} alt="评论图片" style={{ maxWidth: 160, maxHeight: 160, borderRadius: 8, marginTop: 4, border: '1px solid var(--border)', objectFit: 'cover' }} />
+                  )}
                 </div>
               ))}
             </div>

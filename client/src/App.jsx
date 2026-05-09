@@ -17,6 +17,7 @@ import TermWiki from './pages/TermWiki';
 import AdminPage from './pages/AdminPage';
 import ComparePage from './pages/ComparePage';
 import MessagesPage from './pages/MessagesPage';
+import UserPage from './pages/UserPage';
 
 function getInitialTheme() {
   const saved = localStorage.getItem('abdl_theme');
@@ -59,6 +60,7 @@ function getTitle(pathname) {
   if (ROUTE_TITLES[pathname]) return ROUTE_TITLES[pathname];
   if (pathname.startsWith('/diaper/')) return '纸尿裤详情 — ABDL Space';
   if (pathname.startsWith('/forum/')) return '帖子详情 — ABDL Space';
+  if (pathname.startsWith('/user/')) return '用户主页 — ABDL Space';
   return 'ABDL Space';
 }
 
@@ -116,6 +118,7 @@ export default function App() {
             <Route path="/rankings" element={<Rankings />} />
             <Route path="/recommend" element={<Recommendations />} />
             <Route path="/termwiki" element={<TermWiki />} />
+            <Route path="/user/:id" element={<UserPage />} />
             <Route path="/admin" element={<AdminPage />} />
           </Routes>
           </ErrorBoundary>

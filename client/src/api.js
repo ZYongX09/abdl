@@ -281,11 +281,11 @@ export const forumAPI = {
     LS.set('posts', posts);
     return { message: '已删除' };
   },
-  comment: (postId, { content, parent_id }) => {
+  comment: (postId, { content, parent_id, image_url }) => {
     const user = LS.get('currentUser');
     if (!user) throw new Error('请先登录');
     const comments = LS.get('comments') || {};
-    const c = { id: Date.now(), post_id: Number(postId), user_id: user.id, parent_id: parent_id||null, content, created_at: new Date().toISOString() };
+    const c = { id: Date.now(), post_id: Number(postId), user_id: user.id, parent_id: parent_id||null, content, image_url: image_url||null, created_at: new Date().toISOString() };
     comments[c.id] = c;
     LS.set('comments', comments);
     return { message: '评论成功' };
