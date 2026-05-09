@@ -25,6 +25,8 @@ export default function AdminPage() {
   const [editingTerm, setEditingTerm] = useState(null);
   const [editingWiki, setEditingWiki] = useState(null);
   const [msg, setMsg] = useState('');
+  const [aiSuggesting, setAiSuggesting] = useState(false);
+  const [aiResult, setAiResult] = useState(null);
   const [users, setUsers] = useState([]);
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState([]);
@@ -85,8 +87,37 @@ export default function AdminPage() {
         setMsg('saved');
       }
       resetDiaperForm();
+      setAiResult(null);
       loadData();
     } catch (e) { setMsg('error:' + e.message); }
+  };
+
+  const handleAIComplete = async () => {
+    if (!editingDiaper.brand || !editingDiaper.model) {
+      setMsg('error:请先填写品牌和型号');
+      return;
+    }
+    setAiSuggesting(true);
+    setMsg('');
+    setAiResult(null);
+    try {
+      const result = await adminAPI.aiCompleteDiaper(editingDiaper);
+      setAiResult(result);
+      setMsg('ai_done');
+      // Auto-apply suggestions to form
+      if (result.suggestions) {
+        const updates = {};
+        Object.entries(result.suggestions).forEach(([key, val]) => {
+          if (!editingDiaper[key] || editingDiaper[key] === '' || editingDiaper[key] === 0) {
+            updates[key] = val;
+          }
+        });
+        if (Object.keys(updates).length > 0) {
+          setEditingDiaper(prev => ({ ...prev, ...updates }));
+        }
+      }
+    } catch (e) { setMsg('error:' + e.message); }
+    finally { setAiSuggesting(false); }
   };
 
   const handleDeleteDiaper = async (id) => {
@@ -160,8 +191,8 @@ export default function AdminPage() {
       </div>
 
       {msg && (
-        <div className={`alert ${msg === 'saved' || msg.includes('已') ? 'alert-success' : 'alert-danger'}`}>
-          {msg === 'saved' ? '操作成功' : msg.replace('error:', '')}
+        <div className={`alert ${msg === 'saved' || msg === 'ai_done' || msg.includes('已') ? 'alert-success' : 'alert-danger'}`}>
+          {msg === 'saved' ? <><i className="fa-solid fa-circle-check" /> 操作成功</> : msg === 'ai_done' ? <><i className="fa-solid fa-robot" /> AI 分析完成，建议已自动填入</> : msg.replace('error:', '')}
         </div>
       )}
 
@@ -205,12 +236,43 @@ export default function AdminPage() {
                   </label>
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
+              <div style={{ display: 'flex', gap: 12, marginTop: 12, flexWrap: 'wrap' }}>
                 <button className="btn btn-primary" onClick={handleSaveDiaper}>
                   <i className="fa-solid fa-floppy-disk" /> 保存
                 </button>
+                <button className="btn btn-accent" onClick={handleAIComplete} disabled={aiSuggesting}>
+                  {aiSuggesting ? <><i className="fa-solid fa-spinner fa-spin" /> AI 分析中...</> : <><i className="fa-solid fa-robot" /> AI 补全数据</>}
+                </button>
                 <button className="btn btn-outline" onClick={resetDiaperForm}>取消</button>
               </div>
+              {aiResult && (
+                <div style={{ marginTop: 16, padding: 16, borderRadius: 'var(--radius-sm)', background: 'var(--rating-bg)', border: '1px solid var(--border)' }}>
+                  <h4 style={{ marginBottom: 8 }}><i className="fa-solid fa-robot" /> AI 建议</h4>
+                  {aiResult.summary && <p style={{ fontSize: '0.85rem', color: 'var(--primary-dark)', marginBottom: 8 }}>{aiResult.summary}</p>}
+                  {aiResult.suggestions && Object.keys(aiResult.suggestions).length > 0 && (
+                    <div style={{ marginBottom: 8 }}>
+                      <strong style={{ fontSize: '0.85rem' }}>补全建议：</strong>
+                      <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 4 }}>
+                        {Object.entries(aiResult.suggestions).map(([key, val]) => (
+                          <span key={key} className="tag" style={{ background: '#E8F8E8', color: '#2E7D32', fontSize: '0.78rem' }}>
+                            {key}: {typeof val === 'string' ? val : JSON.stringify(val)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {aiResult.verification && aiResult.verification.length > 0 && (
+                    <div>
+                      <strong style={{ fontSize: '0.85rem', color: 'var(--danger)' }}>
+                        <i className="fa-solid fa-triangle-exclamation" /> 数据核验提醒：
+                      </strong>
+                      <ul style={{ margin: '4px 0 0 16px', fontSize: '0.82rem', color: 'var(--text-light)' }}>
+                        {aiResult.verification.map((v, i) => <li key={i}>{v}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 

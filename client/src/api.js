@@ -592,6 +592,38 @@ export const adminAPI = {
   deletePost: (id) => { let p = LS.get('posts')||[]; p = p.filter(x => x.id !== id); LS.set('posts', p); return { message: '已删除' }; },
   comments: () => ({ comments: [] }),
   deleteComment: () => ({ message: '已删除' }),
+  aiCompleteDiaper: async (diaperData) => {
+    const key = import.meta.env.VITE_DEEPSEEK_KEY;
+    if (!key) throw new Error('API key 未配置');
+    
+    const prompt = `你是一个纸尿裤产品数据库专家。请根据以下纸尿裤的部分信息，补全缺失的字段并验证已有数据的一致性。
+
+当前数据：
+${JSON.stringify(diaperData, null, 2)}
+
+参考数据库中已有的纸尿裤数据：
+${JSON.stringify(_diapers?.map(d => ({ brand: d.brand, model: d.model, product_type: d.product_type, thickness: d.thickness, absorbency_adult: d.absorbency_adult, avg_price: d.avg_price, material: d.material, features: d.features, sizes: d.sizes })), null, 2)}
+
+请以JSON格式返回，包含：
+1. suggestions: 建议补全的字段（只返回确实缺失或明显错误的字段）
+2. verification: 数据一致性验证结果（列出任何不一致的地方）
+3. summary: 一句话总结
+
+格式：{"suggestions": {"字段名": "建议值"}, "verification": ["不一致描述"], "summary": "总结"}`;
+
+    const res = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+      body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'system', content: '你是一个纸尿裤数据库专家。只返回JSON，不要其他文字。' }, { role: 'user', content: prompt }], max_tokens: 2000, temperature: 0.3 }),
+    });
+    
+    if (!res.ok) throw new Error('AI 服务暂不可用');
+    const data = await res.json();
+    const content = data.choices?.[0]?.message?.content || '';
+    const match = content.match(/\{[\s\S]*\}/);
+    if (match) return JSON.parse(match[0]);
+    throw new Error('AI 返回格式异常');
+  },
 };
 
 // ====== Wiki（占位，后续调用 B's API） ======

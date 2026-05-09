@@ -215,6 +215,24 @@ div:focus-visible, span:focus-visible, main:focus-visible, section:focus-visible
   width: 40px; height: 40px; border-radius: 50%; background: var(--bg-card);
   border: none; box-shadow: var(--shadow); font-size: 1.2rem; cursor: pointer; color: var(--text);
 }
+/* Desktop sidebar: inline flex item */
+.sidebar-desktop {
+  display: flex; flex-direction: column;
+  height: 100vh; position: sticky; top: 0;
+  background: var(--bg-sidebar); border-right: 1px solid var(--border);
+  padding: 16px 0; overflow-y: auto;
+}
+/* Mobile sidebar: fixed overlay, hidden off-screen by default */
+.sidebar-mobile {
+  display: none;
+  position: fixed; left: -280px; top: 0; bottom: 0; z-index: 200;
+  width: 280px; flex-direction: column;
+  background: var(--bg-sidebar); border-right: 1px solid var(--border);
+  padding: 16px 0; overflow-y: auto;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+}
+.sidebar-mobile.open { left: 0; }
 
 /* ====== 卡片 ====== */
 .card {
@@ -522,13 +540,10 @@ select.form-control {
 
 /* ====== 响应式布局 ====== */
 @media (max-width: 768px) {
+  /* Hide desktop sidebar, show mobile sidebar + toggle */
+  .sidebar-desktop { display: none; }
+  .sidebar-mobile { display: flex; }
   .sidebar-toggle { display: flex; align-items: center; justify-content: center; }
-  .sidebar {
-    position: fixed; left: -280px; top: 0; bottom: 0; z-index: 200;
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
-  }
-  .sidebar.open { left: 0; }
 
   .diaper-grid { grid-template-columns: 1fr; }
   .container { padding: 12px; }
@@ -812,7 +827,8 @@ select.form-control {
 }
 
 /* ====== 侧边栏文本不可选中（防止点击高亮） ====== */
-.sidebar a, .sidebar button, .sidebar nav span {
+.sidebar-desktop a, .sidebar-desktop button, .sidebar-desktop nav span,
+.sidebar-mobile a, .sidebar-mobile button, .sidebar-mobile nav span {
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;

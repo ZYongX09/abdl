@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-import { forumAPI } from '../api';
 
 function SearchBar({ onSearch }) {
   const [q, setQ] = useState('');
@@ -16,7 +15,7 @@ function SearchBar({ onSearch }) {
   };
 
   return (
-    <form onSubmit={handleSearch} style={{ position: 'relative', maxWidth: 300 }}>
+    <form onSubmit={handleSearch} style={{ position: 'relative' }}>
       <i className="fa-solid fa-magnifying-glass" style={{
         position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
         color: 'var(--text-muted)', fontSize: '0.85rem'
@@ -54,7 +53,7 @@ export default function Sidebar() {
     return () => document.body.classList.remove('sidebar-locked');
   }, [mobileOpen]);
 
-  // Close mobile sidebar on Escape key + focus trap
+  // Close on Escape & focus trap
   useEffect(() => {
     if (!mobileOpen) return;
     const sidebar = mobileSidebarRef.current;
@@ -78,21 +77,8 @@ export default function Sidebar() {
     return () => document.removeEventListener('keydown', onKey);
   }, [mobileOpen]);
 
-  const [notifCount, setNotifCount] = useState(0);
-
-  useEffect(() => {
-    if (!user) return;
-    let cancelled = false;
-    const load = async () => {
-      try {
-        const d = await forumAPI.notifications();
-        if (!cancelled) setNotifCount(d.unread_count || 0);
-      } catch {}
-    };
-    load();
-    const timer = setInterval(load, 60000);
-    return () => { cancelled = true; clearInterval(timer); };
-  }, [user]);
+  // Close on route change
+  useEffect(() => { closeMobile(); }, [location.pathname]);
 
   const links = [
     { path: '/', label: '论坛', icon: 'fa-regular fa-comments' },
@@ -100,10 +86,8 @@ export default function Sidebar() {
     { path: '/rankings', label: '排行榜', icon: 'fa-solid fa-trophy' },
     { path: '/recommend', label: 'AI推荐', icon: 'fa-solid fa-robot' },
     ...(user ? [
-      { path: '/messages', label: '私信', icon: 'fa-regular fa-envelope' },
-      { path: '/notifications', label: '通知', icon: 'fa-solid fa-bell', badge: notifCount },
+      { path: '/messages', label: '私信 & 通知', icon: 'fa-regular fa-envelope' },
     ] : []),
-    { path: '/compare', label: '对比工具', icon: 'fa-solid fa-chart-simple' },
     { path: '/termwiki', label: '术语百科', icon: 'fa-solid fa-book' },
     ...(user?.role === 'admin' ? [{ path: '/admin', label: '管理后台', icon: 'fa-solid fa-screwdriver-wrench' }] : []),
   ];
@@ -141,9 +125,6 @@ export default function Sidebar() {
           >
             <i className={l.icon} style={{ fontSize: '1.15rem', width: 24, textAlign: 'center' }} />
             <span>{l.label}</span>
-            {l.badge > 0 && (
-              <span className="notif-badge" style={{ marginLeft: 'auto' }}>{l.badge}</span>
-            )}
           </Link>
         ))}
       </nav>
@@ -157,12 +138,13 @@ export default function Sidebar() {
             }}>
               <div style={{
                 width: 36, height: 36, borderRadius: '50%', background: 'var(--primary-light)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem'
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', overflow: 'hidden'
               }}>
                 {user.avatar ? (
-                  <img src={user.avatar} alt={user.username} loading="lazy" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
-                ) : null}
-                <i className="fa-solid fa-user" style={{ display: user.avatar ? 'none' : 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                  <img src={user.avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <i className="fa-solid fa-user" />
+                )}
               </div>
               <div>
                 <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{user.username}</div>
@@ -193,21 +175,20 @@ export default function Sidebar() {
 
   return (
     <>
+      {/* Hamburger button - visible only on mobile */}
       <button className="sidebar-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label={mobileOpen ? '关闭菜单' : '打开菜单'}>
         <i className={`fa-solid ${mobileOpen ? 'fa-xmark' : 'fa-bars'}`} />
       </button>
-      <div className={`sidebar-overlay ${mobileOpen ? 'open' : ''}`} onClick={closeMobile} />
-      <div className="sidebar" style={{
-        display: 'flex', flexDirection: 'column',
-        height: '100vh', position: 'sticky', top: 0,
-        background: 'var(--bg-sidebar)', borderRight: '1px solid var(--border)',
-        padding: '16px 0', overflowY: 'auto'
-      }}>
-        <style>{`@media (min-width: 769px) { .sidebar { width: 240px; min-width: 240px; } }`}</style>
+
+      {/* Desktop sidebar - always visible, part of flex layout */}
+      <div className="sidebar sidebar-desktop">
+        <style>{`@media (min-width: 769px) { .sidebar-desktop { width: 240px; min-width: 240px; } }`}</style>
         {sidebarContent}
       </div>
-      <div ref={mobileSidebarRef} className={`sidebar ${mobileOpen ? 'open' : ''}`} style={{ display: 'none' }}>
-        <style>{`@media (max-width: 768px) { .sidebar { display: flex !important; flex-direction: column; width: 280px; min-width: 280px; } }`}</style>
+
+      {/* Mobile overlay */}
+      <div className={`sidebar-overlay ${mobileOpen ? 'open' : ''}`} onClick={closeMobile} />
+      <div ref={mobileSidebarRef} className={`sidebar sidebar-mobile ${mobileOpen ? 'open' : ''}`}>
         {sidebarContent}
       </div>
     </>

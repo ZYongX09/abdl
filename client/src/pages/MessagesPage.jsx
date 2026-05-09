@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { messagesAPI, forumAPI } from '../api';
 import { useAuth } from '../AuthContext';
 import LoadingSkeleton from '../components/LoadingSkeleton';
@@ -18,6 +19,7 @@ const NOTIF_SYSTEM_ID = '__system_notifications__';
 
 export default function MessagesPage() {
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
   const [convs, setConvs] = useState([]);
   const [notifs, setNotifs] = useState([]);
   const [activeOther, setActiveOther] = useState(null);
@@ -32,6 +34,24 @@ export default function MessagesPage() {
     loadConvs();
     if (user) loadNotifs();
   }, []);
+
+  // Auto-open conversation from URL param ?to=username
+  useEffect(() => {
+    const toUser = searchParams.get('to');
+    if (toUser && convs.length > 0) {
+      const existing = convs.find(c => c.other_name === toUser);
+      if (existing) {
+        openChat(existing.other_id);
+      } else if (toUser !== user?.username) {
+        // Start new conversation — find user by name
+        const users = JSON.parse(localStorage.getItem('abdl_users') || '{}');
+        const targetUser = Object.values(users).find(u => u.username === toUser);
+        if (targetUser) {
+          openChat(targetUser.id);
+        }
+      }
+    }
+  }, [convs, searchParams, user]);
 
   const loadConvs = async () => {
     try {

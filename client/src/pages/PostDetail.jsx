@@ -107,6 +107,12 @@ export default function PostDetail() {
                 <Link to={`/user/${post.user?.id}`} style={{ fontWeight: 700, textDecoration: 'none', color: 'var(--text)' }}>
                   {post.user?.username}
                 </Link>
+                {user && post.user?.id !== user.id && (
+                  <Link to={`/messages?to=${encodeURIComponent(post.user?.username)}`} className="btn btn-outline btn-sm"
+                    style={{ fontSize: '0.7rem', padding: '2px 10px' }} title="发私信">
+                    <i className="fa-solid fa-paper-plane" />
+                  </Link>
+                )}
                 <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
                   @{post.user?.username} · {timeAgo(post.created_at)}
                 </span>

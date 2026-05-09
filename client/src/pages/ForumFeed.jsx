@@ -162,6 +162,12 @@ export default function ForumFeed() {
                   <Link to={`/user/${p.user?.id}`} style={{ fontWeight: 700, textDecoration: 'none', color: 'var(--text)' }}>
                     {p.user?.username}
                   </Link>
+                  {user && p.user?.id !== user.id && (
+                    <Link to={`/messages?to=${encodeURIComponent(p.user?.username)}`} className="btn btn-outline btn-sm"
+                      style={{ fontSize: '0.7rem', padding: '2px 10px' }} title="发私信">
+                      <i className="fa-solid fa-paper-plane" />
+                    </Link>
+                  )}
                   <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
                     @{p.user?.username} · {timeAgo(p.created_at)}
                   </span>
