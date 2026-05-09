@@ -16,11 +16,10 @@ export default function Settings() {
   const [msg, setMsg] = useState('');
   const [glassEffect, setGlassEffect] = useState(() => getStoredSetting('glassEffect') ?? false);
 
-  // Apply glass effect
+  // Apply glass effect — NO cleanup so it persists across page navigation
   useEffect(() => {
     setStoredSetting('glassEffect', glassEffect);
     document.documentElement.classList.toggle('glass-enabled', glassEffect);
-    return () => document.documentElement.classList.remove('glass-enabled');
   }, [glassEffect]);
 
   // Apply theme
