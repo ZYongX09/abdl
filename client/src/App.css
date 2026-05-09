@@ -691,7 +691,7 @@ select.form-control {
 }
 
 /* ====== 交错入场动画 ====== */
-.card.stagger-item, .diaper-card.stagger-item, .rank-item.stagger-item {
+.card.stagger-item, .diaper-card.stagger-item {
   animation: none;
 }
 .stagger-item {
