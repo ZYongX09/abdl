@@ -26,7 +26,7 @@ export default function LoadingSkeleton({ count = 3, type = 'card' }) {
   }
   if (type === 'feed') {
     return Array.from({ length: count }, (_, i) => (
-      <div key={i} className="skeleton skeleton-card" style={{ padding: 20, background: 'white' }}>
+      <div key={i} className="skeleton skeleton-card" style={{ padding: 20, background: 'var(--bg-card)' }}>
         <div style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
           <div className="skeleton skeleton-avatar" />
           <div style={{ flex: 1 }}>
@@ -44,7 +44,7 @@ export default function LoadingSkeleton({ count = 3, type = 'card' }) {
   return (
     <div className="diaper-grid">
       {Array.from({ length: count }, (_, i) => (
-        <div key={i} className="skeleton skeleton-card" style={{ padding: 20, background: 'white', height: 140 }}>
+        <div key={i} className="skeleton skeleton-card" style={{ padding: 20, background: 'var(--bg-card)', height: 140 }}>
           <div className="skeleton skeleton-text" style={{ width: '40%' }} />
           <div className="skeleton skeleton-text" style={{ width: '80%', height: 20 }} />
           <div className="skeleton skeleton-text" style={{ width: '60%' }} />

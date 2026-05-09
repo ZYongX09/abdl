@@ -544,10 +544,10 @@ select.form-control {
 [data-theme="dark"] img[src*="placehold"] { opacity: 0.7; }
 [data-theme="dark"] .btn-outline { border-color: var(--border); color: var(--text-light); }
 [data-theme="dark"] .btn-outline:hover { background: var(--primary-light); color: var(--primary-dark); }
-[data-theme="dark"] .alert-info { background: rgba(168,216,240,0.1); border-color: var(--primary); }
-[data-theme="dark"] .alert-success { background: rgba(123,198,126,0.1); }
-[data-theme="dark"] .alert-danger { background: rgba(232,131,124,0.1); }
-[data-theme="dark"] .alert-warning { background: rgba(240,192,64,0.1); }
+[data-theme="dark"] .alert-info { background: rgba(168,216,240,0.1); border-color: var(--primary); color: #A8D8F0; }
+[data-theme="dark"] .alert-success { background: rgba(123,198,126,0.1); color: #8BC78E; }
+[data-theme="dark"] .alert-danger { background: rgba(232,131,124,0.1); color: #F09894; }
+[data-theme="dark"] .alert-warning { background: rgba(240,192,64,0.1); color: #E8C860; }
 [data-theme="dark"] .hero-card { background: linear-gradient(135deg, #2A3F50 0%, #283540 50%, #3A2830 100%); }
 [data-theme="dark"] input[type="range"] { filter: brightness(0.9); }
 
@@ -676,10 +676,10 @@ select.form-control {
 [data-theme="dark"] img[src*="placehold"] { opacity: 0.7; }
 [data-theme="dark"] .btn-outline { border-color: var(--border); color: var(--text-light); }
 [data-theme="dark"] .btn-outline:hover { background: var(--primary-light); color: var(--primary-dark); }
-[data-theme="dark"] .alert-info { background: rgba(168,216,240,0.1); border-color: var(--primary); }
-[data-theme="dark"] .alert-success { background: rgba(123,198,126,0.1); }
-[data-theme="dark"] .alert-danger { background: rgba(232,131,124,0.1); }
-[data-theme="dark"] .alert-warning { background: rgba(240,192,64,0.1); }
+[data-theme="dark"] .alert-info { background: rgba(168,216,240,0.1); border-color: var(--primary); color: #A8D8F0; }
+[data-theme="dark"] .alert-success { background: rgba(123,198,126,0.1); color: #8BC78E; }
+[data-theme="dark"] .alert-danger { background: rgba(232,131,124,0.1); color: #F09894; }
+[data-theme="dark"] .alert-warning { background: rgba(240,192,64,0.1); color: #E8C860; }
 [data-theme="dark"] input[type="range"] { filter: brightness(0.9); }
 [data-theme="dark"] .theme-toggle { background: var(--bg-card); border-color: var(--border); }
 [data-theme="dark"] .tag { background: var(--tag-bg); color: var(--tag-color); }
