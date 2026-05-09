@@ -54,9 +54,17 @@ export default function MessagesPage() {
   return (
     <div className="messages-layout" style={{ display: 'flex', height: 'calc(100vh - 100px)', minHeight: 400, borderRadius: 'var(--radius)', overflow: 'hidden', boxShadow: 'var(--shadow)', background: 'var(--bg-card)' }}>
       <div className="messages-sidebar" style={{ width: 300, minWidth: 280, borderRight: '1px solid var(--border)', overflowY: 'auto' }}>
-        <h3 style={{ padding: 16, borderBottom: '1px solid var(--border)', margin: 0 }}>
-          <i className="fa-regular fa-envelope" /> 私信
-        </h3>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px', borderBottom: '1px solid var(--border)' }}>
+          <h3 style={{ margin: 0, fontSize: '1rem' }}>
+            <i className="fa-regular fa-envelope" /> 私信
+          </h3>
+          {activeOther && (
+            <button className="btn btn-outline btn-sm" onClick={() => setActiveOther(null)}
+              style={{ fontSize: '0.75rem', padding: '4px 12px' }}>
+              <i className="fa-solid fa-arrow-left" /> 返回列表
+            </button>
+          )}
+        </div>
         {loading ? <LoadingSkeleton count={3} type="feed" /> : convs.length === 0 ? (
           <p style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>暂无对话</p>
         ) : (

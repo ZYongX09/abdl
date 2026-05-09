@@ -301,7 +301,7 @@ export const forumAPI = {
     return { liked: true };
   },
   notifications: () => { return { notifications: [], unread_count: 0 }; },
-  readAllNotifications: () => {},
+  readAllNotifications: () => Promise.resolve(),
 };
 
 // ====== 等级（基于经验值） ======
@@ -521,7 +521,7 @@ ${JSON.stringify(diapers.map(d => ({ id: d.id, brand: d.brand, model: d.model, t
 
   fetch('https://api.deepseek.com/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer REDACTED_KEY' },
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${import.meta.env.VITE_DEEPSEEK_KEY || ''}` },
     body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'system', content: '你是一个专业的ABDL纸尿裤推荐助手。请始终以 JSON 格式回复。' }, { role: 'user', content: prompt }], stream: true, max_tokens: 2000, temperature: 0.7 }),
     signal: ctrl.signal,
   }).then(async res => {

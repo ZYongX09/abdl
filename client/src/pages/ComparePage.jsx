@@ -92,7 +92,7 @@ export default function ComparePage() {
             })}
           </div>
         )}
-        <div style={{ maxHeight: 200, overflowY: 'auto', marginBottom: 12 }}>
+        <div style={{ maxHeight: 200, overflowY: 'auto', marginBottom: selected.length >= 2 ? 0 : 12 }}>
           {loading && allDiapers.length === 0 ? (
             <LoadingSkeleton count={5} type="list" />
           ) : allDiapers.length === 0 ? (
@@ -108,27 +108,38 @@ export default function ComparePage() {
                 <input type="checkbox" checked={selected.includes(d.id)} onChange={() => toggleSelect(d.id)}
                   disabled={!selected.includes(d.id) && selected.length >= 4}
                   style={{ accentColor: 'var(--primary)' }} aria-label={`选择 ${d.brand} ${d.model}`} />
-                <span>{d.brand} {d.model}</span>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                <span style={{ flex: 1 }}>{d.brand} {d.model}</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', flexShrink: 0 }}>
                   <i className="fa-solid fa-star" style={{ color: 'var(--warning)', fontSize: '0.7rem' }} /> {Number(d.avg_score||0).toFixed(1)}
                 </span>
               </label>
             ))
           )}
         </div>
-        <button className="btn btn-accent" onClick={doCompare} disabled={selected.length < 2}>
-          <i className="fa-solid fa-code-compare" /> 开始对比 ({selected.length}/4)
-        </button>
+        {selected.length >= 2 ? (
+          <div className="mobile-action-bar">
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', flex: 1 }}>
+              已选 <strong style={{ color: 'var(--text)' }}>{selected.length}</strong>/4 款
+            </span>
+            <button className="btn btn-accent btn-sm" onClick={doCompare}>
+              <i className="fa-solid fa-code-compare" /> 开始对比
+            </button>
+          </div>
+        ) : (
+          <button className="btn btn-accent" onClick={doCompare} disabled={selected.length < 2}>
+            <i className="fa-solid fa-code-compare" /> 开始对比 ({selected.length}/4)
+          </button>
+        )}
       </div>
 
       {loading && compared.length === 0 && (
-        <div className="loading-spinner"><div className="spinner" /><span>对比中</span></div>
+        <div className="loading-spinner"><div className="spinner" /><span>对比中…</span></div>
       )}
 
       {!loading && compared.length === 0 && selected.length >= 2 && (
         <div className="card" style={{ textAlign: 'center', padding: 32, opacity: 0.7 }}>
           <div style={{ fontSize: '2.5rem', marginBottom: 12 }}><i className="fa-solid fa-hand-pointer" style={{ animation: 'floatUpDown 1.5s infinite' }} /></div>
-          <p style={{ color: 'var(--text-muted)' }}>已选择 {selected.length} 款纸尿裤，点击上方「开始对比」查看详细对比</p>
+          <p style={{ color: 'var(--text-muted)' }}>已选择 {selected.length} 款纸尿裤，点击「开始对比」查看详细对比</p>
         </div>
       )}
 
@@ -138,8 +149,8 @@ export default function ComparePage() {
             <h3 style={{ marginBottom: 12 }}>
               <i className="fa-solid fa-table-list" /> 规格对比
             </h3>
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+            <div className="table-responsive">
+              <table style={{ fontSize: '0.9rem' }}>
                 <thead>
                   <tr>
                     <th style={{ padding: 8, borderBottom: '2px solid var(--border)', textAlign: 'left' }}>参数</th>

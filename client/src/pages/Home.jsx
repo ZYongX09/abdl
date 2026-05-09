@@ -113,7 +113,7 @@ export default function Home() {
         </div>
         {/* Active filter badges */}
         {(brandFilter || sizeFilter || sort !== 'popularity' || search) && (
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8, alignItems: 'center' }}>
             <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', alignSelf: 'center' }}>
               <i className="fa-solid fa-filter" /> 筛选：
             </span>
@@ -141,6 +141,10 @@ export default function Home() {
                 排序: {sort} <i className="fa-solid fa-xmark" />
               </span>
             )}
+            <button className="btn btn-outline btn-sm" style={{ marginLeft: 4, fontSize: '0.75rem', padding: '4px 12px' }}
+              onClick={() => { setSearch(''); setBrandFilter(''); setSizeFilter(''); setSort('popularity'); }}>
+              <i className="fa-solid fa-rotate-left" /> 清除全部
+            </button>
           </div>
         )}
       </div>

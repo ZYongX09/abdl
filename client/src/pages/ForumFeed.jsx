@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { forumAPI, uploadImage } from '../api';
 import { useAuth } from '../AuthContext';
@@ -31,6 +31,16 @@ export default function ForumFeed() {
   const [msg, setMsg] = useState('');
   const [notifCount, setNotifCount] = useState(0);
   const [loadingMore, setLoadingMore] = useState(false);
+  const postTextareaRef = useRef(null);
+
+  const autoResize = useCallback(() => {
+    const el = postTextareaRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 300) + 'px';
+  }, []);
+
+  useEffect(() => { autoResize(); }, [content, autoResize]);
 
   const loadPosts = async (p = 1, append = false) => {
     if (append) setLoadingMore(true); else setLoading(true);
@@ -105,7 +115,7 @@ export default function ForumFeed() {
       {showForm && (
         <div className="card" style={{ marginBottom: 16 }}>
           {msg && <div className={`alert ${msg.includes('成功')?'alert-success':'alert-danger'}`}>{msg}</div>}
-          <textarea className="form-control" rows={4} placeholder="分享你的想法..." value={content} onChange={e=>setContent(e.target.value)} maxLength={5000} />
+          <textarea ref={postTextareaRef} className="form-control auto-resize" rows={4} placeholder="分享你的想法..." value={content} onChange={e=>setContent(e.target.value)} maxLength={5000} onInput={autoResize} />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
             <span style={{ fontSize: '0.75rem', color: content.length > 4500 ? 'var(--danger)' : content.length > 3500 ? 'var(--warning)' : 'var(--text-muted)' }}>
               {content.length}/5000

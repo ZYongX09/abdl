@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { forumAPI } from '../api';
 import { useAuth } from '../AuthContext';
@@ -24,7 +24,16 @@ export default function PostDetail() {
   const [commentImage, setCommentImage] = useState(null);
   const [commentImagePreview, setCommentImagePreview] = useState(null);
   const [lightboxSrc, setLightboxSrc] = useState(null);
+  const commentTextareaRef = useRef(null);
 
+  const autoResize = useCallback(() => {
+    const el = commentTextareaRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 200) + 'px';
+  }, []);
+
+  useEffect(() => { autoResize(); }, [commentText, autoResize]);
   useEffect(() => { loadPost(); }, [id]);
 
   // Close lightbox on Escape
@@ -141,7 +150,7 @@ export default function PostDetail() {
               <button className="btn btn-outline btn-sm" style={{ marginLeft: 8 }} onClick={() => setReplyTo(null)}>取消</button>
             </div>
           )}
-          <textarea className="form-control" rows={2} placeholder="写评论..." value={commentText} onChange={e=>setCommentText(e.target.value)} maxLength={MAX_COMMENT_LEN} />
+          <textarea ref={commentTextareaRef} className="form-control auto-resize" rows={2} placeholder="写评论..." value={commentText} onChange={e=>setCommentText(e.target.value)} maxLength={MAX_COMMENT_LEN} onInput={autoResize} />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', marginTop: 4 }}>
             <span style={{ color: 'var(--text-muted)' }}>支持 Markdown</span>
             <span style={{
@@ -154,8 +163,8 @@ export default function PostDetail() {
               <button onClick={clearCommentImage} style={{
                 position: 'absolute', top: -6, right: -6, width: 22, height: 22, borderRadius: '50%',
                 background: 'var(--danger)', color: '#fff', border: 'none', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', padding: 0
-              }} title="移除图片" aria-label="移除图片">×</button>
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', padding: 0, lineHeight: 1
+              }} title="移除图片" aria-label="移除图片"><i className="fa-solid fa-xmark" /></button>
             </div>
           )}
           <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center' }}>

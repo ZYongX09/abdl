@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
@@ -8,8 +8,11 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const usernameRef = useRef(null);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => { usernameRef.current?.focus(); }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +38,7 @@ export default function Login() {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>用户名</label>
-            <input className="form-control" type="text" value={username}
+            <input ref={usernameRef} className="form-control" type="text" value={username}
               onChange={e => setUsername(e.target.value)} placeholder="输入用户名" required />
           </div>
           <div className="form-group">

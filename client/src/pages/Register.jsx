@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
@@ -10,10 +10,28 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const usernameRef = useRef(null);
   const { register } = useAuth();
   const navigate = useNavigate();
 
   const update = (field) => (e) => setForm(f => ({ ...f, [field]: e.target.value }));
+
+  // Auto-focus username field
+  useEffect(() => { usernameRef.current?.focus(); }, []);
+
+  // Password strength calculation
+  const passwordStrength = useMemo(() => {
+    const p = form.password;
+    let score = 0;
+    if (p.length >= 6) score++;
+    if (p.length >= 10) score++;
+    if (/[A-Z]/.test(p)) score++;
+    if (/[0-9]/.test(p)) score++;
+    if (/[^A-Za-z0-9]/.test(p)) score++;
+    return score;
+  }, [form.password]);
+  const strengthColors = ['', '#E8837C', '#F0C040', '#7BC67E', '#5DAE60', '#2E7D32'];
+  const strengthLabels = ['', '弱', '较弱', '一般', '强', '很强'];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,7 +68,7 @@ export default function Register() {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>用户名 *</label>
-            <input className="form-control" value={form.username} onChange={update('username')} placeholder="你的昵称" required />
+            <input ref={usernameRef} className="form-control" value={form.username} onChange={update('username')} placeholder="你的昵称" required />
           </div>
           <div className="form-group">
             <label>邮箱</label>
@@ -70,6 +88,19 @@ export default function Register() {
                 <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
               </button>
             </div>
+            {form.password.length > 0 && (
+              <div className="password-strength">
+                <div className="password-strength-bar">
+                  <div className="password-strength-bar-fill" style={{
+                    width: `${(passwordStrength / 5) * 100}%`,
+                    background: strengthColors[passwordStrength]
+                  }} />
+                </div>
+                <span className="password-strength-text" style={{ color: strengthColors[passwordStrength] }}>
+                  密码强度: {strengthLabels[passwordStrength]}
+                </span>
+              </div>
+            )}
           </div>
           <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px solid var(--border)' }} />
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: 12 }}>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { forumAPI } from '../api';
@@ -43,14 +43,37 @@ export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const mobileSidebarRef = useRef(null);
 
   const isActive = (path) => location.pathname === path;
   const closeMobile = () => setMobileOpen(false);
 
-  // Close mobile sidebar on Escape key
+  // Lock body scroll when mobile sidebar is open
+  useEffect(() => {
+    document.body.classList.toggle('sidebar-locked', mobileOpen);
+    return () => document.body.classList.remove('sidebar-locked');
+  }, [mobileOpen]);
+
+  // Close mobile sidebar on Escape key + focus trap
   useEffect(() => {
     if (!mobileOpen) return;
-    const onKey = (e) => { if (e.key === 'Escape') closeMobile(); };
+    const sidebar = mobileSidebarRef.current;
+    if (!sidebar) return;
+    const focusable = sidebar.querySelectorAll('a, button, input, [tabindex]:not([tabindex="-1"])');
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    first?.focus();
+
+    const onKey = (e) => {
+      if (e.key === 'Escape') { closeMobile(); return; }
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault(); last?.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault(); first?.focus();
+        }
+      }
+    };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [mobileOpen]);
@@ -183,7 +206,7 @@ export default function Sidebar() {
         <style>{`@media (min-width: 769px) { .sidebar { width: 240px; min-width: 240px; } }`}</style>
         {sidebarContent}
       </div>
-      <div className={`sidebar ${mobileOpen ? 'open' : ''}`} style={{ display: 'none' }}>
+      <div ref={mobileSidebarRef} className={`sidebar ${mobileOpen ? 'open' : ''}`} style={{ display: 'none' }}>
         <style>{`@media (max-width: 768px) { .sidebar { display: flex !important; flex-direction: column; width: 280px; min-width: 280px; } }`}</style>
         {sidebarContent}
       </div>
