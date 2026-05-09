@@ -100,7 +100,7 @@ export default function Rankings() {
                 {tab==='hot' && <div className="score-badge"><i className="fa-solid fa-star" /> {Number(item.avg_score||0).toFixed(1)}</div>}
                 {tab==='absorbency' && <div style={{ fontWeight: 700, color: 'var(--primary-dark)' }}>{item.absorbency_adult||item.absorbency_mfr}</div>}
                 {tab==='popular' && <div style={{ fontWeight: 700, color: 'var(--accent-dark)' }}>{item.rating_count} 评价</div>}
-                {!['hot','absorbency','popular'].includes(tab) && item.avg_score > 0 && <div className="score-badge">{Number(item.avg_score).toFixed(1)}</div>}
+                {!['hot','absorbency','popular'].includes(tab) && item.avg_score != null && <div className="score-badge"><i className="fa-solid fa-star" style="color: var(--warning); margin-right: 3px; font-size: 0.7rem;" />{Number(item.avg_score).toFixed(1)}</div>}
               </div>
             </div>
           </Link>

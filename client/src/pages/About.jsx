@@ -1,10 +1,34 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const VERSION = '5.7.12';
+const VERSION = '5.8.2';
 
 // Embedded changelog (kept in sync with CHANGELOG.md)
 const CHANGELOG = [
+  {
+    version: 'v5.8.2',
+    date: '2026-05-10',
+    changes: [
+      '排行榜维度评分增加星级图标，修复零分不显示问题',
+      '版本号同步至最新 Git tag',
+      '消息页通知项交互动画增强',
+    ],
+  },
+  {
+    version: 'v5.8.1',
+    date: '2026-05-10',
+    changes: [
+      '玻璃卡片不透明度提升至 20%，降低对比度至 1.15',
+      '修复玻璃材质下帖子不可见问题',
+    ],
+  },
+  {
+    version: 'v5.8.0',
+    date: '2026-05-10',
+    changes: [
+      '设置页面新增账户注销功能',
+    ],
+  },
   {
     version: 'v5.7.11',
     date: '2026-05-10',

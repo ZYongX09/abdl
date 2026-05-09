@@ -130,8 +130,10 @@ export default function MessagesPage() {
         <div onClick={() => openChat(NOTIF_SYSTEM_ID)} style={{
           padding: '12px 16px', cursor: 'pointer', borderBottom: '1px solid var(--border)',
           background: activeOther?.id === NOTIF_SYSTEM_ID ? 'var(--primary-light)' : 'var(--bg-card)',
-          transition: 'background 0.15s',
-        }}>
+          transition: 'background 0.15s ease',
+        }}
+        onMouseOver={e => { if (activeOther?.id !== NOTIF_SYSTEM_ID) e.currentTarget.style.background = 'var(--input-bg)'; }}
+        onMouseOut={e => { if (activeOther?.id !== NOTIF_SYSTEM_ID) e.currentTarget.style.background = 'var(--bg-card)'; }}>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
             <div style={{
               width: 40, height: 40, borderRadius: '50%', background: 'var(--primary-light)',
@@ -159,8 +161,10 @@ export default function MessagesPage() {
             <div key={c.id} onClick={() => openChat(c.other_id)} style={{
               padding: '12px 16px', cursor: 'pointer', borderBottom: '1px solid var(--border)',
               background: activeOther?.id === c.other_id ? 'var(--primary-light)' : 'var(--bg-card)',
-              transition: 'background 0.15s',
-            }}>
+              transition: 'background 0.15s ease',
+            }}
+            onMouseOver={e => { if (activeOther?.id !== c.other_id) e.currentTarget.style.background = 'var(--input-bg)'; }}
+            onMouseOut={e => { if (activeOther?.id !== c.other_id) e.currentTarget.style.background = 'var(--bg-card)'; }}>
               <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                 <div className="post-avatar" style={{ width: 40, height: 40 }}>
                   <i className="fa-solid fa-user-astronaut" />
@@ -207,8 +211,11 @@ export default function MessagesPage() {
                       padding: '10px 14px', borderRadius: 10, marginBottom: 6,
                       background: n.is_read ? 'transparent' : 'var(--primary-light)',
                       border: `1px solid ${n.is_read ? 'var(--border)' : 'var(--primary)'}`,
-                      transition: 'all 0.2s', fontSize: '0.9rem',
-                    }}>
+                      transition: 'all 0.2s ease, background 0.2s ease',
+                      fontSize: '0.9rem', cursor: 'default',
+                    }}
+                    onMouseOver={e => { if (n.is_read) e.currentTarget.style.background = 'var(--input-bg)'; }}
+                    onMouseOut={e => { if (n.is_read) e.currentTarget.style.background = 'transparent'; }}>
                       <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                         <span style={{ color: n.type === 'like' ? 'var(--like-active)' : 'var(--primary-dark)', fontSize: '1rem' }}>
                           <i className={`fa-solid ${typeIcons[n.type] || 'fa-circle'}`} />
