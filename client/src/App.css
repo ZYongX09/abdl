@@ -841,7 +841,7 @@ select.form-control {
 
 /* 对比度放大层 */
 .glass-enabled .container {
-  filter: contrast(1.3);
+  filter: contrast(1.5);
 }
 
 /* ===== 卡片/面板 — 加深模糊 + 多层阴影，无白色反光 ===== */
@@ -860,8 +860,10 @@ select.form-control {
     inset 0 0 3px rgba(0,0,0,0.5),
     0 4px 12px rgba(0,0,0,0.12);
   filter: brightness(0.92);
-  position: relative;
-  overflow: hidden;
+  max-height: 85vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-position: calc(--glass-light-x * 0.003) calc(--glass-light-y * 0.003);
 }
 
 /* 玻璃边缘折射暗光晕 — ::before 暗边 */
@@ -908,9 +910,10 @@ select.form-control {
     inset 0 0 3px rgba(0,0,0,0.8),
     0 4px 12px rgba(0,0,0,0.35);
   filter: brightness(0.85);
+  background-position: calc(--glass-light-x * 0.003) calc(--glass-light-y * 0.003);
 }
 .glass-enabled[data-theme="dark"] .container {
-  filter: contrast(1.1);
+  filter: contrast(1.35);
 }
 
 /* ===== 侧边栏 ===== */
