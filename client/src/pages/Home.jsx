@@ -111,6 +111,38 @@ export default function Home() {
             <i className="fa-solid fa-search" /> 搜索
           </button>
         </div>
+        {/* Active filter badges */}
+        {(brandFilter || sizeFilter || sort !== 'popularity' || search) && (
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', alignSelf: 'center' }}>
+              <i className="fa-solid fa-filter" /> 筛选：
+            </span>
+            {search && (
+              <span className="tag filter-tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                onClick={() => setSearch('')} title="清除搜索">
+                搜索: {search} <i className="fa-solid fa-xmark" />
+              </span>
+            )}
+            {brandFilter && (
+              <span className="tag filter-tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                onClick={() => setBrandFilter('')} title="清除品牌">
+                {brandFilter} <i className="fa-solid fa-xmark" />
+              </span>
+            )}
+            {sizeFilter && (
+              <span className="tag filter-tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                onClick={() => setSizeFilter('')} title="清除尺码">
+                {sizeFilter}码 <i className="fa-solid fa-xmark" />
+              </span>
+            )}
+            {sort !== 'popularity' && (
+              <span className="tag filter-tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                onClick={() => setSort('popularity')} title="恢复默认排序">
+                排序: {sort} <i className="fa-solid fa-xmark" />
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {loading ? <LoadingSkeleton count={6} type="card" /> : (

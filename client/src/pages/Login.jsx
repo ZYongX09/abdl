@@ -5,6 +5,7 @@ import { useAuth } from '../AuthContext';
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -39,8 +40,18 @@ export default function Login() {
           </div>
           <div className="form-group">
             <label>密码</label>
-            <input className="form-control" type="password" value={password}
-              onChange={e => setPassword(e.target.value)} placeholder="输入密码" required />
+            <div style={{ position: 'relative' }}>
+              <input className="form-control" type={showPassword ? 'text' : 'password'} value={password}
+                onChange={e => setPassword(e.target.value)} placeholder="输入密码" required
+                style={{ paddingRight: 44 }} />
+              <button type="button" onClick={() => setShowPassword(!showPassword)}
+                style={{ position: 'absolute', right: 4, top: '50%', transform: 'translateY(-50%)',
+                  background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)',
+                  fontSize: '1rem', padding: '6px 10px', borderRadius: 6 }}
+                tabIndex={-1} aria-label={showPassword ? '隐藏密码' : '显示密码'}>
+                <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+              </button>
+            </div>
           </div>
           <button className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
             {loading ? <><i className="fa-solid fa-spinner fa-spin" /> 登录中...</> : <><i className="fa-solid fa-right-to-bracket" /> 登录</>}

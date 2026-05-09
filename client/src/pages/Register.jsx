@@ -7,6 +7,7 @@ export default function Register() {
     username: '', email: '', password: '',
     age: '', region: '', weight: '', waist: '', hip: '', style_preference: ''
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -57,7 +58,18 @@ export default function Register() {
           </div>
           <div className="form-group">
             <label>密码 *</label>
-            <input className="form-control" type="password" value={form.password} onChange={update('password')} placeholder="至少 6 位" required />
+            <div style={{ position: 'relative' }}>
+              <input className="form-control" type={showPassword ? 'text' : 'password'} value={form.password}
+                onChange={update('password')} placeholder="至少 6 位" required
+                style={{ paddingRight: 44 }} />
+              <button type="button" onClick={() => setShowPassword(!showPassword)}
+                style={{ position: 'absolute', right: 4, top: '50%', transform: 'translateY(-50%)',
+                  background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)',
+                  fontSize: '1rem', padding: '6px 10px', borderRadius: 6 }}
+                tabIndex={-1} aria-label={showPassword ? '隐藏密码' : '显示密码'}>
+                <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+              </button>
+            </div>
           </div>
           <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px solid var(--border)' }} />
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: 12 }}>

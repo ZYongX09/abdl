@@ -1,5 +1,31 @@
 # ABDL Space 更新日志
 
+## v5.1.2 — 2026-05-09
+
+### ✨ 新功能
+- **滚动进度条**：页面顶部新增渐变色进度条，实时显示当前阅读进度
+- **筛选标签可视化**：纸尿裤列表页激活筛选条件时，显示可点击清除的筛选标签
+- **论坛发帖字符计数**：发帖框显示实时字符数，接近上限时颜色警告（黄→红）
+- **密码显隐切换**：登录/注册页密码输入框新增 👁 显示/隐藏密码按钮
+- **帖子详情空评论提示**：无评论时显示友好空状态，引导用户参与讨论
+- **对比工具加载骨架**：纸尿裤列表加载时使用骨架屏代替空白
+
+### 🎨 UI/UX 优化
+- 深色模式下 `<select>` 下拉框使用 `color-scheme: dark`，自定义下拉箭头图标
+- 深色模式下 checkbox/radio 使用主题色 accent-color
+- 筛选标签使用主题色背景（蓝色），悬停高亮
+- LoadingSkeleton 新增 `list` 类型骨架（复选框+文字行）
+
+### 📝 文件变更
+- `App.jsx` — 新增 ScrollProgress 组件
+- `App.css` — 新增 `.scroll-progress`、`.filter-tag` 样式，深色模式 select/checkbox/radio 适配
+- `Home.jsx` — 新增筛选标签栏（搜索词/品牌/尺码/排序）
+- `ForumFeed.jsx` — 发帖框新增字符计数器
+- `Login.jsx` / `Register.jsx` — 密码显隐切换按钮
+- `PostDetail.jsx` — 空评论空状态提示
+- `ComparePage.jsx` — 导入 LoadingSkeleton，列表加载时使用骨架屏
+- `LoadingSkeleton.jsx` — 新增 list 类型骨架
+
 ## v5.1.1 — 2026-05-09
 
 ### 🐛 Bug 修复

@@ -257,6 +257,15 @@ select.form-control { cursor: pointer; color: var(--text); }
   transition: transform 0.15s;
 }
 .tag:hover { transform: scale(1.05); }
+.filter-tag {
+  background: var(--primary);
+  color: white;
+  transition: all 0.15s;
+}
+.filter-tag:hover {
+  background: var(--primary-dark);
+  transform: scale(1.05);
+}
 
 /* ====== 深色模式切换按钮 ====== */
 .theme-toggle {
@@ -540,6 +549,28 @@ select.form-control { cursor: pointer; color: var(--text); }
 [data-theme="dark"] .tag { background: var(--tag-bg); color: var(--tag-color); }
 [data-theme="dark"] .sidebar-overlay { background: var(--overlay-bg); }
 
+/* 深色模式 select 下拉框样式 */
+[data-theme="dark"] select.form-control {
+  color-scheme: dark;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239BA1AC' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+[data-theme="dark"] select.form-control option {
+  background: var(--bg-card);
+  color: var(--text);
+}
+/* checkbox 和 radio 深色适配 */
+[data-theme="dark"] input[type="checkbox"] {
+  accent-color: var(--primary);
+}
+[data-theme="dark"] input[type="radio"] {
+  accent-color: var(--primary);
+}
+
 /* ====== 雷达图（深色适配） ====== */
 .radar-grid { stroke: var(--border); }
 .radar-fill { fill: rgba(168,216,240,0.35); stroke: var(--primary-dark); }
@@ -576,6 +607,14 @@ select.form-control { cursor: pointer; color: var(--text); }
   background: var(--primary-dark);
   transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 0;
+}
+
+/* ====== 滚动进度条 ====== */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 999;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transition: width 0.1s linear;
+  border-radius: 0 2px 2px 0;
 }
 
 /* ====== 通用辅助类 ====== */

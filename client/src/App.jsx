@@ -23,6 +23,22 @@ function getInitialTheme() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
+function ScrollProgress() {
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <div className="scroll-progress" style={{ width: `${progress}%` }} />
+  );
+}
+
 export default function App() {
   const [theme, setTheme] = useState(getInitialTheme);
 
@@ -73,6 +89,7 @@ export default function App() {
           <i className="fa-solid fa-baby" style={{ color: 'var(--primary)' }} /> ABDL Space v5 · <a href="/forum" style={{ color: 'var(--link-color)' }}>论坛</a> · <a href="/termwiki" style={{ color: 'var(--link-color)' }}>术语</a>
         </footer>
       </div>
+      <ScrollProgress />
       <BackToTop />
     </div>
   );

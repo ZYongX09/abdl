@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { compareAPI, diapersAPI } from '../api';
+import LoadingSkeleton from '../components/LoadingSkeleton';
 
 const DIMS = [
   { key: 'absorption_score', label: '吸水量' },
@@ -88,7 +89,9 @@ export default function ComparePage() {
           </div>
         )}
         <div style={{ maxHeight: 200, overflowY: 'auto', marginBottom: 12 }}>
-          {allDiapers.length === 0 ? (
+          {loading && allDiapers.length === 0 ? (
+            <LoadingSkeleton count={5} type="list" />
+          ) : allDiapers.length === 0 ? (
             <div className="empty-state" style={{ padding: 30 }}>
               <div className="icon"><i className="fa-solid fa-box-open" /></div>
               <p>暂无纸尿裤数据</p>

@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react';
 
 export default function LoadingSkeleton({ count = 3, type = 'card' }) {
+  if (type === 'list') {
+    return Array.from({ length: count }, (_, i) => (
+      <div key={i} className="skeleton" style={{ padding: '10px 12px', marginBottom: 6, borderRadius: 8, height: 36 }}>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', height: '100%' }}>
+          <div className="skeleton" style={{ width: 16, height: 16, borderRadius: 3 }} />
+          <div className="skeleton skeleton-text" style={{ flex: 1, marginBottom: 0 }} />
+          <div className="skeleton skeleton-text short" style={{ width: '20%', marginBottom: 0 }} />
+        </div>
+      </div>
+    ));
+  }
   if (type === 'feed') {
     return Array.from({ length: count }, (_, i) => (
       <div key={i} className="skeleton skeleton-card" style={{ padding: 20, background: 'white' }}>

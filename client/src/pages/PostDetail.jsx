@@ -117,6 +117,13 @@ export default function PostDetail() {
       <h3 style={{ marginBottom: 12 }}>
         <i className="fa-regular fa-comments" /> 评论 ({comments.length})
       </h3>
+      {topComments.length === 0 && (
+        <div className="empty-state" style={{ padding: 32 }}>
+          <div className="icon"><i className="fa-regular fa-comment-dots" /></div>
+          <h3>还没有评论</h3>
+          <p>来成为第一个评论的人吧</p>
+        </div>
+      )}
       {topComments.map(c => (
         <div key={c.id} style={{ padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', gap: 8 }}>

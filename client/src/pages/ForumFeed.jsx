@@ -105,6 +105,11 @@ export default function ForumFeed() {
         <div className="card" style={{ marginBottom: 16 }}>
           {msg && <div className={`alert ${msg.includes('成功')?'alert-success':'alert-danger'}`}>{msg}</div>}
           <textarea className="form-control" rows={4} placeholder="分享你的想法..." value={content} onChange={e=>setContent(e.target.value)} maxLength={5000} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+            <span style={{ fontSize: '0.75rem', color: content.length > 4500 ? 'var(--danger)' : content.length > 3500 ? 'var(--warning)' : 'var(--text-muted)' }}>
+              {content.length}/5000
+            </span>
+          </div>
           <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center' }}>
             <input type="file" accept="image/*" onChange={e=>setImage(e.target.files[0])} style={{ fontSize: '0.85rem' }} />
             <button className="btn btn-primary btn-sm" onClick={handlePost} disabled={uploading||!content.trim()}>
