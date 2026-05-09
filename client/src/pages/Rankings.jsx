@@ -41,14 +41,30 @@ export default function Rankings() {
       <h2 style={{ textAlign: 'center', marginBottom: 20 }}>
         <i className="fa-solid fa-trophy" /> 排行榜
       </h2>
-      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginBottom: 20, flexWrap: 'wrap' }}>
-        {DIM_TABS.map(t => (
-          <button key={t.key}
-            className={`btn ${tab===t.key?'btn-primary':'btn-outline'} btn-sm`}
-            onClick={() => setTab(t.key)}>
-            <i className={`fa-solid ${t.fa}`} style={{ marginRight: 4 }} />{t.label}
-          </button>
-        ))}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 10 }}>
+          {DIM_TABS.filter(t => ['hot','absorbency','popular'].includes(t.key)).map(t => (
+            <button key={t.key}
+              className={`btn ${tab===t.key?'btn-primary':'btn-outline'} btn-sm`}
+              onClick={() => setTab(t.key)}>
+              <i className={`fa-solid ${t.fa}`} style={{ marginRight: 4 }} />{t.label}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', marginBottom: 8 }}>
+          <span style={{ flex: '0 0 auto', width: 30, height: 1, background: 'var(--border)' }} />
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>按维度评分排序</span>
+          <span style={{ flex: '1', height: 1, background: 'var(--border)', maxWidth: 120 }} />
+        </div>
+        <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
+          {DIM_TABS.filter(t => !['hot','absorbency','popular'].includes(t.key)).map(t => (
+            <button key={t.key}
+              className={`btn ${tab===t.key?'btn-primary':'btn-outline'} btn-sm`}
+              onClick={() => setTab(t.key)}>
+              <i className={`fa-solid ${t.fa}`} style={{ marginRight: 4 }} />{t.label}
+            </button>
+          ))}
+        </div>
       </div>
       {cached && (
         <div className="alert alert-info" style={{ textAlign: 'center', fontSize: '0.85rem' }}>

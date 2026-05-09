@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const VERSION = '5.7.10';
+const VERSION = '5.7.12';
 
 // Embedded changelog (kept in sync with CHANGELOG.md)
 const CHANGELOG = [
+  {
+    version: 'v5.7.11',
+    date: '2026-05-10',
+    changes: [
+      '修复 Settings 版本号显示',
+      '修复 LoadingSkeleton 深色模式背景色',
+      '修复深色模式下 alert 文字颜色',
+    ],
+  },
   {
     version: 'v5.7.10',
     date: '2026-05-09',

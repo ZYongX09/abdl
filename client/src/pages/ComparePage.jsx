@@ -46,6 +46,7 @@ export default function ComparePage() {
   const [selected, setSelected] = useState([]);
   const [allDiapers, setAllDiapers] = useState([]);
   const [compared, setCompared] = useState([]);
+  const [comparedIds, setComparedIds] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -63,6 +64,7 @@ export default function ComparePage() {
     try {
       const d = await compareAPI.compare(selected);
       setCompared(d.diapers);
+      setComparedIds([...selected]);
     } catch {} finally { setLoading(false); }
   };
 
@@ -146,6 +148,21 @@ export default function ComparePage() {
 
       {compared.length > 0 && (
         <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+              <i className="fa-solid fa-check-circle" style={{ color: 'var(--success)', marginRight: 6 }} />
+              对比结果
+              {comparedIds.length !== selected.length || !comparedIds.every(id => selected.includes(id)) ? (
+                <span style={{ color: 'var(--warning)', marginLeft: 8 }}>
+                  <i className="fa-solid fa-triangle-exclamation" /> 选择已变更，结果可能不匹配
+                </span>
+              ) : null}
+            </span>
+            <button className="btn btn-outline btn-sm" onClick={() => { setCompared([]); setComparedIds([]); }}
+              title="清除对比结果">
+              <i className="fa-solid fa-xmark" /> 清除结果
+            </button>
+          </div>
           <div className="card">
             <h3 style={{ marginBottom: 12 }}>
               <i className="fa-solid fa-table-list" /> 规格对比
