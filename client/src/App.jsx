@@ -133,19 +133,6 @@ export default function App() {
       <ScrollToTop />
       <Sidebar />
       <div style={{ flex: 1, overflow: 'auto', position: 'relative' }}>
-        {/* Floating theme toggle - top right */}
-        <div style={{
-          position: 'fixed', top: 16, right: 24, zIndex: 250,
-        }}>
-          <button
-            className="theme-toggle-float"
-            onClick={toggleTheme}
-            title={theme === 'dark' ? '切换到浅色模式' : '切换到深色模式'}
-            aria-label={theme === 'dark' ? '切换到浅色模式' : '切换到深色模式'}
-          >
-            <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`} />
-          </button>
-        </div>
 
         <div className="container page-enter" style={{ maxWidth: 800, padding: '24px 20px' }}>
           <ErrorBoundary>
