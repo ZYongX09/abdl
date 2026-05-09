@@ -14,6 +14,14 @@ export default function Settings() {
   const [animations, setAnimations] = useState(() => getStoredSetting('animations') ?? true);
   const [aiPrivacy, setAiPrivacy] = useState(() => getStoredSetting('aiPrivacy') || { basic: true, body: true, prefs: true, bio: false, feelings: true });
   const [msg, setMsg] = useState('');
+  const [glassEffect, setGlassEffect] = useState(() => getStoredSetting('glassEffect') ?? false);
+
+  // Apply glass effect
+  useEffect(() => {
+    setStoredSetting('glassEffect', glassEffect);
+    document.documentElement.classList.toggle('glass-enabled', glassEffect);
+    return () => document.documentElement.classList.remove('glass-enabled');
+  }, [glassEffect]);
 
   // Apply theme
   useEffect(() => {
@@ -104,6 +112,22 @@ export default function Settings() {
               onClick={() => setAnimations(!animations)}
               style={{ minWidth: 80, textAlign: 'center' }}>
               {animations ? '已开启' : '已关闭'}
+            </button>
+          </label>
+        </div>
+
+        <div className="form-group" style={{ marginTop: 16 }}>
+          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
+            <span>
+              <i className="fa-solid fa-gem" style={{ marginRight: 8 }} />
+              高级材质
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 400 }}>卡片和面板使用半透明毛玻璃质感，带环境光流动</div>
+            </span>
+            <button
+              className={`btn btn-sm ${glassEffect ? 'btn-primary' : 'btn-outline'}`}
+              onClick={() => setGlassEffect(!glassEffect)}
+              style={{ minWidth: 80, textAlign: 'center' }}>
+              {glassEffect ? '已开启' : '已关闭'}
             </button>
           </label>
         </div>

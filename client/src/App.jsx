@@ -87,6 +87,14 @@ export default function App() {
     localStorage.setItem('abdl_theme', theme);
   }, [theme]);
 
+  // Initialize glass effect from settings
+  useEffect(() => {
+    try {
+      const glass = JSON.parse(localStorage.getItem('abdl_settings_glassEffect'));
+      if (glass) document.documentElement.classList.add('glass-enabled');
+    } catch {}
+  }, []);
+
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
   const navigate = useNavigate();
 
