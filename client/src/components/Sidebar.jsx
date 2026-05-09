@@ -89,6 +89,7 @@ export default function Sidebar() {
       { path: '/messages', label: '私信 & 通知', icon: 'fa-regular fa-envelope' },
     ] : []),
     { path: '/termwiki', label: '术语百科', icon: 'fa-solid fa-book' },
+    { path: '/settings', label: '设置', icon: 'fa-solid fa-gear' },
     ...(user?.role === 'admin' ? [{ path: '/admin', label: '管理后台', icon: 'fa-solid fa-screwdriver-wrench' }] : []),
   ];
 
