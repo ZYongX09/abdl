@@ -797,4 +797,44 @@ select.form-control {
   }
   /* 侧边栏过时滚动锁定 */
   body.sidebar-locked { overflow: hidden; }
+  /* 隐藏移动端不重要的文字 */
+  .hide-mobile { display: none; }
+  /* 表格横向滚动 */
+  .table-responsive { -webkit-overflow-scrolling: touch; }
+  /* 搜索栏竖向排列 */
+  .search-bar { flex-direction: column; }
+  .search-bar select.form-control { width: 100%; }
+  /* 私信布局 */
+  .messages-layout { flex-direction: column !important; height: auto !important; min-height: calc(100vh - 80px) !important; }
+  .messages-sidebar { width: 100% !important; min-width: unset !important; max-height: 180px !important; border-right: none !important; border-bottom: 1px solid var(--border) !important; }
+  /* 主题切换按钮避免遮挡 */
+  .theme-toggle-float { top: 8px; right: 12px; width: 36px; height: 36px; font-size: 1rem; }
+}
+
+/* ====== 侧边栏文本不可选中（防止点击高亮） ====== */
+.sidebar a, .sidebar button, .sidebar nav span {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ====== 禁用按钮颜色增强（防止看起来像不可点击） ====== */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(30%);
+}
+.btn-primary:disabled {
+  background: #8CB8CC;
+  color: rgba(255,255,255,0.7);
+}
+.btn-accent:disabled {
+  background: #E8A0AA;
+  color: rgba(255,255,255,0.7);
+}
+[data-theme="dark"] .btn-primary:disabled {
+  background: #3A5A68;
+}
+[data-theme="dark"] .btn-accent:disabled {
+  background: #6A4048;
 }

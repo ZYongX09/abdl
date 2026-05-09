@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import BackToTop from './components/BackToTop';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -84,19 +84,36 @@ export default function App() {
     localStorage.setItem('abdl_theme', theme);
   }, [theme]);
 
-  // Ctrl+Shift+T keyboard shortcut for theme toggle
+  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
+  const navigate = useNavigate();
+
+  // Keyboard shortcuts
   useEffect(() => {
     const onKey = (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'T') {
-        e.preventDefault();
-        toggleTheme();
-      }
+      // Don't trigger shortcuts when typing in inputs
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+
+      const key = e.key.toLowerCase();
+      const ctrl = e.ctrlKey || e.metaKey;
+      const alt = e.altKey;
+
+      // Ctrl+Shift+T: Toggle theme
+      if (ctrl && e.shiftKey && key === 't') { e.preventDefault(); toggleTheme(); return; }
+
+      // Alt+1..9: Navigate pages
+      const navMap = { '1': '/', '2': '/diapers', '3': '/rankings', '4': '/recommend', '5': '/termwiki', '6': '/profile', '7': '/compare', '8': '/messages', '9': '/about' };
+      if (alt && navMap[key]) { e.preventDefault(); navigate(navMap[key]); return; }
+
+      // G then H: Go Home
+      if (key === 'h' && !ctrl && !alt) { e.preventDefault(); navigate('/'); return; }
+      // G then D: Go Diapers
+      if (key === 'd' && ctrl && !alt) { e.preventDefault(); navigate('/diapers'); return; }
+      // Escape: close modals, go back
+      if (key === 'escape') { /* handled by individual components */ return; }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [theme]);
-
-  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>

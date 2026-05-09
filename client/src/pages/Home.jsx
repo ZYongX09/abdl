@@ -1,22 +1,50 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { diapersAPI, rankingsAPI } from '../api';
+import { diapersAPI, rankingsAPI, compareAPI } from '../api';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 
-function useDebounce(value, delay = 300) {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    const timer = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(timer);
-  }, [value, delay]);
-  return debounced;
+const DIMS = [
+  { key: 'absorption_score', label: '吸水量' },
+  { key: 'fit_score', label: '贴合' },
+  { key: 'comfort_score', label: '舒适' },
+  { key: 'thickness_score', label: '厚度' },
+  { key: 'appearance_score', label: '外观' },
+  { key: 'value_score', label: '性价比' },
+];
+
+function MiniRadar({ diapers }) {
+  const size = 180, cx = size/2, cy = size/2, r = 68;
+  const colors = ['#A8D8F0','#FFB7C5','#7BC67E','#F0C040'];
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      {[1,2,3,4,5].map(lvl => {
+        const rr = r * lvl / 5;
+        const pts = DIMS.map((_,i) => {
+          const a = Math.PI*2*i/DIMS.length - Math.PI/2;
+          return `${cx+rr*Math.cos(a)},${cy+rr*Math.sin(a)}`;
+        }).join(' ');
+        return <polygon key={lvl} points={pts} fill="none" stroke="var(--border)" strokeWidth="1" />;
+      })}
+      {DIMS.map((_,i) => {
+        const a = Math.PI*2*i/DIMS.length - Math.PI/2;
+        return <line key={i} x1={cx} y1={cy} x2={cx+r*Math.cos(a)} y2={cy+r*Math.sin(a)} stroke="var(--border)" strokeWidth="1" />;
+      })}
+      {diapers.map((d, idx) => {
+        const pts = DIMS.map((dim, i) => {
+          const val = d.dimensions?.[dim.key]?.weighted || 0;
+          const a = Math.PI*2*i/DIMS.length - Math.PI/2;
+          return `${cx+r*val/10*Math.cos(a)},${cy+r*val/10*Math.sin(a)}`;
+        }).join(' ');
+        return <polygon key={idx} points={pts} fill={colors[idx]} fillOpacity="0.25" stroke={colors[idx]} strokeWidth="2" />;
+      })}
+    </svg>
+  );
 }
 
 export default function Home() {
   const [diapers, setDiapers] = useState([]);
   const [hotRankings, setHotRankings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [initialLoading, setInitialLoading] = useState(true);
   const [brands, setBrands] = useState([]);
   const [sizes, setSizes] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,22 +53,33 @@ export default function Home() {
   const [sizeFilter, setSizeFilter] = useState(searchParams.get('size') || '');
   const [sort, setSort] = useState(searchParams.get('sort') || 'popularity');
 
-  // Debounce search to avoid excessive API calls while typing
-  const debouncedSearch = useDebounce(search, 300);
+  // Compare state
+  const [compareMode, setCompareMode] = useState(false);
+  const [compareSelected, setCompareSelected] = useState([]);
+  const [compareResult, setCompareResult] = useState([]);
+  const [compareLoading, setCompareLoading] = useState(false);
 
-  // Read URL params whenever they change (sidebar search navigation triggers this)
+  const loadDiapers = useCallback(async (s, bf, sf, so) => {
+    setLoading(true);
+    try {
+      const d = await diapersAPI.list({ search: s, brand: bf, size: sf, sort: so, limit: 50 });
+      setDiapers(d.diapers);
+    } catch (e) { console.error(e); } finally { setLoading(false); }
+  }, []);
+
+  // Read URL params
   useEffect(() => {
     const q = searchParams.get('search');
-    if (q && q !== search) setSearch(q);
+    if (q !== undefined) setSearch(q || '');
     const b = searchParams.get('brand');
-    if (b && b !== brandFilter) setBrandFilter(b);
+    if (b !== undefined) setBrandFilter(b || '');
     const sz = searchParams.get('size');
-    if (sz && sz !== sizeFilter) setSizeFilter(sz);
-    const s = searchParams.get('sort');
-    if (s && s !== sort) setSort(s);
+    if (sz !== undefined) setSizeFilter(sz || '');
+    const st = searchParams.get('sort');
+    if (st !== undefined) setSort(st || 'popularity');
   }, [searchParams]);
 
-  // Sync URL params with filter state
+  // Sync URL
   useEffect(() => {
     const params = {};
     if (search) params.search = search;
@@ -50,48 +89,52 @@ export default function Home() {
     setSearchParams(params, { replace: true });
   }, [search, brandFilter, sizeFilter, sort]);
 
-  // Load brands, sizes, and hot rankings once
+  // Load filter options once
   useEffect(() => {
-    Promise.all([
-      rankingsAPI.hot(),
-      diapersAPI.brands(),
-      diapersAPI.sizes(),
-    ]).then(([rData, bData, sData]) => {
-      setHotRankings(rData.rankings?.slice(0, 5) || []);
-      setBrands(bData.brands);
-      setSizes(sData.sizes);
-    }).catch(() => {});
+    Promise.all([rankingsAPI.hot(), diapersAPI.brands(), diapersAPI.sizes()])
+      .then(([rData, bData, sData]) => {
+        setHotRankings(rData.rankings?.slice(0, 5) || []);
+        setBrands(bData.brands);
+        setSizes(sData.sizes);
+      }).catch(() => {});
   }, []);
 
-  const handleSearch = () => {
-    const params = {};
-    if (search) params.search = search;
-    if (brandFilter) params.brand = brandFilter;
-    if (sizeFilter) params.size = sizeFilter;
-    if (sort && sort !== 'popularity') params.sort = sort;
-    setSearchParams(params, { replace: true });
-    setLoading(true);
-    diapersAPI.list({ search, brand: brandFilter, size: sizeFilter, sort, limit: 50 })
-      .then(d => setDiapers(d.diapers))
-      .finally(() => setLoading(false));
+  // Load diapers on filter change
+  useEffect(() => { loadDiapers(search, brandFilter, sizeFilter, sort); }, [search, brandFilter, sizeFilter, sort]);
+
+  const handleSearch = () => loadDiapers(search, brandFilter, sizeFilter, sort);
+
+  // Compare handlers
+  const toggleCompare = (id) => {
+    setCompareSelected(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : prev.length < 4 ? [...prev, id] : prev
+    );
   };
 
-  // Auto-search on filter changes (debounced for search text)
-  useEffect(() => {
-    setLoading(true);
-    diapersAPI.list({ search: debouncedSearch, brand: brandFilter, size: sizeFilter, sort, limit: 50 })
-      .then(d => { setDiapers(d.diapers); setInitialLoading(false); })
-      .finally(() => setLoading(false));
-  }, [debouncedSearch, brandFilter, sizeFilter, sort]);
+  const doCompare = async () => {
+    if (compareSelected.length < 2) return;
+    setCompareLoading(true);
+    try {
+      const d = await compareAPI.compare(compareSelected);
+      setCompareResult(d.diapers);
+    } catch {} finally { setCompareLoading(false); }
+  };
 
   return (
     <div>
+      {/* Header + Search */}
       <div className="hero-card">
-        <h2 style={{ marginBottom: 16, color: 'var(--hero-text)' }}>
-          <i className="fa-solid fa-magnifying-glass" /> 探索纸尿裤
-        </h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
+          <h2 style={{ margin: 0, color: 'var(--hero-text)', fontSize: '1.3rem' }}>
+            <i className="fa-solid fa-magnifying-glass" /> 探索纸尿裤
+          </h2>
+          <button className={`btn btn-sm ${compareMode ? 'btn-primary' : 'btn-outline'}`}
+            onClick={() => { setCompareMode(!compareMode); setCompareSelected([]); setCompareResult([]); }}>
+            <i className="fa-solid fa-code-compare" /> {compareMode ? '退出对比' : '对比模式'}
+          </button>
+        </div>
         <div className="search-bar">
-          <input className="form-control" placeholder="搜索品牌、型号、材质..." value={search}
+          <input className="form-control" placeholder="搜索品牌、型号..." value={search}
             onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearch()} />
           <select className="form-control" value={brandFilter} onChange={e => setBrandFilter(e.target.value)}>
             <option value="">全部品牌</option>
@@ -105,43 +148,18 @@ export default function Home() {
             <option value="popularity">热度</option>
             <option value="avg_price">价格</option>
             <option value="thickness">厚度</option>
-            <option value="created_at">最新</option>
           </select>
           <button className="btn btn-primary" onClick={handleSearch}>
             <i className="fa-solid fa-search" /> 搜索
           </button>
         </div>
-        {/* Active filter badges */}
         {(brandFilter || sizeFilter || sort !== 'popularity' || search) && (
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8, alignItems: 'center' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', alignSelf: 'center' }}>
-              <i className="fa-solid fa-filter" /> 筛选：
-            </span>
-            {search && (
-              <span className="tag filter-tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4 }}
-                onClick={() => setSearch('')} title="清除搜索">
-                搜索: {search} <i className="fa-solid fa-xmark" />
-              </span>
-            )}
-            {brandFilter && (
-              <span className="tag filter-tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4 }}
-                onClick={() => setBrandFilter('')} title="清除品牌">
-                {brandFilter} <i className="fa-solid fa-xmark" />
-              </span>
-            )}
-            {sizeFilter && (
-              <span className="tag filter-tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4 }}
-                onClick={() => setSizeFilter('')} title="清除尺码">
-                {sizeFilter}码 <i className="fa-solid fa-xmark" />
-              </span>
-            )}
-            {sort !== 'popularity' && (
-              <span className="tag filter-tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4 }}
-                onClick={() => setSort('popularity')} title="恢复默认排序">
-                排序: {sort} <i className="fa-solid fa-xmark" />
-              </span>
-            )}
-            <button className="btn btn-outline btn-sm" style={{ marginLeft: 4, fontSize: '0.75rem', padding: '4px 12px' }}
+            {search && <span className="tag" style={{ cursor: 'pointer' }} onClick={() => setSearch('')}>搜索: {search} <i className="fa-solid fa-xmark" /></span>}
+            {brandFilter && <span className="tag" style={{ cursor: 'pointer' }} onClick={() => setBrandFilter('')}>{brandFilter} <i className="fa-solid fa-xmark" /></span>}
+            {sizeFilter && <span className="tag" style={{ cursor: 'pointer' }} onClick={() => setSizeFilter('')}>{sizeFilter}码 <i className="fa-solid fa-xmark" /></span>}
+            {sort !== 'popularity' && <span className="tag" style={{ cursor: 'pointer' }} onClick={() => setSort('popularity')}>排序: {sort} <i className="fa-solid fa-xmark" /></span>}
+            <button className="btn btn-outline btn-sm" style={{ fontSize: '0.75rem', padding: '4px 12px' }}
               onClick={() => { setSearch(''); setBrandFilter(''); setSizeFilter(''); setSort('popularity'); }}>
               <i className="fa-solid fa-rotate-left" /> 清除全部
             </button>
@@ -149,22 +167,95 @@ export default function Home() {
         )}
       </div>
 
-      {loading ? <LoadingSkeleton count={6} type="card" /> : (
+      {/* Compare mode header */}
+      {compareMode && (
+        <div className="card" style={{ padding: 12, marginBottom: 12, background: 'var(--primary-light)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+            <span style={{ fontSize: '0.9rem' }}>
+              <i className="fa-solid fa-code-compare" /> 选择 2-4 款对比 (已选 {compareSelected.length}/4)
+            </span>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {compareSelected.length >= 2 && (
+                <button className="btn btn-accent btn-sm" onClick={doCompare} disabled={compareLoading}>
+                  {compareLoading ? <i className="fa-solid fa-spinner fa-spin" /> : <i className="fa-solid fa-chart-simple" />}
+                  开始对比
+                </button>
+              )}
+              <button className="btn btn-outline btn-sm" onClick={() => { setCompareSelected([]); setCompareResult([]); }}>
+                <i className="fa-solid fa-rotate-left" /> 清空
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Compare Results */}
+      {compareResult.length > 0 && (
+        <div className="card" style={{ marginBottom: 16 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <h3 style={{ margin: 0 }}><i className="fa-solid fa-table-list" /> 对比结果</h3>
+            <button className="btn btn-outline btn-sm" onClick={() => setCompareResult([])}>
+              <i className="fa-solid fa-xmark" /> 关闭
+            </button>
+          </div>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+              <thead>
+                <tr>
+                  <th style={{ padding: 6, borderBottom: '2px solid var(--border)', textAlign: 'left' }}>参数</th>
+                  {compareResult.map(d => (
+                    <th key={d.id} style={{ padding: 6, borderBottom: '2px solid var(--border)', textAlign: 'center' }}>
+                      {d.brand}<br/>{d.model}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['类型', 'product_type'],
+                  ['厚度', d => `${d.thickness}/5`],
+                  ['成人吸水量', d => d.absorbency_adult || d.absorbency_mfr || '-'],
+                  ['价格', 'avg_price'],
+                  ['综合评分', d => <span><i className="fa-solid fa-star" style={{ color: 'var(--warning)', fontSize: '0.7rem' }} /> {Number(d.avg_score||0).toFixed(1)}</span>],
+                ].map((row, i) => (
+                  <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: 6, fontWeight: 600 }}>{row[0]}</td>
+                    {compareResult.map(d => (
+                      <td key={d.id} style={{ padding: 6, textAlign: 'center' }}>
+                        {typeof row[1] === 'function' ? row[1](d) : d[row[1]] || '-'}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div style={{ marginTop: 12, display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
+            <MiniRadar diapers={compareResult} />
+            <div style={{ fontSize: '0.85rem' }}>
+              {compareResult.map((d, i) => (
+                <div key={d.id} style={{ marginBottom: 4 }}>
+                  <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%',
+                    background: ['#A8D8F0','#FFB7C5','#7BC67E','#F0C040'][i], marginRight: 6 }} />
+                  {d.brand} {d.model}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {loading && diapers.length === 0 ? <LoadingSkeleton count={6} type="card" /> : (
         <>
-          {!initialLoading && diapers.length === 0 ? (
+          {!loading && diapers.length === 0 ? (
             <div className="empty-state">
               <div className="icon"><i className="fa-solid fa-magnifying-glass" /></div>
               <h3>没有找到匹配的纸尿裤</h3>
               <p>试试调整筛选条件或搜索其他关键词</p>
-              {(brandFilter || sizeFilter || sort !== 'popularity' || search) && (
-                <button className="btn btn-outline btn-sm" style={{ marginTop: 8 }} onClick={() => { setSearch(''); setBrandFilter(''); setSizeFilter(''); setSort('popularity'); }}>
-                  <i className="fa-solid fa-rotate-left" /> 清除所有筛选
-                </button>
-              )}
             </div>
           ) : (
-          <>
-          {hotRankings.length > 0 && (
+            <>
+          {hotRankings.length > 0 && !compareMode && (
             <div style={{ marginBottom: 24 }}>
               <h3 style={{ marginBottom: 12 }}><i className="fa-solid fa-fire" /> 热门 TOP 5</h3>
               <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8 }}>
@@ -184,43 +275,59 @@ export default function Home() {
             </div>
           )}
 
-          <h3 style={{ marginBottom: 12 }}><i className="fa-solid fa-box" /> 全部纸尿裤 ({diapers.length})</h3>
+          <h3 style={{ marginBottom: 12 }}>
+            <i className="fa-solid fa-box" /> 全部纸尿裤 ({diapers.length})
+          </h3>
           <div className="diaper-grid">
-            {diapers.map((d, i) => (
-              <Link to={`/diaper/${d.id}`} key={d.id} className="diaper-card stagger-item" style={{ animationDelay: `${i * 0.04}s` }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div className="brand">{d.brand}</div>
-                  {d.is_baby_diaper === 1 && (
-                    <span style={{ fontSize: '0.65rem', background: 'var(--badge-bg)', color: 'var(--badge-color)', padding: '1px 6px', borderRadius: 8 }}>
-                      <i className="fa-solid fa-baby" /> 婴儿款
-                    </span>
-                  )}
-                </div>
-                <div className="model">{d.model}</div>
-                <div className="meta">
-                  <span className="tag">{d.product_type}</span>
-                  {d.sizes && d.sizes.length > 0 && (
-                    <span className="tag">{d.sizes.map(s=>s.label).join(' / ')}</span>
-                  )}
-                  <span className="tag"><i className="fa-solid fa-layer-group" /> 厚 {d.thickness}/5</span>
-                  {d.absorbency_adult && (
-                    <span className="tag"><i className="fa-solid fa-droplet" /> {d.absorbency_adult}</span>
-                  )}
-                </div>
-                <div className="meta" style={{ marginTop: 8 }}>
-                  {d.avg_score > 0 && (
-                    <span className="score-badge"><i className="fa-solid fa-star" style={{ color: 'var(--warning)' }} /> {Number(d.avg_score).toFixed(1)}</span>
-                  )}
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{d.rating_count} 评价</span>
-                  {d.avg_price && <span style={{ fontWeight: 600 }}>{d.avg_price}</span>}
-                </div>
-              </Link>
+            {diapers.map(d => (
+              <div key={d.id} style={{ position: 'relative' }}>
+                {compareMode && (
+                  <label style={{
+                    position: 'absolute', top: 8, left: 8, zIndex: 2,
+                    background: 'var(--bg-card)', borderRadius: '50%', width: 28, height: 28,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: 'pointer', border: '2px solid var(--border)',
+                    boxShadow: 'var(--shadow)',
+                  }}>
+                    <input type="checkbox" checked={compareSelected.includes(d.id)}
+                      onChange={() => toggleCompare(d.id)}
+                      disabled={!compareSelected.includes(d.id) && compareSelected.length >= 4}
+                      style={{ width: 14, height: 14, accentColor: 'var(--primary)' }} />
+                  </label>
+                )}
+                <Link to={`/diaper/${d.id}`} className="diaper-card" style={compareMode ? { paddingTop: 32 } : {}}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div className="brand">{d.brand}</div>
+                    {d.is_baby_diaper === 1 && (
+                      <span style={{ fontSize: '0.65rem', background: 'var(--badge-bg)', color: 'var(--badge-color)', padding: '1px 6px', borderRadius: 8 }}>
+                        <i className="fa-solid fa-baby" /> 婴儿款
+                      </span>
+                    )}
+                  </div>
+                  <div className="model">{d.model}</div>
+                  <div className="meta">
+                    <span className="tag">{d.product_type}</span>
+                    {d.sizes && d.sizes.length > 0 && (
+                      <span className="tag">{d.sizes.map(s=>s.label).join(' / ')}</span>
+                    )}
+                    <span className="tag"><i className="fa-solid fa-layer-group" /> 厚 {d.thickness}/5</span>
+                    {d.absorbency_adult && <span className="tag"><i className="fa-solid fa-droplet" /> {d.absorbency_adult}</span>}
+                  </div>
+                  <div className="meta" style={{ marginTop: 8 }}>
+                    {d.avg_score > 0 && (
+                      <span className="score-badge"><i className="fa-solid fa-star" style={{ color: 'var(--warning)' }} /> {Number(d.avg_score).toFixed(1)}</span>
+                    )}
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{d.rating_count} 评价</span>
+                    {d.avg_price && <span style={{ fontWeight: 600 }}>{d.avg_price}</span>}
+                  </div>
+                </Link>
+              </div>
             ))}
           </div>
         </>
+          )}
+        </>
       )}
-</>
-)}
     </div>
   );
 }

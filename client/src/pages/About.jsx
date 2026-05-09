@@ -194,6 +194,36 @@ export default function About() {
         </div>
       </div>
 
+      <div className="card" style={{ marginTop: 16 }}>
+        <h3 style={{ marginBottom: 12 }}>
+          <i className="fa-solid fa-keyboard" /> 快捷键
+        </h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 8 }}>
+          {[
+            { keys: 'Ctrl+Shift+T', desc: '切换深色/浅色模式' },
+            { keys: 'Alt+1', desc: '论坛首页' },
+            { keys: 'Alt+2', desc: '纸尿裤列表' },
+            { keys: 'Alt+3', desc: '排行榜' },
+            { keys: 'Alt+4', desc: 'AI 智能推荐' },
+            { keys: 'Alt+5', desc: '术语 Wiki' },
+            { keys: 'Alt+6', desc: '个人中心' },
+            { keys: 'Alt+7', desc: '对比工具' },
+            { keys: 'Alt+8', desc: '私信 & 通知' },
+            { keys: 'Alt+9', desc: '关于页面' },
+            { keys: 'Ctrl+D', desc: '跳转纸尿裤列表' },
+          ].map(s => (
+            <div key={s.keys} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', fontSize: '0.88rem' }}>
+              <kbd style={{
+                background: 'var(--input-bg)', border: '1px solid var(--border)',
+                borderRadius: 4, padding: '2px 8px', fontSize: '0.78rem',
+                fontFamily: 'monospace', whiteSpace: 'nowrap',
+              }}>{s.keys}</kbd>
+              <span style={{ color: 'var(--text-light)' }}>{s.desc}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="card" style={{ textAlign: 'center' }}>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: 8 }}>
           <i className="fa-solid fa-shield-halved" /> 隐私说明
