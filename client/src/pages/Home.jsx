@@ -154,12 +154,40 @@ export default function Home() {
           </button>
         </div>
         {(brandFilter || sizeFilter || sort !== 'popularity' || search) && (
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8, alignItems: 'center' }}>
-            {search && <span className="tag" style={{ cursor: 'pointer' }} onClick={() => setSearch('')}>搜索: {search} <i className="fa-solid fa-xmark" /></span>}
-            {brandFilter && <span className="tag" style={{ cursor: 'pointer' }} onClick={() => setBrandFilter('')}>{brandFilter} <i className="fa-solid fa-xmark" /></span>}
-            {sizeFilter && <span className="tag" style={{ cursor: 'pointer' }} onClick={() => setSizeFilter('')}>{sizeFilter}码 <i className="fa-solid fa-xmark" /></span>}
-            {sort !== 'popularity' && <span className="tag" style={{ cursor: 'pointer' }} onClick={() => setSort('popularity')}>排序: {sort} <i className="fa-solid fa-xmark" /></span>}
-            <button className="btn btn-outline btn-sm" style={{ fontSize: '0.75rem', padding: '4px 12px' }}
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 10, alignItems: 'center' }}>
+            {search && (
+              <span className="filter-tag">
+                搜索: {search}
+                <button className="tag-close" onClick={() => setSearch('')} aria-label="清除搜索">
+                  <i className="fa-solid fa-xmark" />
+                </button>
+              </span>
+            )}
+            {brandFilter && (
+              <span className="filter-tag">
+                {brandFilter}
+                <button className="tag-close" onClick={() => setBrandFilter('')} aria-label="清除品牌筛选">
+                  <i className="fa-solid fa-xmark" />
+                </button>
+              </span>
+            )}
+            {sizeFilter && (
+              <span className="filter-tag">
+                {sizeFilter}码
+                <button className="tag-close" onClick={() => setSizeFilter('')} aria-label="清除尺码筛选">
+                  <i className="fa-solid fa-xmark" />
+                </button>
+              </span>
+            )}
+            {sort !== 'popularity' && (
+              <span className="filter-tag">
+                排序: {sort === 'avg_price' ? '价格' : sort === 'thickness' ? '厚度' : sort}
+                <button className="tag-close" onClick={() => setSort('popularity')} aria-label="重置排序">
+                  <i className="fa-solid fa-xmark" />
+                </button>
+              </span>
+            )}
+            <button className="btn btn-outline btn-sm" style={{ fontSize: '0.75rem', padding: '5px 14px' }}
               onClick={() => { setSearch(''); setBrandFilter(''); setSizeFilter(''); setSort('popularity'); }}>
               <i className="fa-solid fa-rotate-left" /> 清除全部
             </button>

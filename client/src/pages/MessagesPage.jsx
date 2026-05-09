@@ -221,9 +221,9 @@ export default function MessagesPage() {
                           </div>
                         </div>
                         {link !== '#' ? (
-                          <a href={link} style={{ color: 'var(--link-color)', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
+                          <Link to={link} style={{ color: 'var(--link-color)', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
                             查看 <i className="fa-solid fa-arrow-right" />
-                          </a>
+                          </Link>
                         ) : null}
                       </div>
                     </div>

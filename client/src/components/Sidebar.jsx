@@ -18,21 +18,33 @@ function SearchBar({ onSearch }) {
     <form onSubmit={handleSearch} style={{ position: 'relative' }}>
       <i className="fa-solid fa-magnifying-glass" style={{
         position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
-        color: 'var(--text-muted)', fontSize: '0.85rem'
+        color: 'var(--text-muted)', fontSize: '0.85rem', pointerEvents: 'none'
       }} />
       <input
+        className="sidebar-search-input"
         value={q} onChange={e => setQ(e.target.value)}
         placeholder="搜索纸尿裤..."
         aria-label="搜索纸尿裤"
-        style={{
-          width: '100%', padding: '8px 12px 8px 36px', borderRadius: 24,
-          border: '1px solid var(--border)', background: 'var(--input-bg)',
-          fontSize: '0.85rem', color: 'var(--text)',
-          outline: 'none', transition: 'all 0.2s'
-        }}
-        onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.background = 'var(--bg-card)'; }}
-        onBlur={e => { e.target.style.borderColor = 'var(--border)'; e.target.style.background = 'var(--input-bg)'; }}
       />
+      {q && (
+        <button
+          type="button"
+          onClick={() => setQ('')}
+          aria-label="清除搜索"
+          style={{
+            position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
+            background: 'var(--input-bg)', border: 'none', borderRadius: '50%',
+            width: 22, height: 22, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'var(--text-muted)', fontSize: '0.7rem',
+            transition: 'color 0.15s, background 0.15s',
+          }}
+          onMouseOver={e => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.background = 'var(--border)'; }}
+          onMouseOut={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'var(--input-bg)'; }}
+        >
+          <i className="fa-solid fa-xmark" />
+        </button>
+      )}
     </form>
   );
 }

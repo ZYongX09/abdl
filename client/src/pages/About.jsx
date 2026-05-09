@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const VERSION = '5.7.9';
+const VERSION = '5.7.10';
 
 // Embedded changelog (kept in sync with CHANGELOG.md)
 const CHANGELOG = [
+  {
+    version: 'v5.7.10',
+    date: '2026-05-09',
+    changes: [
+      '侧边栏搜索框聚焦样式改用 CSS 实现',
+      '活跃筛选标签增加独立圆形关闭按钮',
+      '筛选标签排序名称中文化显示',
+    ],
+  },
   {
     version: 'v5.7.8',
     date: '2026-05-09',

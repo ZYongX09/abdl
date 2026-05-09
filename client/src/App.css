@@ -201,6 +201,33 @@ div:focus-visible, span:focus-visible, main:focus-visible, section:focus-visible
 }
 
 /* ====== 侧边栏 ====== */
+.sidebar-search-input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  font-size: 0.85rem;
+  color: var(--text);
+  outline: none;
+  font-family: var(--font);
+  transition: all 0.2s ease;
+}
+.sidebar-search-input:focus {
+  border-color: var(--primary);
+  background: var(--bg-card);
+  box-shadow: 0 0 0 3px rgba(168,216,240,0.15);
+}
+[data-theme="dark"] .sidebar-search-input {
+  background: var(--input-bg);
+  border-color: var(--border);
+}
+[data-theme="dark"] .sidebar-search-input:focus {
+  background: var(--bg-card);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(126,184,212,0.15);
+}
+
 .sidebar-overlay {
   position: fixed; inset: 0; background: var(--overlay-bg); z-index: 199;
   backdrop-filter: blur(2px);
@@ -330,10 +357,41 @@ select.form-control {
   background: var(--primary);
   color: white;
   transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px 3px 10px;
+  border-radius: 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 .filter-tag:hover {
   background: var(--primary-dark);
   transform: scale(1.05);
+}
+.tag-close {
+  background: rgba(255,255,255,0.25);
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 0.65rem;
+  padding: 0;
+  transition: background 0.15s ease;
+}
+.tag-close:hover {
+  background: rgba(255,255,255,0.45);
+}
+[data-theme="dark"] .tag-close {
+  background: rgba(255,255,255,0.15);
+}
+[data-theme="dark"] .tag-close:hover {
+  background: rgba(255,255,255,0.3);
 }
 
 /* ====== 深色模式切换按钮 ====== */
