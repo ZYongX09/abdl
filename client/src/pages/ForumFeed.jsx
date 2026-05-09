@@ -187,6 +187,7 @@ export default function ForumFeed() {
                 )}
                 <div style={{ display: 'flex', gap: 24, marginTop: 8 }}>
                   <button onClick={() => handleLike(p.id)}
+                    className={`like-btn${p.has_liked ? ' liked' : ''}`}
                     style={{ background: 'none', border: 'none', cursor: 'pointer',
                       color: p.has_liked ? 'var(--like-active)' : 'var(--text-muted)', fontSize: '0.9rem' }}>
                     <i className={`fa-heart ${p.has_liked ? 'fa-solid' : 'fa-regular'}`} /> {p.like_count}

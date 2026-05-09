@@ -136,6 +136,7 @@ export default function PostDetail() {
             )}
             <div style={{ display: 'flex', gap: 24, borderTop: '1px solid var(--border)', paddingTop: 12 }}>
               <button onClick={() => handleLike('post', post.id)}
+                className={`like-btn${post.has_liked ? ' liked' : ''}`}
                 style={{ background: 'none', border: 'none', cursor: 'pointer',
                   color: post.has_liked ? 'var(--like-active)' : 'var(--text-muted)', fontSize: '0.9rem' }}>
                 <i className={`fa-heart ${post.has_liked ? 'fa-solid' : 'fa-regular'}`} /> {post.like_count}
@@ -214,6 +215,7 @@ export default function PostDetail() {
               )}
               <div style={{ display: 'flex', gap: 16, fontSize: '0.85rem' }}>
                 <button onClick={() => handleLike('comment', c.id)}
+                  className={`like-btn${c.has_liked ? ' liked' : ''}`}
                   style={{ background: 'none', border: 'none', cursor: 'pointer',
                     color: c.has_liked ? 'var(--like-active)' : 'var(--text-muted)' }}>
                   <i className={`fa-heart ${c.has_liked ? 'fa-solid' : 'fa-regular'}`} /> {c.like_count}

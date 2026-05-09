@@ -58,6 +58,7 @@ export default function ComparePage() {
 
   const doCompare = async () => {
     if (selected.length < 2) return;
+    setCompared([]);
     setLoading(true);
     try {
       const d = await compareAPI.compare(selected);
