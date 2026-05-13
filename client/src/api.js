@@ -79,9 +79,6 @@ export const diapersAPI = {
     if (params.search) { const s = params.search.toLowerCase(); list = list.filter(d => d.brand.toLowerCase().includes(s) || d.model.toLowerCase().includes(s)); }
     if (params.brand) list = list.filter(d => d.brand === params.brand);
     if (params.size) list = list.filter(d => d.sizes?.some(s => s.label === params.size));
-    const page = Number(params.page) || 1, limit = Number(params.limit) || 20;
-    const total = list.length;
-    list = list.slice((page-1)*limit, page*limit);
     // 附加评分 + 感受加权（感受权重 10%）
     const ratings = LS.get('ratings') || {};
     const allFeelings = LS.get('feelings') || {};
@@ -108,6 +105,26 @@ export const diapersAPI = {
         : Math.round(avgScore * 10) / 10;
       return { ...d, avg_score: compositeScore, rating_count: r.length, feeling_count: dFeelings.length };
     });
+    // 排序
+    const sort = params.sort || 'id';
+    const order = params.order || (sort === 'id' ? 'ASC' : 'DESC');
+    const sortFns = {
+      avg_score: (a, b) => (a.avg_score || 0) - (b.avg_score || 0),
+      rating_count: (a, b) => (a.rating_count || 0) - (b.rating_count || 0),
+      thickness: (a, b) => (a.thickness || 0) - (b.thickness || 0),
+      popularity: (a, b) => (a.popularity || 0) - (b.popularity || 0),
+      avg_price: (a, b) => {
+        const extract = t => { if (!t) return 0; const m = t.match(/(\d+)/); return m ? parseInt(m[1]) : 0; };
+        return extract(a.avg_price) - extract(b.avg_price);
+      },
+      id: (a, b) => a.id - b.id,
+    };
+    const sortFn = sortFns[sort] || sortFns.id;
+    list.sort((a, b) => order === 'DESC' ? sortFn(b, a) : sortFn(a, b));
+    // 分页
+    const page = Number(params.page) || 1, limit = Number(params.limit) || 20;
+    const total = list.length;
+    list = list.slice((page-1)*limit, page*limit);
     return { diapers: list, pagination: { page, limit, total, totalPages: Math.ceil(total/limit) } };
   },
   get: async (id) => {
@@ -200,9 +217,25 @@ export const ratingsAPI = {
 // ====== 排行榜（基于评分数据计算） ======
 export const rankingsAPI = {
   hot: async () => {
-    const { diapers } = await diapersAPI.list({ limit: 100 });
-    const ranked = [...diapers].sort((a,b) => b.avg_score - a.avg_score);
-    return { rankings: ranked.slice(0, 20), cached: true };
+    if (!_diapers) await loadData();
+    const ratings = LS.get('ratings') || {};
+    const allFeelings = LS.get('feelings') || {};
+    const dims = ['absorption_score','fit_score','comfort_score','thickness_score','appearance_score','value_score'];
+    const fDims = ['looseness','softness','dryness','odor_control','quietness'];
+    const scored = _diapers.map(d => {
+      const r = Object.values(ratings).filter(r => r.diaper_id === d.id);
+      const avgScore = r.length > 0 ? r.reduce((s, ri) => s + dims.reduce((a, dim) => a + (ri[dim]||0), 0) / dims.length, 0) / r.length : 0;
+      const dFeelings = Object.values(allFeelings).filter(f => f.diaper_id === d.id);
+      let feelingAvg = 0;
+      if (dFeelings.length > 0) {
+        const fScores = dFeelings.map(f => { const valid = fDims.filter(k => f[k] != null); return valid.length ? valid.reduce((s, k) => s + (f[k] + 5) * 10 / 10, 0) / valid.length : 0; });
+        feelingAvg = fScores.reduce((a, b) => a + b, 0) / fScores.length;
+      }
+      const compositeScore = dFeelings.length > 0 ? Math.round((avgScore * 0.9 + feelingAvg * 0.1) * 10) / 10 : Math.round(avgScore * 10) / 10;
+      return { ...d, avg_score: compositeScore, rating_count: r.length, feeling_count: dFeelings.length };
+    });
+    scored.sort((a, b) => b.avg_score - a.avg_score);
+    return { rankings: scored.slice(0, 20), cached: true };
   },
   absorbency: async () => {
     if (!_diapers) await loadData();
@@ -211,18 +244,26 @@ export const rankingsAPI = {
     return { rankings: ranked.slice(0,20), cached: true };
   },
   popular: async () => {
-    const { diapers } = await diapersAPI.list({ limit: 100 });
-    const ranked = [...diapers].sort((a,b) => b.rating_count - a.rating_count);
-    return { rankings: ranked.slice(0,20), cached: true };
+    if (!_diapers) await loadData();
+    const ratings = LS.get('ratings') || {};
+    const scored = _diapers.map(d => {
+      const r = Object.values(ratings).filter(r => r.diaper_id === d.id);
+      return { ...d, rating_count: r.length };
+    });
+    scored.sort((a, b) => b.rating_count - a.rating_count);
+    return { rankings: scored.slice(0, 20), cached: true };
   },
   dimension: async (dim) => {
-    const { diapers } = await diapersAPI.list({ limit: 100 });
-    const ranked = [...diapers].sort((a,b) => {
-      const ratings = LS.get('ratings') || {};
-      const avg = (id) => { const r = Object.values(ratings).filter(x => x.diaper_id === id).map(x => x[dim]).filter(v=>v!=null); return r.length ? r.reduce((a,b)=>a+b,0)/r.length : 0; };
-      return avg(b.id) - avg(a.id);
+    if (!_diapers) await loadData();
+    const ratings = LS.get('ratings') || {};
+    const scored = _diapers.map(d => {
+      const r = Object.values(ratings).filter(x => x.diaper_id === d.id);
+      const vals = r.map(x => x[dim]).filter(v => v != null);
+      const avg = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+      return { ...d, avg_score: Math.round(avg * 10) / 10, rating_count: r.length };
     });
-    return { rankings: ranked.slice(0,20), cached: true, dimension: dim };
+    scored.sort((a, b) => b.avg_score - a.avg_score);
+    return { rankings: scored.slice(0, 20), cached: true, dimension: dim };
   },
 };
 
@@ -231,7 +272,10 @@ export const forumAPI = {
   feed: async ({ page=1, limit=20, search } = {}) => {
     let posts = LS.get('posts') || [];
     if (search) { const s = search.toLowerCase(); posts = posts.filter(p => p.content?.toLowerCase().includes(s)); }
-    posts.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    posts.sort((a,b) => {
+      if (a.pinned !== b.pinned) return (b.pinned || 0) - (a.pinned || 0);
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
     const total = posts.length;
     const users = LS.get('users') || {};
     const allComments = LS.get('comments') || {};
@@ -242,7 +286,7 @@ export const forumAPI = {
       const commentCount = Object.values(allComments).filter(c => c.post_id === p.id).length;
       const currentUser = LS.get('currentUser');
       const hasLiked = currentUser ? Object.values(likes).some(l => l.user_id === currentUser.id && l.target_type === 'post' && l.target_id === p.id) : false;
-      return { ...p, images: [], user: { id: u?.id, username: u?.username }, like_count: likeCount, has_liked: hasLiked, comment_count: commentCount, diaper: null };
+      return { ...p, images: [], user: { id: u?.id, username: u?.username, avatar: u?.avatar, role: u?.role }, like_count: likeCount, has_liked: hasLiked, comment_count: commentCount, diaper: null };
     });
     return { posts: enriched, pagination: { page, limit, total, totalPages: Math.ceil(total/limit) } };
   },
@@ -261,10 +305,11 @@ export const forumAPI = {
     const postComments = Object.values(comments).filter(c => c.post_id === post.id).map(c => {
       const cu = Object.values(users).find(u => u.id === c.user_id);
       const cl = Object.values(likes).filter(l => l.target_type === 'comment' && l.target_id === c.id).length;
-      return { ...c, username: cu?.username, like_count: cl, has_liked: false };
+      const cHasLiked = currentUser ? Object.values(likes).some(l => l.user_id === currentUser.id && l.target_type === 'comment' && l.target_id === c.id) : false;
+      return { ...c, user: { id: cu?.id, username: cu?.username, avatar: cu?.avatar, role: cu?.role }, username: cu?.username, like_count: cl, has_liked: cHasLiked };
     });
 
-    return { post: { ...post, images: [], user: { id: u?.id, username: u?.username }, like_count: likeCount, has_liked, comment_count: postComments.length, diaper: null }, comments: postComments };
+    return { post: { ...post, images: [], user: { id: u?.id, username: u?.username, avatar: u?.avatar, role: u?.role }, like_count: likeCount, has_liked, comment_count: postComments.length, diaper: null }, comments: postComments };
   },
   create: ({ content, diaper_id }) => {
     const user = LS.get('currentUser');
@@ -560,7 +605,7 @@ export function uploadImage() { return Promise.resolve({ url: '' }); }
 
 export const messagesAPI = {
   conversations: () => { const convs = LS.get('conversations')||[]; return { conversations: convs }; },
-  withUser: (userId) => { const msgs = LS.get('messages')||{}; return { messages: msgs[userId]||[], other: { id: userId, username: '用户'+userId } }; },
+  withUser: (userId) => { const msgs = LS.get('messages')||{}; const users = LS.get('users')||{}; const u = Object.values(users).find(u => u.id === userId); return { messages: msgs[userId]||[], other: { id: userId, username: u?.username || '用户'+userId } }; },
   send: ({ receiver_id, content }) => {
     const user = LS.get('currentUser');
     if (!user) throw new Error('请先登录');
@@ -587,7 +632,7 @@ export const adminAPI = {
   },
   banUser: () => ({ message: '功能简化中' }),
   deleteUser: (id) => ({ message: '已删除' }),
-  posts: () => { const p = LS.get('posts')||[]; const comments = LS.get('comments')||{}; const likes = LS.get('likes')||{}; return { posts: p.map(post => ({ ...post, username: 'user', comment_count: Object.values(comments).filter(c => c.post_id === post.id).length, like_count: Object.values(likes).filter(l => l.target_type === 'post' && l.target_id === post.id).length })) }; },
+  posts: () => { const p = LS.get('posts')||[]; const comments = LS.get('comments')||{}; const likes = LS.get('likes')||{}; const users = LS.get('users')||{}; return { posts: p.map(post => { const u = Object.values(users).find(u => u.id === post.user_id); return { ...post, username: u?.username || '已注销', comment_count: Object.values(comments).filter(c => c.post_id === post.id).length, like_count: Object.values(likes).filter(l => l.target_type === 'post' && l.target_id === post.id).length }; }) }; },
   pinPost: () => ({ message: '已置顶' }),
   deletePost: (id) => { let p = LS.get('posts')||[]; p = p.filter(x => x.id !== id); LS.set('posts', p); return { message: '已删除' }; },
   comments: () => ({ comments: [] }),

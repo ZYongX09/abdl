@@ -635,16 +635,20 @@ select.form-control {
 /* ====== 模态弹窗 ====== */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-  z-index: 300; display: flex; align-items: center; justify-content: center;
+  z-index: 300;
+  display: flex; align-items: flex-start; justify-content: center;
   animation: fadeIn 0.2s ease-out;
   backdrop-filter: blur(2px);
+  overflow-y: auto;
+  padding: 40px 16px;
 }
 .modal {
   background: var(--bg-card); color: var(--text);
   border-radius: var(--radius);
-  padding: 32px; max-width: 520px; width: 90%; max-height: 85vh; overflow-y: auto;
+  padding: 32px; max-width: 520px; width: 100%; max-height: none; overflow-y: visible;
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   animation: scaleIn 0.25s ease-out;
+  flex-shrink: 0;
 }
 
 /* ====== 渐变背景区域 ====== */
@@ -904,7 +908,7 @@ select.form-control {
 }
 
 /* ================================================================
-   高级材质 — 毛玻璃悬浮面板（纯 blur + 半透明，无光影投射）
+   焕新视觉 — 毛玻璃悬浮面板（纯 blur + 半透明，无光影投射）
    实际用途：内容层级分离，卡片/侧栏/弹窗在背景上悬浮
    ================================================================ */
 
@@ -1170,7 +1174,7 @@ select.form-control {
   from { opacity: 0; transform: translateY(20px) scale(0.97); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
-.card, .diaper-card, .rank-item { animation: cardFloatIn 0.4s ease-out; }
+.card, .diaper-card, .rank-item { animation: cardFloatIn 0.4s ease-out forwards; }
 
 @keyframes buttonPop {
   0% { transform: scale(1); }
@@ -1190,21 +1194,8 @@ select.form-control {
 }
 
 /* ================================================================
-   高级材质 v2 — 玻璃折射 + 液体惯性增强
+   焕新视觉 v2 — 玻璃折射 + 液体惯性增强
    ================================================================ */
-
-/* ---- 液体惯性：卡片将交由 LiquidScroll 组件驱动 ---- */
-/* 当 glass-enabled 时，撤消原有的 CSS transition，
-   让 JS 弹簧物理完全接管 transform */
-.glass-enabled .card,
-.glass-enabled .diaper-card,
-.glass-enabled .rank-item,
-.glass-enabled .hero-card,
-.glass-enabled .post-card {
-  transition: background 0.35s ease, backdrop-filter 0.35s ease, box-shadow 0.35s ease !important;
-  /* transform 由 LiquidScroll JS 控制 */
-  animation: none !important; /* 禁用入场动画，避免与液体惯性冲突 */
-}
 
 /* ---- 玻璃折射：多层伪元素光效 ---- */
 
@@ -1294,13 +1285,13 @@ select.form-control {
   inset: -40%;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.15;
+  opacity: 0.25;
   background:
-    radial-gradient(ellipse at 30% 20%, rgba(168,216,240,0.4) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 60%, rgba(255,183,197,0.3) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(168,216,240,0.3) 0%, transparent 40%);
-  animation: causticsFloat 8s ease-in-out infinite;
-  filter: blur(30px);
+    radial-gradient(ellipse at 30% 20%, rgba(168,216,240,0.55) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 60%, rgba(255,183,197,0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(168,216,240,0.4) 0%, transparent 40%);
+  animation: causticsFloat 7s ease-in-out infinite;
+  filter: blur(28px);
 }
 
 @keyframes causticsFloat {

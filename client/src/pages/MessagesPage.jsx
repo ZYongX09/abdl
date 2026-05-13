@@ -64,7 +64,7 @@ export default function MessagesPage() {
     try {
       const d = await forumAPI.notifications();
       setNotifs(d.notifications || []);
-      setUnreadNotifs(d.notifications?.filter(n => !n.is_read).length || 0);
+      setUnreadNotifs(d.notifications?.filter(n => !n.read).length || 0);
     } catch {}
   };
 
@@ -213,15 +213,15 @@ export default function MessagesPage() {
                   return (
                     <div key={n.id} className="stagger-item" style={{
                       padding: '10px 14px', borderRadius: 10, marginBottom: 6,
-                      background: n.is_read ? 'transparent' : 'var(--primary-light)',
-                      border: `1px solid ${n.is_read ? 'var(--border)' : 'var(--primary)'}`,
+                      background: n.read ? 'transparent' : 'var(--primary-light)',
+                      border: `1px solid ${n.read ? 'var(--border)' : 'var(--primary)'}`,
                       transition: 'all 0.2s ease, background 0.2s ease',
                       fontSize: '0.9rem', cursor: isClickable ? 'pointer' : 'default',
                       animationDelay: `${i * 0.04}s`,
                     }}
                     onClick={() => { if (isClickable) window.location.href = link; }}
-                    onMouseOver={e => { if (n.is_read) e.currentTarget.style.background = 'var(--input-bg)'; }}
-                    onMouseOut={e => { if (n.is_read) e.currentTarget.style.background = 'transparent'; }}>
+                    onMouseOver={e => { if (n.read) e.currentTarget.style.background = 'var(--input-bg)'; }}
+                    onMouseOut={e => { if (n.read) e.currentTarget.style.background = 'transparent'; }}>
                       <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                         <span style={{ color: n.type === 'like' ? 'var(--like-active)' : 'var(--primary-dark)', fontSize: '1rem' }}>
                           <i className={`fa-solid ${typeIcons[n.type] || 'fa-circle'}`} />

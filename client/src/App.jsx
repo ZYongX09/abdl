@@ -129,12 +129,12 @@ export default function App() {
   }, [theme]);
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       <GlobalMouseTracker />
       <LiquidScroll />
       <ScrollToTop />
       <Sidebar />
-      <div style={{ flex: 1, overflow: 'auto', position: 'relative' }}>
+      <div style={{ flex: 1, minWidth: 0, overflowY: 'auto' }}>
 
         <div className="container page-enter" style={{ maxWidth: 800, padding: '24px 20px' }}>
           <ErrorBoundary>

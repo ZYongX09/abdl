@@ -119,8 +119,8 @@ export default function Settings() {
           <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
             <span>
               <i className="fa-solid fa-gem" style={{ marginRight: 8 }} />
-              高级材质
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 400 }}>卡片和面板使用半透明毛玻璃质感，带环境光流动</div>
+              焕新视觉
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 400 }}>卡片和面板使用半透明毛玻璃质感，带来沉浸式视觉体验</div>
             </span>
             <button
               className={`btn btn-sm ${glassEffect ? 'btn-primary' : 'btn-outline'}`}
@@ -236,8 +236,7 @@ export default function Settings() {
               if (!confirm('再次确认：真的要删除账户吗？')) return;
               try {
                 await authAPI.deleteAccount(user.id);
-                localStorage.removeItem('abdl_token');
-                localStorage.removeItem('abdl_user');
+                localStorage.removeItem('token');
                 alert('账户已删除');
                 window.location.href = '/';
               } catch (e) {

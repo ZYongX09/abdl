@@ -33,6 +33,8 @@ export default function Rankings() {
     api.then(data => {
       setRankings(data.rankings || []);
       setCached(data.cached || false);
+    }).catch(err => {
+      console.error('[Rankings]', err);
     }).finally(() => setLoading(false));
   }, [tab]);
 

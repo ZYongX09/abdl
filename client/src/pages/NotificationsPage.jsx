@@ -55,8 +55,8 @@ export default function Notifications() {
           <Link to={getLink(n)} key={n.id} style={{ textDecoration: 'none', color: 'inherit' }}>
             <div style={{
               padding: '12px 16px', borderRadius: 12, marginBottom: 8,
-              background: n.is_read ? 'var(--bg-card)' : 'var(--primary-light)',
-              border: `1px solid ${n.is_read ? 'var(--border)' : 'var(--primary)'}`,
+              background: n.read ? 'var(--bg-card)' : 'var(--primary-light)',
+              border: `1px solid ${n.read ? 'var(--border)' : 'var(--primary)'}`,
               transition: 'all 0.2s'
             }}>
               <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -64,7 +64,7 @@ export default function Notifications() {
                   <i className={`fa-solid ${typeIcons[n.type]}`} />
                 </span>
                 <div style={{ flex: 1 }}>
-                  <span style={{ fontWeight: n.is_read?400:600 }}>
+                  <span style={{ fontWeight: n.read?400:600 }}>
                     <strong>{n.from_username}</strong> {typeLabels[n.type]}
                     {n.type === 'like' && (n.target_type==='post'?'帖子':'评论')}
                   </span>
@@ -72,7 +72,7 @@ export default function Notifications() {
                     {timeAgo(n.created_at)}
                   </div>
                 </div>
-                {!n.is_read && (
+                {!n.read && (
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--primary-dark)' }} />
                 )}
               </div>
