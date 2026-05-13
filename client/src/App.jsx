@@ -51,7 +51,6 @@ const ROUTE_TITLES = {
   '/rankings': '排行榜 — ABDL Space',
   '/compare': '对比工具 — ABDL Space',
   '/recommend': 'AI 推荐 — ABDL Space',
-  '/termwiki': '术语 Wiki — ABDL Space',
   '/profile': '个人中心 — ABDL Space',
   '/login': '登录 — ABDL Space',
   '/register': '注册 — ABDL Space',
@@ -114,7 +113,7 @@ export default function App() {
       if (ctrl && e.shiftKey && key === 't') { e.preventDefault(); toggleTheme(); return; }
 
       // Alt+1..9: Navigate pages
-      const navMap = { '1': '/', '2': '/diapers', '3': '/rankings', '4': '/recommend', '5': '/termwiki', '6': '/profile', '7': '/compare', '8': '/messages', '9': '/about' };
+      const navMap = { '1': '/', '2': '/diapers', '3': '/rankings', '4': '/recommend', '5': '/profile', '6': '/compare', '7': '/messages', '8': '/about' };
       if (alt && navMap[key]) { e.preventDefault(); navigate(navMap[key]); return; }
 
       // G then H: Go Home
@@ -151,7 +150,7 @@ export default function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/rankings" element={<Rankings />} />
             <Route path="/recommend" element={<Recommendations />} />
-            <Route path="/termwiki" element={<TermWiki />} />
+            {/* <Route path="/termwiki" element={<TermWiki />} /> */}
             <Route path="/user/:id" element={<UserPage />} />
             <Route path="/about" element={<About />} />
             <Route path="/settings" element={<Settings />} />
@@ -160,7 +159,7 @@ export default function App() {
           </ErrorBoundary>
         </div>
         <footer style={{ textAlign: 'center', padding: 20, color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-          <i className="fa-solid fa-baby" style={{ color: 'var(--primary)' }} /> ABDL Space v5 · © {new Date().getFullYear()} · <a href="/about" style={{ color: 'var(--link-color)' }}>关于</a> · <a href="/settings" style={{ color: 'var(--link-color)' }}>设置</a> · <a href="/" style={{ color: 'var(--link-color)' }}>论坛</a> · <a href="/termwiki" style={{ color: 'var(--link-color)' }}>术语</a> · <a href="https://github.com/ZYongX09/abdl" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--link-color)' }}><i className="fa-brands fa-github" /> GitHub</a>
+          <i className="fa-solid fa-baby" style={{ color: 'var(--primary)' }} /> ABDL Space v5 · © {new Date().getFullYear()} · <a href="/about" style={{ color: 'var(--link-color)' }}>关于</a> · <a href="/settings" style={{ color: 'var(--link-color)' }}>设置</a> · <a href="/" style={{ color: 'var(--link-color)' }}>论坛</a> · <a href="https://github.com/ZYongX09/abdl" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--link-color)' }}><i className="fa-brands fa-github" /> GitHub</a>
         </footer>
       </div>
       <ScrollProgress />

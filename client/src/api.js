@@ -1,9 +1,22 @@
 /**
- * API 数据层 v5 — 纯前端版
- * 数据来源：静态 JSON + localStorage
- * 后续迁移：JSON → B's API
+ * API 数据层 v5 — 双模式：localStorage / 后端 API
+ * 通过 VITE_API_BASE 环境变量切换
  */
-const API_BASE = ''; // 留空，用相对路径读 public 目录
+const API_BASE = import.meta.env.VITE_API_BASE || '';
+const USE_API = !!API_BASE;
+
+// ====== 通用 fetch 封装 ======
+function getToken() { return localStorage.getItem('token'); }
+
+async function apiFetch(path, options = {}) {
+  const headers = { 'Content-Type': 'application/json', ...options.headers };
+  const token = getToken();
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || `请求失败 (${res.status})`);
+  return data;
+}
 
 // ====== 静态数据 ======
 let _diapers = null, _terms = null, _levels = null;
@@ -33,6 +46,14 @@ const LS = {
 // ====== 认证 ======
 export const authAPI = {
   register: async ({ username, password, ...profile }) => {
+    if (USE_API) {
+      const data = await apiFetch('/api/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ email: profile.email || `${username}@abdl.local`, password, username }),
+      });
+      localStorage.setItem('token', data.token);
+      return data;
+    }
     const users = LS.get('users') || {};
     if (users[username]) throw new Error('用户名已被使用');
     const user = { id: Date.now(), username, password, role: username === 'ZhX' || username === 'ZYongX' ? 'admin' : 'user', ...profile, created_at: new Date().toISOString() };
@@ -42,6 +63,14 @@ export const authAPI = {
     return { token: 'local-' + user.id, user: { ...user, password: undefined } };
   },
   login: async ({ username, password }) => {
+    if (USE_API) {
+      const data = await apiFetch('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ login: username, password }),
+      });
+      localStorage.setItem('token', data.token);
+      return data;
+    }
     const users = LS.get('users') || {};
     const user = users[username];
     if (!user || user.password !== password) throw new Error('用户名或密码错误');
@@ -49,11 +78,19 @@ export const authAPI = {
     return { token: 'local-' + user.id, user: { ...user, password: undefined } };
   },
   me: async () => {
+    if (USE_API) {
+      const user = await apiFetch('/api/auth/me');
+      return { user };
+    }
     const user = LS.get('currentUser');
     if (!user) throw new Error('未登录');
     return { user: { ...user, password: undefined } };
   },
   updateProfile: async (body) => {
+    if (USE_API) {
+      const user = await apiFetch('/api/auth/me', { method: 'PATCH', body: JSON.stringify(body) });
+      return { user };
+    }
     const user = LS.get('currentUser');
     if (!user) throw new Error('未登录');
     Object.assign(user, body);
@@ -64,16 +101,47 @@ export const authAPI = {
     return { user: { ...user, password: undefined } };
   },
   getUser: async (id) => {
+    if (USE_API) {
+      const user = await apiFetch(`/api/users/${id}`);
+      return { user };
+    }
     const users = LS.get('users') || {};
     const u = Object.values(users).find(u => u.id === id);
     if (!u) throw new Error('用户不存在');
     return { user: { ...u, password: undefined } };
+  },
+  deleteAccount: async (id) => {
+    if (USE_API) {
+      await apiFetch(`/api/users/${id}`, { method: 'DELETE' });
+      localStorage.removeItem('token');
+      return { message: '已删除' };
+    }
+    const users = LS.get('users') || {};
+    const user = LS.get('currentUser');
+    if (user) { delete users[user.username]; LS.set('users', users); }
+    LS.del('currentUser');
+    localStorage.removeItem('token');
+    return { message: '已删除' };
   },
 };
 
 // ====== 纸尿裤 ======
 export const diapersAPI = {
   list: async (params = {}) => {
+    if (USE_API) {
+      const qs = new URLSearchParams();
+      if (params.search) qs.set('search', params.search);
+      if (params.brand) qs.set('brand', params.brand);
+      if (params.size) qs.set('size', params.size);
+      // 后端只支持 id/avg_score/thickness，rating_count 有 bug 会 500
+      const sortMap = { popularity: 'avg_score', avg_price: 'id', thickness: 'thickness', avg_score: 'avg_score' };
+      const sort = sortMap[params.sort] || 'id';
+      qs.set('sort', sort);
+      qs.set('order', sort === 'id' ? 'ASC' : 'DESC');
+      if (params.page) qs.set('page', params.page);
+      if (params.limit) qs.set('limit', params.limit);
+      return apiFetch(`/api/diapers?${qs}`);
+    }
     if (!_diapers) await loadData();
     let list = [..._diapers];
     if (params.search) { const s = params.search.toLowerCase(); list = list.filter(d => d.brand.toLowerCase().includes(s) || d.model.toLowerCase().includes(s)); }
@@ -128,6 +196,7 @@ export const diapersAPI = {
     return { diapers: list, pagination: { page, limit, total, totalPages: Math.ceil(total/limit) } };
   },
   get: async (id) => {
+    if (USE_API) return apiFetch(`/api/diapers/${id}`);
     if (!_diapers) await loadData();
     const d = _diapers.find(d => d.id === Number(id));
     if (!d) throw new Error('纸尿裤不存在');
@@ -158,8 +227,8 @@ export const diapersAPI = {
     }).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
     return { diaper: { ...d, avg_score: compositeScore, rating_count: r.length, feeling_count: dFeelings.length }, reviews, wiki: null };
   },
-  brands: async () => { if (!_diapers) await loadData(); return { brands: [...new Set(_diapers.map(d => d.brand))] }; },
-  sizes: async () => { if (!_diapers) await loadData(); return { sizes: [...new Set(_diapers.flatMap(d => d.sizes?.map(s => s.label)||[]))] }; },
+  brands: async () => { if (USE_API) return apiFetch('/api/diapers/brands'); if (!_diapers) await loadData(); return { brands: [...new Set(_diapers.map(d => d.brand))] }; },
+  sizes: async () => { if (USE_API) return apiFetch('/api/diapers/sizes'); if (!_diapers) await loadData(); return { sizes: [...new Set(_diapers.flatMap(d => d.sizes?.map(s => s.label)||[]))] }; },
   matchSize: ({ hip }) => {
     const STANDARDS = [{label:'S',hip_min:80,hip_max:95},{label:'M',hip_min:95,hip_max:110},{label:'L',hip_min:110,hip_max:125},{label:'XL',hip_min:125,hip_max:140},{label:'XXL',hip_min:140,hip_max:160}];
     const matched = STANDARDS.find(s => hip >= s.hip_min && hip <= s.hip_max);
@@ -423,8 +492,9 @@ export const guessAPI = {
 // ====== 对比 ======
 export const compareAPI = {
   compare: async (ids) => {
-    if (!_diapers) await loadData();
     const idArr = Array.isArray(ids) ? ids : (ids.ids || []);
+    if (USE_API) return apiFetch(`/api/diapers/compare?ids=${idArr.join(',')}`);
+    if (!_diapers) await loadData();
     const ratings = LS.get('ratings') || {};
     const items = idArr.map(id => {
       const d = _diapers.find(dd => dd.id === Number(id));
