@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 export default function LoadingSkeleton({ count = 3, type = 'card' }) {
   if (type === 'rank') {
     return Array.from({ length: count }, (_, i) => (

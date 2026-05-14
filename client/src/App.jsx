@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+import MobileBottomNav from './components/MobileBottomNav';
 import BackToTop from './components/BackToTop';
 import ErrorBoundary from './components/ErrorBoundary';
 import GlobalMouseTracker from './components/GlobalMouseTracker';
@@ -109,8 +110,8 @@ export default function App() {
       const ctrl = e.ctrlKey || e.metaKey;
       const alt = e.altKey;
 
-      // Ctrl+Shift+T: Toggle theme
-      if (ctrl && e.shiftKey && key === 't') { e.preventDefault(); toggleTheme(); return; }
+      // Ctrl+Shift+T: Toggle theme (use functional setState to avoid stale closure)
+      if (ctrl && e.shiftKey && key === 't') { e.preventDefault(); setTheme(t => t === 'dark' ? 'light' : 'dark'); return; }
 
       // Alt+1..9: Navigate pages
       const navMap = { '1': '/', '2': '/diapers', '3': '/rankings', '4': '/recommend', '5': '/profile', '6': '/compare', '7': '/messages', '8': '/about' };
@@ -125,15 +126,15 @@ export default function App() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [theme]);
+  }, []);
 
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+    <div className="app-layout">
       <GlobalMouseTracker />
       <LiquidScroll />
       <ScrollToTop />
       <Sidebar />
-      <div style={{ flex: 1, minWidth: 0, overflowY: 'auto' }}>
+      <div className="app-main-content">
 
         <div className="container page-enter" style={{ maxWidth: 800, padding: '24px 20px' }}>
           <ErrorBoundary>
@@ -162,6 +163,7 @@ export default function App() {
           <i className="fa-solid fa-baby" style={{ color: 'var(--primary)' }} /> ABDL Space v5 · © {new Date().getFullYear()} · <a href="/about" style={{ color: 'var(--link-color)' }}>关于</a> · <a href="/settings" style={{ color: 'var(--link-color)' }}>设置</a> · <a href="/" style={{ color: 'var(--link-color)' }}>论坛</a> · <a href="https://github.com/ZYongX09/abdl" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--link-color)' }}><i className="fa-brands fa-github" /> GitHub</a>
         </footer>
       </div>
+      <MobileBottomNav />
       <ScrollProgress />
       <BackToTop />
     </div>

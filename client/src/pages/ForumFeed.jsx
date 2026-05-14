@@ -47,7 +47,7 @@ export default function ForumFeed() {
     try {
       const params = { page: p, limit: 20 }; if (search) params.search = search;
       const d = await forumAPI.feed(params);
-      setPosts(prev => append ? [...prev, ...d.posts] : d.posts);
+      setPosts(prev => append ? [...prev, ...(d.posts||[])] : (d.posts||[]));
       setHasMore(d.pagination.page < d.pagination.totalPages);
       setPage(p);
     } catch(e) {} finally { setLoading(false); setLoadingMore(false); }
@@ -90,7 +90,7 @@ export default function ForumFeed() {
         {user && (
           <>
             <Link to="/notifications" style={{ position: 'relative', textDecoration: 'none', fontSize: '1.3rem', color: 'var(--text)' }}>
-              <i className="fa-solid fa-bell" />
+              <i className={`fa-solid fa-bell${notifCount > 0 ? ' bell-shake' : ''}`} />
               {notifCount > 0 && (
                 <span className="notif-badge" style={{ position: 'absolute', top: -6, right: -8 }}>{notifCount}</span>
               )}

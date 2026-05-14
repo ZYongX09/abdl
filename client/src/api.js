@@ -133,11 +133,12 @@ export const diapersAPI = {
       if (params.search) qs.set('search', params.search);
       if (params.brand) qs.set('brand', params.brand);
       if (params.size) qs.set('size', params.size);
-      // 后端只支持 id/avg_score/thickness，rating_count 有 bug 会 500
-      const sortMap = { popularity: 'avg_score', avg_price: 'id', thickness: 'thickness', avg_score: 'avg_score' };
+      // 后端 avg_score 排序会 500，暂用 id 兜底；thickness/rating_count 正常
+      const sortMap = { popularity: 'id', avg_price: 'id', thickness: 'thickness', avg_score: 'id' };
       const sort = sortMap[params.sort] || 'id';
+      const orderMap = { popularity: 'ASC', avg_price: 'ASC', thickness: 'DESC', avg_score: 'DESC' };
       qs.set('sort', sort);
-      qs.set('order', sort === 'id' ? 'ASC' : 'DESC');
+      qs.set('order', orderMap[params.sort] || 'ASC');
       if (params.page) qs.set('page', params.page);
       if (params.limit) qs.set('limit', params.limit);
       return apiFetch(`/api/diapers?${qs}`);
@@ -236,9 +237,15 @@ export const diapersAPI = {
   },
 };
 
-// ====== 评分（localStorage） ======
+// ====== 评分 ======
 export const ratingsAPI = {
-  create: ({ diaper_id, review, ...scores }) => {
+  create: async ({ diaper_id, review, ...scores }) => {
+    if (USE_API) {
+      return apiFetch('/api/ratings', {
+        method: 'POST',
+        body: JSON.stringify({ diaper_id, review: review || undefined, ...scores }),
+      });
+    }
     const user = LS.get('currentUser');
     if (!user) throw new Error('请先登录');
     const ratings = LS.get('ratings') || {};
@@ -249,6 +256,7 @@ export const ratingsAPI = {
     return { message: '评分成功', review_status: 'approved' };
   },
   getForDiaper: async (id) => {
+    if (USE_API) return apiFetch(`/api/diapers/${id}/ratings`);
     if (!_diapers) await loadData();
     const ratings = LS.get('ratings') || {};
     const reviews = Object.values(ratings).filter(r => r.diaper_id === Number(id));
@@ -262,20 +270,27 @@ export const ratingsAPI = {
     stats.composite = allAvgs.length ? Math.round(allAvgs.reduce((a,b)=>a+b,0)/allAvgs.length*10)/10 : 0;
     return { reviews, stats };
   },
-  getForUser: (userId) => {
+  getForUser: async (userId) => {
+    if (USE_API) return apiFetch(`/api/users/${userId}/ratings`);
     const ratings = LS.get('ratings') || {};
     const reviews = Object.values(ratings).filter(r => r.user_id === Number(userId));
-    return Promise.resolve({ reviews });
+    return { reviews };
   },
-  getStats: async (id) => { const d = await ratingsAPI.getForDiaper(id); return { stats: d.stats }; },
-  getMyRating: (diaperId) => {
+  getStats: async (id) => {
+    if (USE_API) return apiFetch(`/api/diapers/${id}/ratings`);
+    const d = await ratingsAPI.getForDiaper(id);
+    return { stats: d.stats };
+  },
+  getMyRating: async (diaperId) => {
+    if (USE_API) return apiFetch(`/api/ratings/me/${diaperId}`);
     const user = LS.get('currentUser');
     if (!user) return { rating: null };
     const ratings = LS.get('ratings') || {};
     const key = `${user.id}-${diaperId}`;
     return { rating: ratings[key] || null };
   },
-  delete: (id) => {
+  delete: async (id) => {
+    if (USE_API) return apiFetch(`/api/ratings/${id}`, { method: 'DELETE' });
     const ratings = LS.get('ratings') || {};
     const key = Object.keys(ratings).find(k => ratings[k].id === id);
     if (key) { delete ratings[key]; LS.set('ratings', ratings); }
@@ -283,9 +298,10 @@ export const ratingsAPI = {
   },
 };
 
-// ====== 排行榜（基于评分数据计算） ======
+// ====== 排行榜 ======
 export const rankingsAPI = {
   hot: async () => {
+    if (USE_API) return apiFetch('/api/rankings?type=hot&limit=20');
     if (!_diapers) await loadData();
     const ratings = LS.get('ratings') || {};
     const allFeelings = LS.get('feelings') || {};
@@ -307,12 +323,14 @@ export const rankingsAPI = {
     return { rankings: scored.slice(0, 20), cached: true };
   },
   absorbency: async () => {
+    if (USE_API) return apiFetch('/api/rankings?type=absorbency&limit=20');
     if (!_diapers) await loadData();
     const extract = t => { if(!t)return 0; const m=t.match(/(\d+)\s*ml/gi); return m?Math.max(...m.map(x=>parseInt(x))):0; };
     const ranked = [..._diapers].sort((a,b) => (extract(b.absorbency_adult)||extract(b.absorbency_mfr)||0) - (extract(a.absorbency_adult)||extract(a.absorbency_mfr)||0));
     return { rankings: ranked.slice(0,20), cached: true };
   },
   popular: async () => {
+    if (USE_API) return apiFetch('/api/rankings?type=popular&limit=20');
     if (!_diapers) await loadData();
     const ratings = LS.get('ratings') || {};
     const scored = _diapers.map(d => {
@@ -323,6 +341,7 @@ export const rankingsAPI = {
     return { rankings: scored.slice(0, 20), cached: true };
   },
   dimension: async (dim) => {
+    if (USE_API) return apiFetch(`/api/rankings?type=dimension&dimension=${dim}&limit=20`);
     if (!_diapers) await loadData();
     const ratings = LS.get('ratings') || {};
     const scored = _diapers.map(d => {
@@ -336,9 +355,16 @@ export const rankingsAPI = {
   },
 };
 
-// ====== 论坛（localStorage） ======
+// ====== 论坛 ======
 export const forumAPI = {
   feed: async ({ page=1, limit=20, search } = {}) => {
+    if (USE_API) {
+      const qs = new URLSearchParams();
+      qs.set('page', page);
+      qs.set('limit', limit);
+      if (search) qs.set('search', search);
+      return apiFetch(`/api/posts?${qs}`);
+    }
     let posts = LS.get('posts') || [];
     if (search) { const s = search.toLowerCase(); posts = posts.filter(p => p.content?.toLowerCase().includes(s)); }
     posts.sort((a,b) => {
@@ -359,7 +385,8 @@ export const forumAPI = {
     });
     return { posts: enriched, pagination: { page, limit, total, totalPages: Math.ceil(total/limit) } };
   },
-  getPost: (id) => {
+  getPost: async (id) => {
+    if (USE_API) return apiFetch(`/api/posts/${id}`);
     const posts = LS.get('posts') || [];
     const post = posts.find(p => p.id === Number(id));
     if (!post) throw new Error('帖子不存在');
@@ -380,7 +407,13 @@ export const forumAPI = {
 
     return { post: { ...post, images: [], user: { id: u?.id, username: u?.username, avatar: u?.avatar, role: u?.role }, like_count: likeCount, has_liked, comment_count: postComments.length, diaper: null }, comments: postComments };
   },
-  create: ({ content, diaper_id }) => {
+  create: async ({ content, diaper_id }) => {
+    if (USE_API) {
+      return apiFetch('/api/posts', {
+        method: 'POST',
+        body: JSON.stringify({ content, diaper_id: diaper_id || undefined }),
+      });
+    }
     const user = LS.get('currentUser');
     if (!user) throw new Error('请先登录');
     const posts = LS.get('posts') || [];
@@ -389,13 +422,20 @@ export const forumAPI = {
     LS.set('posts', posts);
     return { id: post.id, message: '发布成功' };
   },
-  delete: (id) => {
+  delete: async (id) => {
+    if (USE_API) return apiFetch(`/api/posts/${id}`, { method: 'DELETE' });
     let posts = LS.get('posts') || [];
     posts = posts.filter(p => p.id !== Number(id));
     LS.set('posts', posts);
     return { message: '已删除' };
   },
-  comment: (postId, { content, parent_id, image_url }) => {
+  comment: async (postId, { content, parent_id, image_url }) => {
+    if (USE_API) {
+      return apiFetch(`/api/posts/${postId}/comments`, {
+        method: 'POST',
+        body: JSON.stringify({ content, parent_id: parent_id || undefined }),
+      });
+    }
     const user = LS.get('currentUser');
     if (!user) throw new Error('请先登录');
     const comments = LS.get('comments') || {};
@@ -404,7 +444,13 @@ export const forumAPI = {
     LS.set('comments', comments);
     return { message: '评论成功' };
   },
-  like: ({ target_type, target_id }) => {
+  like: async ({ target_type, target_id }) => {
+    if (USE_API) {
+      return apiFetch('/api/likes', {
+        method: 'POST',
+        body: JSON.stringify({ target_type, target_id }),
+      });
+    }
     const user = LS.get('currentUser');
     if (!user) throw new Error('请先登录');
     const likes = LS.get('likes') || {};
@@ -414,13 +460,25 @@ export const forumAPI = {
     LS.set('likes', likes);
     return { liked: true };
   },
-  notifications: () => { return { notifications: [], unread_count: 0 }; },
-  readAllNotifications: () => Promise.resolve(),
+  notifications: async () => {
+    if (USE_API) return apiFetch('/api/notifications');
+    return { notifications: [], unread_count: 0 };
+  },
+  readAllNotifications: async () => {
+    if (USE_API) return apiFetch('/api/notifications/read-all', { method: 'POST' });
+    return;
+  },
 };
 
-// ====== 等级（基于经验值） ======
+// ====== 等级 ======
 export const levelsAPI = {
-  me: () => {
+  me: async () => {
+    if (USE_API) {
+      const user = LS.get('currentUser') || await authAPI.me().catch(() => null);
+      if (!user) throw new Error('未登录');
+      const uid = user.user?.id || user.id;
+      return apiFetch(`/api/users/${uid}/level`);
+    }
     const user = LS.get('currentUser');
     if (!user) throw new Error('未登录');
     const exp = LS.get('exp') || {};
@@ -429,7 +487,10 @@ export const levelsAPI = {
     const badgeNames = ['','婴儿奶瓶','安抚奶嘴','婴儿围兜','毛绒玩偶','学步车','小童床','儿童王座'];
     return { level: { level: ue.current_level, exp: ue.current_exp, totalExp: ue.total_exp, badge_name: badgeNames[ue.current_level], badge_icon: badgeIcons[ue.current_level], next_level: Math.min(ue.current_level+1,7), next_exp_required: [0,0,100,300,600,1000,1500,2100][Math.min(ue.current_level+1,7)], progress: 50 }, badges: [] };
   },
-  user: (id) => levelsAPI.me(),
+  user: async (id) => {
+    if (USE_API) return apiFetch(`/api/users/${id}/level`);
+    return levelsAPI.me();
+  },
   all: () => loadJSON('/data/levels.json'),
 };
 
@@ -482,6 +543,7 @@ export const termWikiAPI = {
 // ====== 猜你喜欢 ======
 export const guessAPI = {
   get: async () => {
+    if (USE_API) return apiFetch('/api/recommend/guess');
     const { diapers } = await diapersAPI.list({ limit: 100 });
     const sorted = diapers.sort((a,b) => (b.avg_score||0) - (a.avg_score||0) || b.rating_count - a.rating_count);
     const items = sorted.slice(0, 5).map(d => ({ ...d, reason: d.avg_score >= 8 ? '综合评分超高，社区力荐' : d.thickness <= 2 ? '超薄设计，适合日常穿着' : '热门之选' }));
@@ -523,7 +585,13 @@ const FEELING_DIMS = [
 
 export const feelingsAPI = {
   getDimensions: () => FEELING_DIMS,
-  create: ({ diaper_id, size, ...feelings }) => {
+  create: async ({ diaper_id, size, ...feelings }) => {
+    if (USE_API) {
+      return apiFetch('/api/feelings', {
+        method: 'POST',
+        body: JSON.stringify({ diaper_id, size, ...feelings }),
+      });
+    }
     const user = LS.get('currentUser');
     if (!user) throw new Error('请先登录');
     const allFeelings = LS.get('feelings') || {};
@@ -533,6 +601,7 @@ export const feelingsAPI = {
     return { message: '感受记录成功' };
   },
   getForDiaper: async (diaperId) => {
+    if (USE_API) return apiFetch(`/api/diapers/${diaperId}/feelings`);
     const allFeelings = LS.get('feelings') || {};
     const feelings = Object.values(allFeelings).filter(f => f.diaper_id === Number(diaperId));
     const users = LS.get('users') || {};
@@ -548,19 +617,22 @@ export const feelingsAPI = {
     });
     return { feelings: enriched, stats, count: feelings.length };
   },
-  getForUser: (userId) => {
+  getForUser: async (userId) => {
+    if (USE_API) return apiFetch(`/api/users/${userId}/feelings`);
     const allFeelings = LS.get('feelings') || {};
     const feelings = Object.values(allFeelings).filter(f => f.user_id === Number(userId));
-    return Promise.resolve({ feelings: feelings.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) });
+    return { feelings: feelings.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) };
   },
-  getMyFeeling: (diaperId, size) => {
+  getMyFeeling: async (diaperId, size) => {
+    if (USE_API) return apiFetch(`/api/feelings/me/${diaperId}/${size}`);
     const user = LS.get('currentUser');
     if (!user) return { feeling: null };
     const allFeelings = LS.get('feelings') || {};
     const key = `${user.id}-${diaperId}-${size}`;
     return { feeling: allFeelings[key] || null };
   },
-  delete: (id) => {
+  delete: async (id) => {
+    if (USE_API) return apiFetch(`/api/feelings/${id}`, { method: 'DELETE' });
     const allFeelings = LS.get('feelings') || {};
     const key = Object.keys(allFeelings).find(k => allFeelings[k].id === id);
     if (key) { delete allFeelings[key]; LS.set('feelings', allFeelings); }

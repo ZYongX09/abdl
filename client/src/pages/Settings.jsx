@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
+import { useToast } from '../ToastContext';
+import { authAPI } from '../api';
 
 function getStoredSetting(key, fallback) {
   try { return JSON.parse(localStorage.getItem('abdl_settings_' + key)); } catch { return fallback; }
@@ -10,6 +12,7 @@ function setStoredSetting(key, val) {
 
 export default function Settings() {
   const { user } = useAuth();
+  const { addToast } = useToast();
   const [theme, setTheme] = useState(() => getStoredSetting('theme') || localStorage.getItem('abdl_theme') || 'system');
   const [animations, setAnimations] = useState(() => getStoredSetting('animations') ?? true);
   const [aiPrivacy, setAiPrivacy] = useState(() => getStoredSetting('aiPrivacy') || { basic: true, body: true, prefs: true, bio: false, feelings: true });
@@ -207,7 +210,7 @@ export default function Settings() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: '0.9rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ color: 'var(--text-muted)' }}>版本</span>
-            <span>v5.7.12</span>
+            <span>v5.8.5</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ color: 'var(--text-muted)' }}>数据存储</span>
@@ -237,10 +240,10 @@ export default function Settings() {
               try {
                 await authAPI.deleteAccount(user.id);
                 localStorage.removeItem('token');
-                alert('账户已删除');
+                addToast('账户已删除', 'success');
                 window.location.href = '/';
               } catch (e) {
-                alert('删除失败: ' + e.message);
+                addToast('删除失败: ' + e.message, 'error');
               }
             }}
           >

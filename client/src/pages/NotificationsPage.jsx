@@ -4,6 +4,7 @@ import { forumAPI } from '../api';
 import { useAuth } from '../AuthContext';
 
 function timeAgo(d) {
+  if (!d) return '';
   const diff = Date.now()-new Date(d).getTime();
   const m=Math.floor(diff/60000),h=Math.floor(diff/3600000),day=Math.floor(diff/86400000);
   if(m<1)return'刚刚';if(m<60)return`${m}分钟前`;if(h<24)return`${h}小时前`;if(day<7)return`${day}天前`;
@@ -27,7 +28,7 @@ export default function Notifications() {
   const loadNotifs = async () => {
     try {
       const d = await forumAPI.notifications();
-      setNotifs(d.notifications);
+      setNotifs(d.notifications || []);
     } catch(e) {} finally { setLoading(false); }
   };
 
@@ -51,21 +52,24 @@ export default function Notifications() {
           <h3>暂无通知</h3>
         </div>
       ) : (
-        notifs.map(n => (
+        notifs.map((n, i) => (
           <Link to={getLink(n)} key={n.id} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div style={{
+            <div className="stagger-item" style={{
               padding: '12px 16px', borderRadius: 12, marginBottom: 8,
               background: n.read ? 'var(--bg-card)' : 'var(--primary-light)',
               border: `1px solid ${n.read ? 'var(--border)' : 'var(--primary)'}`,
-              transition: 'all 0.2s'
-            }}>
+              transition: 'all 0.2s', cursor: 'pointer',
+              animationDelay: `${i * 0.04}s`,
+            }}
+            onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = 'var(--shadow)'; }}
+            onMouseOut={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
               <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                 <span style={{ fontSize: '1.3rem', color: n.type === 'like' ? 'var(--like-active)' : 'var(--primary-dark)' }}>
-                  <i className={`fa-solid ${typeIcons[n.type]}`} />
+                  <i className={`fa-solid ${typeIcons[n.type] || 'fa-circle'}`} />
                 </span>
                 <div style={{ flex: 1 }}>
                   <span style={{ fontWeight: n.read?400:600 }}>
-                    <strong>{n.from_username}</strong> {typeLabels[n.type]}
+                    <strong>{n.from_username}</strong> {typeLabels[n.type] || '互动了你的内容'}
                     {n.type === 'like' && (n.target_type==='post'?'帖子':'评论')}
                   </span>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 2 }}>

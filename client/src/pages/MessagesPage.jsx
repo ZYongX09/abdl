@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { messagesAPI, forumAPI } from '../api';
 import { useAuth } from '../AuthContext';
 import LoadingSkeleton from '../components/LoadingSkeleton';
@@ -20,6 +20,7 @@ const NOTIF_SYSTEM_ID = '__system_notifications__';
 export default function MessagesPage() {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [convs, setConvs] = useState([]);
   const [notifs, setNotifs] = useState([]);
   const [activeOther, setActiveOther] = useState(null);
@@ -44,11 +45,13 @@ export default function MessagesPage() {
         openChat(existing.other_id);
       } else if (toUser !== user?.username) {
         // Start new conversation — find user by name
-        const users = JSON.parse(localStorage.getItem('abdl_users') || '{}');
-        const targetUser = Object.values(users).find(u => u.username === toUser);
-        if (targetUser) {
-          openChat(targetUser.id);
-        }
+        try {
+          const users = JSON.parse(localStorage.getItem('abdl_users') || '{}');
+          const targetUser = Object.values(users).find(u => u.username === toUser);
+          if (targetUser) {
+            openChat(targetUser.id);
+          }
+        } catch {}
       }
     }
   }, [convs, searchParams, user]);
@@ -219,7 +222,7 @@ export default function MessagesPage() {
                       fontSize: '0.9rem', cursor: isClickable ? 'pointer' : 'default',
                       animationDelay: `${i * 0.04}s`,
                     }}
-                    onClick={() => { if (isClickable) window.location.href = link; }}
+                    onClick={() => { if (isClickable) navigate(link); }}
                     onMouseOver={e => { if (n.read) e.currentTarget.style.background = 'var(--input-bg)'; }}
                     onMouseOut={e => { if (n.read) e.currentTarget.style.background = 'transparent'; }}>
                       <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
@@ -227,7 +230,7 @@ export default function MessagesPage() {
                           <i className={`fa-solid ${typeIcons[n.type] || 'fa-circle'}`} />
                         </span>
                         <div style={{ flex: 1 }}>
-                          <strong>{n.from_username}</strong> {typeLabels[n.type]}
+                          <strong>{n.from_username}</strong> {typeLabels[n.type] || '互动了你的内容'}
                           {n.type === 'like' && (n.target_type === 'post' ? '帖子' : '评论')}
                           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
                             {timeAgo(n.created_at)}

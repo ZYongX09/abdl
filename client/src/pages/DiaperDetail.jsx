@@ -22,7 +22,7 @@ function RadarChart({ stats }) {
   });
   const gridAngles = DIMS.map((_, i) => (Math.PI * 2 * i) / DIMS.length - Math.PI / 2);
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="纸尿裤评分雷达图">
       {[1,2,3,4,5].map(lvl => {
         const rr = r * lvl / 5;
         return <polygon className="radar-grid" key={lvl} points={gridAngles.map(a => `${cx+rr*Math.cos(a)},${cy+rr*Math.sin(a)}`).join(' ')} fill="none" strokeWidth="1" />;
@@ -110,7 +110,7 @@ export default function DiaperDetail() {
       setFeelingsList(fData.feelings || []);
       setFeelingsStats(fData.stats || {});
       if (user) {
-        const mf = feelingsAPI.getMyFeeling(Number(id), selectedSize);
+        const mf = await feelingsAPI.getMyFeeling(Number(id), selectedSize);
         setMyFeeling(mf.feeling);
       }
     } catch(e) { setMsg(e.message); }
@@ -218,7 +218,7 @@ export default function DiaperDetail() {
           </p>
           <div className="form-group">
             <label>选择尺码</label>
-            <select className="form-control" value={selectedSize} onChange={e => { setSelectedSize(e.target.value); const mf = feelingsAPI.getMyFeeling(Number(id), e.target.value); setMyFeeling(mf.feeling); if (mf.feeling) { const fv = {}; FEELING_DIMS.forEach(dim => { if (mf.feeling[dim.key] != null) fv[dim.key] = mf.feeling[dim.key]; }); setFeelings(fv); } else { setFeelings({}); } }} style={{ maxWidth: 200 }}>
+            <select className="form-control" value={selectedSize} onChange={async e => { const sz = e.target.value; setSelectedSize(sz); const mf = await feelingsAPI.getMyFeeling(Number(id), sz); setMyFeeling(mf.feeling); if (mf.feeling) { const fv = {}; FEELING_DIMS.forEach(dim => { if (mf.feeling[dim.key] != null) fv[dim.key] = mf.feeling[dim.key]; }); setFeelings(fv); } else { setFeelings({}); } }} style={{ maxWidth: 200 }}>
               <option value="">请选择尺码</option>
               {diaper.sizes?.map(s => <option key={s.label} value={s.label}>{s.label} ({s.waist_min}-{s.waist_max}cm)</option>)}
             </select>
@@ -286,7 +286,7 @@ export default function DiaperDetail() {
         {reviews.map(r => (
           <div key={r.id} style={{ padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <strong>{r.username}{r.role==='admin' && <span className="tag" style={{ background: '#FDE8E8', color: 'var(--danger)', marginLeft: 6, fontSize: '0.7rem' }}>管理员</span>}</strong>
+              <strong>{r.username}{r.role==='admin' && <span className="tag" style={{ background: 'var(--feeling-bg)', color: 'var(--danger)', marginLeft: 6, fontSize: '0.7rem' }}>管理员</span>}</strong>
               <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{new Date(r.created_at).toLocaleDateString('zh-CN')}</span>
             </div>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '4px 0' }}>

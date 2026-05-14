@@ -16,7 +16,7 @@ function MiniRadar({ diapers }) {
   const size = 180, cx = size/2, cy = size/2, r = 68;
   const colors = ['#A8D8F0','#FFB7C5','#7BC67E','#F0C040'];
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="纸尿裤对比雷达图">
       {[1,2,3,4,5].map(lvl => {
         const rr = r * lvl / 5;
         const pts = DIMS.map((_,i) => {
@@ -226,7 +226,7 @@ export default function Home() {
               <i className="fa-solid fa-xmark" /> 关闭
             </button>
           </div>
-          <div style={{ overflowX: 'auto' }}>
+          <div className="table-responsive" style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
               <thead>
                 <tr>

@@ -5,6 +5,7 @@ import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
 
 function timeAgo(d) {
+  if (!d) return '';
   const diff = Date.now()-new Date(d).getTime();
   const m=Math.floor(diff/60000),h=Math.floor(diff/3600000),day=Math.floor(diff/86400000);
   if(m<1)return'刚刚';if(m<60)return`${m}分钟前`;if(h<24)return`${h}小时前`;if(day<7)return`${day}天前`;
@@ -46,7 +47,7 @@ export default function PostDetail() {
 
   const loadPost = async () => {
     setLoading(true);
-    try { const d = await forumAPI.getPost(id); setPost(d.post); setComments(d.comments); }
+    try { const d = await forumAPI.getPost(id); setPost(d.post); setComments(d.comments||[]); }
     catch(e) { console.error(e); } finally { setLoading(false); }
   };
 
@@ -61,7 +62,7 @@ export default function PostDetail() {
       await forumAPI.comment(id, { content: commentText, parent_id: replyTo, image_url: commentImagePreview || null });
       setCommentText(''); setReplyTo(null); setCommentImage(null); setCommentImagePreview(null);
       loadPost();
-    } catch(e) { alert(e.message); }
+    } catch(e) { addToast(e.message, 'error'); }
   };
 
   const handleCommentImageChange = (e) => {

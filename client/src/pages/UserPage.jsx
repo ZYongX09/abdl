@@ -125,7 +125,7 @@ export default function UserPage() {
             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>收到评论</div>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '1.3rem', fontWeight: 700, color: '#e74c3c' }}>{posts.reduce((sum, p) => sum + (p.like_count || 0), 0)}</div>
+            <div style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--danger)' }}>{posts.reduce((sum, p) => sum + (p.like_count || 0), 0)}</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>获得点赞</div>
           </div>
         </div>

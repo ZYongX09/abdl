@@ -16,7 +16,7 @@ export default function LevelBadge({ userId, showProgress = false }) {
       <span title={`Lv${level.level} ${level.badge_name}`} style={{ fontSize: '1rem' }}>{level.badge_icon}</span>
       <span style={{ color: 'var(--primary-dark)', fontWeight: 600 }}>Lv{level.level}</span>
       {showProgress && (
-        <div style={{ width: 50, height: 4, background: '#EEE', borderRadius: 2, overflow: 'hidden', marginLeft: 4 }}>
+        <div style={{ width: 50, height: 4, background: 'var(--border)', borderRadius: 2, overflow: 'hidden', marginLeft: 4 }}>
           <div style={{ height: '100%', background: 'var(--primary)', width: `${level.progress}%`, transition: 'width 0.3s' }} />
         </div>
       )}

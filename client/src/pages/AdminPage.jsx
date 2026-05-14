@@ -254,7 +254,7 @@ export default function AdminPage() {
                       <strong style={{ fontSize: '0.85rem' }}>补全建议：</strong>
                       <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 4 }}>
                         {Object.entries(aiResult.suggestions).map(([key, val]) => (
-                          <span key={key} className="tag" style={{ background: '#E8F8E8', color: '#2E7D32', fontSize: '0.78rem' }}>
+                          <span key={key} className="tag" style={{ background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.78rem' }}>
                             {key}: {typeof val === 'string' ? val : JSON.stringify(val)}
                           </span>
                         ))}
@@ -427,7 +427,7 @@ export default function AdminPage() {
                 <strong>{u.username}</strong>
                 <span className="tag" style={{ marginLeft: 8 }}>{u.role}</span>
                 <span className="tag" style={{ marginLeft: 4 }}>Lv{u.level}</span>
-                {u.banned ? <span className="tag" style={{ background: '#FDE8E8', color: '#C0392B' }}><i className="fa-solid fa-ban" /> 禁言</span> : null}
+                {u.banned ? <span className="tag" style={{ background: 'var(--feeling-bg)', color: 'var(--danger)' }}><i className="fa-solid fa-ban" /> 禁言</span> : null}
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginLeft: 8 }}>帖:{u.post_count} 评:{u.comment_count}</span>
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
@@ -450,7 +450,7 @@ export default function AdminPage() {
           {posts.map(p => (
             <div key={p.id} className="card" style={{ marginBottom: 8, padding: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ flex: 1 }}>
-                {p.pinned ? <span className="tag" style={{ background: '#FFF8E1', color: '#8D6E00' }}><i className="fa-solid fa-thumbtack" /> 置顶</span> : null}
+                {p.pinned ? <span className="tag" style={{ background: 'var(--warning-bg)', color: 'var(--warning)' }}><i className="fa-solid fa-thumbtack" /> 置顶</span> : null}
                 <strong>{p.username}</strong>
                 <span style={{ marginLeft: 8, color: 'var(--text-light)' }}>{p.content?.substring(0, 60)}...</span>
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginLeft: 8 }}>

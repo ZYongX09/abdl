@@ -30,8 +30,10 @@ export default function Recommendations() {
 
   useEffect(() => {
     if (user) {
-      const h = JSON.parse(localStorage.getItem('abdl_rec_history') || '[]');
-      setHistory(h.slice(0, 5));
+      try {
+        const h = JSON.parse(localStorage.getItem('abdl_rec_history') || '[]');
+        setHistory(h.slice(0, 5));
+      } catch {}
     }
   }, [user]);
 
@@ -89,10 +91,12 @@ export default function Recommendations() {
         setResult(data);
         setStreaming(false);
         if (data.recommendations) {
-          const h = JSON.parse(localStorage.getItem('abdl_rec_history') || '[]');
-          h.unshift({ time: new Date().toISOString(), data, preview: data.summary?.substring(0, 80) });
-          localStorage.setItem('abdl_rec_history', JSON.stringify(h.slice(0, 10)));
-          setHistory(h.slice(0, 5));
+          try {
+            const h = JSON.parse(localStorage.getItem('abdl_rec_history') || '[]');
+            h.unshift({ time: new Date().toISOString(), data, preview: data.summary?.substring(0, 80) });
+            localStorage.setItem('abdl_rec_history', JSON.stringify(h.slice(0, 10)));
+            setHistory(h.slice(0, 5));
+          } catch {}
         }
       },
       (err) => {
@@ -188,7 +192,7 @@ export default function Recommendations() {
 
       {/* Streaming output */}
       {statusText && (
-        <div className="card" style={{ marginBottom: 16, maxHeight: 300, overflowY: 'auto', background: 'var(--rating-bg)', fontSize: '0.9rem', lineHeight: 1.6, fontFamily: 'var(--font)' }}>
+        <div className="card word-break" style={{ marginBottom: 16, maxHeight: 300, overflowY: 'auto', background: 'var(--rating-bg)', fontSize: '0.9rem', lineHeight: 1.6, fontFamily: 'var(--font)' }}>
           {statusText.split('\n').map((line, i) => <p key={i} style={{ margin: 0 }}>{line}</p>)}
           <div ref={chatEndRef} />
         </div>

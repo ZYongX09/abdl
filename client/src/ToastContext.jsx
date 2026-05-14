@@ -37,11 +37,11 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={{ addToast }}>
       {children}
-      <div className="toast-container">
+      <div className="toast-container" role="status" aria-live="polite">
         {toasts.map(t => (
           <div key={t.id} className={`toast toast-${t.type}${t.exiting ? ' toast-exit' : ''}`}>
             <i className={`fa-solid ${iconMap[t.type] || 'fa-circle-info'}`} /> {t.message}
-            <button className="toast-close" onClick={() => removeToast(t.id)}>&times;</button>
+            <button className="toast-close" onClick={() => removeToast(t.id)} aria-label="关闭通知">&times;</button>
           </div>
         ))}
       </div>

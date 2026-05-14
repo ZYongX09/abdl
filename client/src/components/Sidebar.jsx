@@ -176,7 +176,6 @@ export default function Sidebar() {
 
       {/* Desktop sidebar - always visible, part of flex layout */}
       <div className="sidebar sidebar-desktop">
-        <style>{`@media (min-width: 769px) { .sidebar-desktop { width: 240px; min-width: 240px; } }`}</style>
         {sidebarContent}
       </div>
 

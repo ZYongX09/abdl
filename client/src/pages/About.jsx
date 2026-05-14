@@ -1,12 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const VERSION = '5.8.2';
+const VERSION = '5.8.5';
 
 // Embedded changelog (kept in sync with CHANGELOG.md)
 const CHANGELOG = [
   {
-    version: 'v5.8.2',
+    version: 'v5.8.5',
+    date: '2026-05-13',
+    changes: [
+      '接入 B 站点后端 API（纸尿裤数据、认证）',
+      '隐藏术语百科入口',
+      '修复排行榜数据消失问题',
+      '修复卡片动画结束后透明度归零',
+      '修复弹窗滚动、侧边栏固定',
+      '高级材质更名为焕新视觉',
+    ],
+  },
+  {
+    version: 'v5.8.4',
+    date: '2026-05-13',
+    changes: [
+      '纸尿裤列表排序功能修复',
+      '排行榜改用直接数据计算，修复加载后消失',
+      '通知已读状态字段名修复',
+      '评论点赞状态修复',
+      '管理员帖子用户名显示修复',
+      '私信对方用户名显示修复',
+      '删除账号 token key 修复',
+      '液体滚动动效移除，保留毛玻璃视觉',
+    ],
+  },
+  {
+    version: 'v5.8.3',
     date: '2026-05-10',
     changes: [
       '排行榜维度评分增加星级图标，修复零分不显示问题',
@@ -196,7 +222,7 @@ export default function About() {
             { name: 'Vite 5', icon: 'fa-solid fa-bolt', desc: '构建工具' },
             { name: 'Font Awesome 6', icon: 'fa-solid fa-icons', desc: '图标库' },
             { name: 'DeepSeek', icon: 'fa-solid fa-robot', desc: 'AI 推荐' },
-            { name: 'localStorage', icon: 'fa-solid fa-database', desc: '数据存储' },
+            { name: 'Cloudflare D1', icon: 'fa-solid fa-database', desc: '数据库' },
             { name: 'GitHub', icon: 'fa-brands fa-github', desc: '代码托管' },
           ].map(tech => (
             <div key={tech.name} style={{
@@ -225,11 +251,10 @@ export default function About() {
             { keys: 'Alt+2', desc: '纸尿裤列表' },
             { keys: 'Alt+3', desc: '排行榜' },
             { keys: 'Alt+4', desc: 'AI 智能推荐' },
-            { keys: 'Alt+5', desc: '术语 Wiki' },
-            { keys: 'Alt+6', desc: '个人中心' },
-            { keys: 'Alt+7', desc: '对比工具' },
-            { keys: 'Alt+8', desc: '私信 & 通知' },
-            { keys: 'Alt+9', desc: '关于页面' },
+            { keys: 'Alt+5', desc: '个人中心' },
+            { keys: 'Alt+6', desc: '对比工具' },
+            { keys: 'Alt+7', desc: '私信 & 通知' },
+            { keys: 'Alt+8', desc: '关于页面' },
             { keys: 'Ctrl+D', desc: '跳转纸尿裤列表' },
           ].map(s => (
             <div key={s.keys} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', fontSize: '0.88rem' }}>
