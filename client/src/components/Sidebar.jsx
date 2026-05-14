@@ -156,6 +156,27 @@ export default function Sidebar() {
         ))}
       </nav>
 
+      {/* Theme switcher */}
+      <div style={{ padding: '0 20px', marginBottom: 4 }}>
+        <button
+          className="sidebar-link"
+          onClick={() => {
+            const saved = localStorage.getItem('abdl_theme') || 'colorful';
+            const next = saved === 'light' ? 'dark' : saved === 'dark' ? 'colorful' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('abdl_theme', next);
+            window.dispatchEvent(new CustomEvent('theme-change', { detail: next }));
+          }}
+          style={{ cursor: 'pointer', border: 'none', width: '100%' }}
+        >
+          <i className="fa-solid fa-palette" style={{ fontSize: '1.15rem', width: 24, textAlign: 'center' }} />
+          <span style={{ flex: 1 }}>主题切换</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            {(() => { try { return { light: '☀️ 浅色', dark: '🌙 深色', colorful: '🎨 多彩' }[localStorage.getItem('abdl_theme') || 'colorful'] || '🎨 多彩'; } catch { return '🎨 多彩'; } })()}
+          </span>
+        </button>
+      </div>
+
       <div style={{ padding: '0 20px', borderTop: '1px solid var(--border)', paddingTop: 12, marginTop: 8 }}>
         {user ? (
           <div>

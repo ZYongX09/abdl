@@ -83,7 +83,7 @@ export default function About() {
           <h3 className="card-title"><i className="fa-solid fa-keyboard" /> 快捷键</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
-              { keys: 'Ctrl+Shift+T', desc: '切换深色/浅色模式' },
+              { keys: 'Ctrl+Shift+T', desc: '切换主题（浅色/深色/多彩）' },
               { keys: 'Alt+1~8', desc: '快速导航到各页面' },
               { keys: 'Ctrl+D', desc: '跳转纸尿裤列表' },
             ].map(s => (

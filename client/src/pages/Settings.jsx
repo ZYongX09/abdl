@@ -28,6 +28,8 @@ export default function Settings() {
     document.documentElement.setAttribute('data-theme', resolved);
     localStorage.setItem('abdl_theme', resolved);
     setStoredSetting('theme', theme);
+    // Sync with App.jsx state
+    window.dispatchEvent(new CustomEvent('theme-change', { detail: resolved }));
   }, [theme]);
 
   // Apply animation preference

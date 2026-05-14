@@ -88,7 +88,19 @@ export default function App() {
   }, [theme]);
 
 
-  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
+  // Listen for theme changes dispatched from Sidebar
+  useEffect(() => {
+    const handler = (e) => setTheme(e.detail);
+    window.addEventListener("theme-change", handler);
+    return () => window.removeEventListener("theme-change", handler);
+  }, []);
+
+  // Cycle through all 3 themes: light → dark → colorful → light
+  const toggleTheme = () => setTheme(t => {
+    if (t === 'light') return 'dark';
+    if (t === 'dark') return 'colorful';
+    return 'light';
+  });
   const navigate = useNavigate();
 
   // Keyboard shortcuts
@@ -101,8 +113,8 @@ export default function App() {
       const ctrl = e.ctrlKey || e.metaKey;
       const alt = e.altKey;
 
-      // Ctrl+Shift+T: Toggle theme (use functional setState to avoid stale closure)
-      if (ctrl && e.shiftKey && key === 't') { e.preventDefault(); setTheme(t => t === 'dark' ? 'light' : 'dark'); return; }
+      // Ctrl+Shift+T: Cycle theme (use functional setState to avoid stale closure)
+      if (ctrl && e.shiftKey && key === 't') { e.preventDefault(); setTheme(t => t === 'light' ? 'dark' : t === 'dark' ? 'colorful' : 'light'); return; }
 
       // Alt+1..9: Navigate pages
       const navMap = { '1': '/', '2': '/diapers', '3': '/rankings', '4': '/recommend', '5': '/profile', '6': '/compare', '7': '/messages', '8': '/about' };
@@ -125,7 +137,7 @@ export default function App() {
       <Sidebar />
       <div className="app-main-content">
 
-        <div className="container page-enter" style={{ maxWidth: 800, padding: '24px 20px' }}>
+        <div className="container page-enter" key={location.pathname} style={{ maxWidth: 800, padding: '24px 20px' }}>
           <ErrorBoundary>
           <Routes>
             <Route path="/" element={<ForumFeed />} />
