@@ -88,8 +88,8 @@ export const authAPI = {
   },
   updateProfile: async (body) => {
     if (USE_API) {
-      const user = await apiFetch('/api/auth/me', { method: 'PATCH', body: JSON.stringify(body) });
-      return { user };
+      const data = await apiFetch('/api/users/me', { method: 'PATCH', body: JSON.stringify(body) });
+      return data;
     }
     const user = LS.get('currentUser');
     if (!user) throw new Error('未登录');

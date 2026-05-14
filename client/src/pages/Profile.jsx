@@ -334,6 +334,32 @@ export default function Profile() {
           </div>
         )}
       </div>
+
+      {/* Mobile quick links — settings, messages, notifications, admin */}
+      <div className="mobile-quick-links">
+        <Link to="/settings" className="mobile-quick-link">
+          <i className="fa-solid fa-gear" />
+          <span>设置</span>
+        </Link>
+        <Link to="/messages" className="mobile-quick-link">
+          <i className="fa-regular fa-envelope" />
+          <span>私信</span>
+        </Link>
+        <Link to="/notifications" className="mobile-quick-link">
+          <i className="fa-regular fa-bell" />
+          <span>通知</span>
+        </Link>
+        {user?.role === 'admin' && (
+          <Link to="/admin" className="mobile-quick-link">
+            <i className="fa-solid fa-screwdriver-wrench" />
+            <span>管理</span>
+          </Link>
+        )}
+        <Link to="/about" className="mobile-quick-link">
+          <i className="fa-solid fa-circle-info" />
+          <span>关于</span>
+        </Link>
+      </div>
     </div>
   );
 }

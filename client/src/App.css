@@ -611,10 +611,11 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
 
 /* ====== 响应式布局 ====== */
 @media (max-width: 768px) {
-  /* Hide desktop sidebar, show mobile sidebar + toggle */
-  .sidebar-desktop { display: none; }
-  .sidebar-mobile { display: flex; }
-  .sidebar-toggle { display: flex; align-items: center; justify-content: center; }
+  /* Mobile: hide sidebar entirely, bottom nav takes over */
+  .sidebar-desktop { display: none !important; }
+  .sidebar-mobile { display: none !important; }
+  .sidebar-toggle { display: none !important; }
+  .sidebar-overlay { display: none !important; }
 
   .diaper-grid { grid-template-columns: 1fr; }
   .container { padding: 12px; }
@@ -990,6 +991,44 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
   footer {
     padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
   }
+  /* Mobile-only quick links on Profile page */
+  .mobile-quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 16px;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .mobile-quick-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    flex: 1 1 calc(33% - 10px);
+    min-width: 80px;
+    transition: transform 0.15s, background 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mobile-quick-link:active {
+    transform: scale(0.95);
+    background: var(--hover-bg);
+  }
+  .mobile-quick-link i {
+    font-size: 1.3rem;
+  }
+}
+@media (min-width: 769px) {
+  .mobile-quick-links { display: none; }
 }
 
 /* ====== 移动端悬浮操作栏 ====== */

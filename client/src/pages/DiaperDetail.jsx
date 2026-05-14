@@ -47,7 +47,10 @@ export default function DiaperDetail() {
   const [stats, setStats] = useState(null);
   const [wiki, setWiki] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [scores, setScores] = useState({});
+  const [scores, setScores] = useState({
+    absorption_score: 5, fit_score: 5, comfort_score: 5,
+    thickness_score: 5, appearance_score: 5, value_score: 5,
+  });
   const [reviewText, setReviewText] = useState('');
   const [myRating, setMyRating] = useState(null);
   const [msg, setMsg] = useState('');
