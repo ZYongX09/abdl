@@ -427,14 +427,6 @@
   box-shadow: 0 0 0 3px rgba(168,216,240,0.2);
 }
 
-/* 多彩主题 — 移动端底栏 */
-[data-theme="colorful"] .mobile-bottom-nav-inner {
-  background: rgba(255,255,255,0.45);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border-top: 1px solid rgba(255,255,255,0.4);
-}
-
 /* 多彩主题 — 标签滚动条 */
 [data-theme="colorful"] ::-webkit-scrollbar-thumb {
   background: rgba(168,216,240,0.4);
@@ -713,12 +705,12 @@ select.form-control {
 
 /* ====== 标签 ====== */
 .tag {
-  display: inline-block; padding: 3px 10px; border-radius: 16px;
+  display: inline-block; padding: 3px 10px; border-radius: 0.625rem;
   font-size: 0.78rem; font-weight: 600;
-  background: var(--primary-light); color: var(--primary-dark); margin: 2px;
-  transition: transform 0.15s;
+  background: var(--tag-bg); color: var(--tag-color); margin: 2px;
+  transition: transform 0.15s ease, background 0.2s ease;
 }
-.tag:hover { transform: scale(1.05); }
+.tag:hover { transform: translateY(-1px); }
 .filter-tag {
   background: var(--primary);
   color: white;
@@ -1116,10 +1108,7 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
 }
 
 /* ====== 交错入场动画 ====== */
-.card.stagger-item, .diaper-card.stagger-item,
-.stagger-item .diaper-card, .stagger-item .card {
-  animation: none;
-}
+/* 让 stagger-item 的 cardFloatIn 保留，不再强制禁用 */
 
 /* ====== 图片灯箱 ====== */
 .lightbox-overlay {
@@ -1222,10 +1211,8 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
   overflow-y: auto;
 }
 
-/* ====== iOS 风格悬浮底部导航栏 ====== */
-.mobile-bottom-nav {
-  display: none;
-}
+/* ====== 底部导航栏 ====== */
+/* 组件使用 daisyUI btm-nav，仅保留移动端布局适配 */
 
 @media (max-width: 768px) {
   .app-layout {
@@ -1239,126 +1226,11 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
     -webkit-overflow-scrolling: touch;
     padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
   }
-
-  .mobile-bottom-nav {
-    display: block;
-    position: fixed;
-    bottom: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 150;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-
-  .mobile-bottom-nav-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    height: 64px;
-    border-radius: 22px;
-    /* iOS 毛玻璃效果 */
-    background: rgba(255, 255, 255, 0.72);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    backdrop-filter: saturate(180%) blur(20px);
-    /* iOS 风格阴影 */
-    box-shadow:
-      0 0 0 0.5px rgba(0, 0, 0, 0.08),
-      0 2px 8px rgba(0, 0, 0, 0.06),
-      0 8px 24px rgba(0, 0, 0, 0.08);
-    border: 0.5px solid rgba(255, 255, 255, 0.5);
-  }
-
-  [data-theme="dark"] .mobile-bottom-nav-inner {
-    background: rgba(30, 33, 40, 0.78);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    backdrop-filter: saturate(180%) blur(20px);
-    box-shadow:
-      0 0 0 0.5px rgba(255, 255, 255, 0.06),
-      0 2px 8px rgba(0, 0, 0, 0.2),
-      0 8px 24px rgba(0, 0, 0, 0.3);
-    border: 0.5px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .mobile-tab-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    height: 100%;
-    text-decoration: none;
-    color: var(--text-muted);
-    font-size: 0.65rem;
-    font-weight: 500;
-    -webkit-tap-highlight-color: transparent;
-    transition: color 0.25s ease, transform 0.2s ease;
-    position: relative;
-    padding: 6px 0;
-  }
-
-  .mobile-tab-item.active {
-    color: var(--primary-dark);
-  }
-
-  .mobile-tab-icon-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    margin-bottom: 2px;
-  }
-
-  .mobile-tab-icon-wrapper i {
-    font-size: 1.2rem;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.25s ease;
-  }
-
-  .mobile-tab-item.active .mobile-tab-icon-wrapper i {
-    transform: scale(1.15);
-    color: var(--primary-dark);
-  }
-
-  .mobile-tab-item:not(.active):active .mobile-tab-icon-wrapper i {
-    transform: scale(0.9);
-    transition-duration: 0.1s;
-  }
-
-  .mobile-tab-label {
-    letter-spacing: 0.02em;
-    line-height: 1;
-  }
-
-  .mobile-tab-item.active .mobile-tab-label {
-    font-weight: 700;
-    color: var(--primary-dark);
-  }
 }
 
 
 
-/* ====== 底部导航栏 — 焕新视觉适配 ======
-   降低模糊度，更通透；切换时优雅过渡 */
-@media (max-width: 768px) {
-  /* 通用过渡动画（非 glass 时也生效） */
-  .mobile-bottom-nav-inner {
-    transition:
-      background 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      backdrop-filter 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      -webkit-backdrop-filter 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* 焕新视觉开启时：低模糊高透明 */
-
-  /* 底部导航栏入场动画 */
-  .mobile-bottom-nav {
-    animation: bottomNavSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  }
-}
-
+/* 底部导航栏入场动画 */
 @keyframes bottomNavSlideUp {
   from {
     opacity: 0;
@@ -1369,6 +1241,12 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
     opacity: 1;
     transform: translateY(0) scale(1);
     filter: blur(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .btm-nav {
+    animation: bottomNavSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
 }
 
@@ -1570,13 +1448,6 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
 }
 .page-enter { animation: pageSlideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
 
-/* 按钮交互增强 */
-.btn {
-  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.btn:active {
-  transform: scale(0.97);
-}
 .btn-primary {
   box-shadow: 0 2px 8px rgba(168, 216, 240, 0.3);
 }
@@ -1590,14 +1461,6 @@ a {
   transition: color 0.2s ease;
 }
 
-/* Tag 标签 */
-.tag {
-  display: inline-block; padding: 3px 10px; border-radius: 0.625rem;
-  background: var(--tag-bg); color: var(--tag-color);
-  font-size: 0.78rem; font-weight: 500;
-}
-
-/* 交错入场 */
 @keyframes staggerFadeIn {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
@@ -1607,18 +1470,13 @@ a {
   animation: staggerFadeIn 0.4s ease-out forwards;
 }
 
-/* 卡片悬停微升 */
-.diaper-card {
-  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
 /* 平滑缩放反馈 */
 @keyframes tapFeedback {
   0% { transform: scale(1); }
   50% { transform: scale(0.96); }
   100% { transform: scale(1); }
 }
-.btn:active, .diaper-card:active, .rank-item:active {
+.diaper-card:active, .rank-item:active {
   animation: tapFeedback 0.2s ease;
 }
 
@@ -1694,13 +1552,6 @@ a {
   background: var(--input-bg);
 }
 
-/* 标签微交互 */
-.tag {
-  transition: transform 0.15s ease, background 0.2s ease;
-}
-.tag:hover {
-  transform: translateY(-1px);
-}
 
 /* 移动端优化额外规则 */
 @media (max-width: 768px) {
@@ -1725,19 +1576,14 @@ a {
   from { opacity: 0; transform: translateY(20px) scale(0.97); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
-.card, .diaper-card, .rank-item { animation: cardFloatIn 0.4s ease-out forwards; }
-
-@keyframes buttonPop {
-  0% { transform: scale(1); }
-  50% { transform: scale(0.95); }
-  100% { transform: scale(1); }
+/* 基础入场动画 — stagger-item 有自己的延迟控制 */
+.card:not(.stagger-item), .diaper-card:not(.stagger-item), .rank-item:not(.stagger-item) {
+  animation: cardFloatIn 0.4s ease-out forwards;
 }
-.btn:active { animation: buttonPop 0.15s ease; }
-
-@keyframes navHighlight {
-  from { background-position: 200% 0; }
-  to { background-position: -200% 0; }
+.stagger-item {
+  animation: cardFloatIn 0.4s ease-out both;
 }
+
 
 /* ================================================================
    焕新视觉 v2 — 玻璃折射 + 液体惯性增强
