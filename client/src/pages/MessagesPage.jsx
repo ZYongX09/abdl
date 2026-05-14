@@ -282,7 +282,7 @@ export default function MessagesPage() {
               )}
             </div>
             <div style={{ padding: 12, borderTop: '1px solid var(--border)', display: 'flex', gap: 8 }}>
-              <input className="form-control" value={text} onChange={e => setText(e.target.value)}
+              <input className="input input-bordered w-full" value={text} onChange={e => setText(e.target.value)}
                 placeholder="输入消息..." onKeyDown={e => e.key === 'Enter' && sendMsg()} disabled={sending} />
               <button className="btn btn-primary btn-sm" onClick={sendMsg} disabled={sending || !text.trim()}>
                 {sending ? <i className="fa-solid fa-spinner fa-spin" /> : <i className="fa-solid fa-paper-plane" />}

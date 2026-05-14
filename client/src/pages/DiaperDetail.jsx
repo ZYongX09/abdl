@@ -120,7 +120,7 @@ export default function DiaperDetail() {
   };
 
   if (loading) return <div className="loading-spinner" role="status" aria-live="polite"><div className="spinner" /><span>加载中</span></div>;
-  if (!diaper) return <div className="alert alert-danger">纸尿裤不存在</div>;
+  if (!diaper) return <div className="alert alert-error">纸尿裤不存在</div>;
 
   return (
     <div>
@@ -207,7 +207,7 @@ export default function DiaperDetail() {
               </div>
             ))}
           </div>
-          <textarea className="form-control" placeholder="写写使用感受...（选填）" rows={2} value={reviewText} onChange={e => setReviewText(e.target.value)} />
+          <textarea className="input input-bordered w-full" placeholder="写写使用感受...（选填）" rows={2} value={reviewText} onChange={e => setReviewText(e.target.value)} />
           <button className="btn btn-accent" style={{ marginTop: 8 }} onClick={handleSubmit}>{myRating ? '更新评分' : '提交评分'}</button>
         </div>
       )}
@@ -221,7 +221,7 @@ export default function DiaperDetail() {
           </p>
           <div className="form-group">
             <label>选择尺码</label>
-            <select className="form-control" value={selectedSize} onChange={async e => { const sz = e.target.value; setSelectedSize(sz); const mf = await feelingsAPI.getMyFeeling(Number(id), sz); setMyFeeling(mf.feeling); if (mf.feeling) { const fv = {}; FEELING_DIMS.forEach(dim => { if (mf.feeling[dim.key] != null) fv[dim.key] = mf.feeling[dim.key]; }); setFeelings(fv); } else { setFeelings({}); } }} style={{ maxWidth: 200 }}>
+            <select className="input input-bordered w-full" value={selectedSize} onChange={async e => { const sz = e.target.value; setSelectedSize(sz); const mf = await feelingsAPI.getMyFeeling(Number(id), sz); setMyFeeling(mf.feeling); if (mf.feeling) { const fv = {}; FEELING_DIMS.forEach(dim => { if (mf.feeling[dim.key] != null) fv[dim.key] = mf.feeling[dim.key]; }); setFeelings(fv); } else { setFeelings({}); } }} style={{ maxWidth: 200 }}>
               <option value="">请选择尺码</option>
               {diaper.sizes?.map(s => <option key={s.label} value={s.label}>{s.label} ({s.waist_min}-{s.waist_max}cm)</option>)}
             </select>

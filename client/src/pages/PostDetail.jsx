@@ -31,17 +31,13 @@ export default function PostDetail() {
   useEffect(() => { autoResize(); }, [commentText, autoResize]);
   useEffect(() => { loadPost(); }, [id]);
 
-  // Close lightbox on Escape & lock body scroll
   useEffect(() => {
     if (!lightboxSrc) return;
     const onKey = (e) => { if (e.key === 'Escape') setLightboxSrc(null); };
     document.addEventListener('keydown', onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prev;
-    };
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
   }, [lightboxSrc]);
 
   const loadPost = async () => {
@@ -59,204 +55,153 @@ export default function PostDetail() {
     if (!commentText.trim() || commentSending) return;
     setCommentSending(true);
     try {
-      await forumAPI.comment(id, { content: commentText, parent_id: replyTo, image_url: commentImagePreview || null });
+      await forumAPI.comment(id, { content: commentText, parent_id: replyTo });
       setCommentText(''); setReplyTo(null); setCommentImage(null); setCommentImagePreview(null);
       loadPost();
     } catch(e) { addToast(e.message, 'error'); }
     finally { setCommentSending(false); }
   };
 
-  const handleCommentImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) { setCommentImage(null); setCommentImagePreview(null); return; }
-    setCommentImage(file);
-    const reader = new FileReader();
-    reader.onloadend = () => setCommentImagePreview(reader.result);
-    reader.readAsDataURL(file);
-  };
-
-  const clearCommentImage = () => {
-    setCommentImage(null);
-    setCommentImagePreview(null);
-  };
-
-  if (loading) return <div className="loading-spinner" role="status" aria-live="polite"><div className="spinner" /><span>加载中</span></div>;
-  if (!post) return <div className="alert alert-danger">帖子不存在</div>;
+  if (loading) return <div className="flex justify-center py-16"><span className="loading loading-spinner loading-lg text-primary"></span></div>;
+  if (!post) return <div className="alert alert-error"><span>帖子不存在</span></div>;
 
   const nestedComments = {};
-  comments.forEach(c => {
-    if (c.parent_id) {
-      nestedComments[c.parent_id] = nestedComments[c.parent_id] || [];
-      nestedComments[c.parent_id].push(c);
-    }
-  });
+  comments.forEach(c => { if (c.parent_id) { nestedComments[c.parent_id] = nestedComments[c.parent_id] || []; nestedComments[c.parent_id].push(c); } });
   const topComments = comments.filter(c => !c.parent_id);
 
   return (
-    <div style={{ maxWidth: 700, margin: '0 auto' }}>
-      <Link to="/" style={{ color: 'var(--link-color)', fontSize: '0.9rem' }}>
-        <i className="fa-solid fa-arrow-left" /> 返回论坛
+    <div className="max-w-2xl mx-auto">
+      <Link to="/" className="link link-primary text-sm mb-3 inline-block">
+        <i className="fa-solid fa-arrow-left mr-1" /> 返回论坛
       </Link>
 
-      <div className="card" style={{ marginTop: 12 }}>
-        <div style={{ display: 'flex', gap: 12 }}>
-          <div className="post-avatar">
-            <i className="fa-solid fa-user-astronaut" />
-          </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <Link to={`/user/${post.user?.id}`} style={{ fontWeight: 700, textDecoration: 'none', color: 'var(--text)' }}>
-                  {post.user?.username}
-                </Link>
-                {user && post.user?.id !== user.id && (
-                  <Link to={`/messages?to=${encodeURIComponent(post.user?.username)}`} className="btn btn-outline btn-sm"
-                    style={{ fontSize: '0.7rem', padding: '2px 10px' }} title="发私信">
-                    <i className="fa-solid fa-paper-plane" />
-                  </Link>
-                )}
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                  @{post.user?.username} · {timeAgo(post.created_at)}
-                </span>
-              </div>
-              <button
-                className="btn btn-outline btn-sm"
-                onClick={() => { navigator.clipboard?.writeText(window.location.href).then(() => addToast('链接已复制到剪贴板', 'success', 2000)).catch(()=>{}); }}
-                title="复制帖子链接" aria-label="分享帖子"
-                style={{ flexShrink: 0 }}
-              >
-                <i className="fa-solid fa-share-nodes" />
-              </button>
+      {/* Post */}
+      <div className="card mb-4">
+        <div className="card-body gap-3">
+          <div className="flex gap-3">
+            <div className="avatar placeholder">
+              <div className="bg-primary/20 text-primary rounded-full w-10"><i className="fa-solid fa-user-astronaut" /></div>
             </div>
-            <p style={{ margin: '12px 0', whiteSpace: 'pre-wrap', fontSize: '1.1rem', lineHeight: 1.6 }}>
-              {post.content}
-            </p>
-            {post.images?.length > 0 && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 6, marginBottom: 12 }}>
-                {post.images.map((img,i) => <img key={i} src={img.image_url} alt="" style={{ width:'100%', borderRadius:8, cursor:'pointer' }} onClick={() => setLightboxSrc(img.image_url)} />)}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Link to={`/user/${post.user?.id}`} className="font-bold text-sm no-underline hover:underline">{post.user?.username}</Link>
+                  {user && post.user?.id !== user.id && (
+                    <Link to={`/messages?to=${encodeURIComponent(post.user?.username)}`} className="btn btn-ghost btn-xs" title="发私信"><i className="fa-solid fa-paper-plane" /></Link>
+                  )}
+                  <span className="text-xs text-base-content/40">@{post.user?.username} · {timeAgo(post.created_at)}</span>
+                </div>
+                <button className="btn btn-ghost btn-xs" onClick={() => navigator.clipboard?.writeText(window.location.href).then(() => addToast('链接已复制', 'success', 2000)).catch(()=>{})} title="分享">
+                  <i className="fa-solid fa-share-nodes" />
+                </button>
               </div>
-            )}
-            <div style={{ display: 'flex', gap: 24, borderTop: '1px solid var(--border)', paddingTop: 12 }}>
-              <button onClick={() => handleLike('post', post.id)}
-                className={`like-btn${post.has_liked ? ' liked' : ''}`}
-                style={{ background: 'none', border: 'none', cursor: 'pointer',
-                  color: post.has_liked ? 'var(--like-active)' : 'var(--text-muted)', fontSize: '0.9rem' }}>
-                <i className={`fa-heart ${post.has_liked ? 'fa-solid' : 'fa-regular'}`} /> {post.like_count}
-              </button>
-              <span style={{ color: 'var(--text-muted)' }}>
-                <i className="fa-regular fa-comment" /> {post.comment_count}
-              </span>
+              <p className="my-3 whitespace-pre-wrap text-base leading-relaxed">{post.content}</p>
+              {post.images?.length > 0 && (
+                <div className="grid grid-cols-2 gap-1 mb-3">
+                  {post.images.map((img,i) => <img key={i} src={img.image_url} alt="" className="w-full rounded-lg cursor-pointer" onClick={() => setLightboxSrc(img.image_url)} />)}
+                </div>
+              )}
+              <div className="flex gap-6 border-t border-base-300 pt-3">
+                <button onClick={() => handleLike('post', post.id)} className={`btn btn-ghost btn-xs gap-1 ${post.has_liked ? 'text-error' : 'text-base-content/40'}`}>
+                  <i className={`${post.has_liked ? 'fa-solid' : 'fa-regular'} fa-heart`} /> {post.like_count}
+                </button>
+                <span className="text-base-content/40 text-sm"><i className="fa-regular fa-comment mr-1" />{post.comment_count}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Comment Form */}
       {user && (
-        <div className="card">
-          {replyTo && (
-            <div className="alert alert-info">
-              <i className="fa-solid fa-reply" /> 回复评论
-              <button className="btn btn-outline btn-sm" style={{ marginLeft: 8 }} onClick={() => setReplyTo(null)}>取消</button>
+        <div className="card mb-4">
+          <div className="card-body gap-3">
+            {replyTo && (
+              <div className="alert alert-info text-sm py-2">
+                <i className="fa-solid fa-reply" /> 回复评论
+                <button className="btn btn-ghost btn-xs ml-2" onClick={() => setReplyTo(null)}>取消</button>
+              </div>
+            )}
+            <textarea ref={commentTextareaRef} className="textarea textarea-bordered w-full" rows={2}
+              placeholder="写评论..." value={commentText} onChange={e=>setCommentText(e.target.value)}
+              maxLength={MAX_COMMENT_LEN} onInput={autoResize} />
+            <div className="flex justify-between items-center text-xs text-base-content/40">
+              <span>支持 Markdown</span>
+              <span className={commentText.length >= MAX_COMMENT_LEN ? 'text-error' : ''}>{commentText.length}/{MAX_COMMENT_LEN}</span>
             </div>
-          )}
-          <textarea ref={commentTextareaRef} className="form-control auto-resize" rows={2} placeholder="写评论..." value={commentText} onChange={e=>setCommentText(e.target.value)} maxLength={MAX_COMMENT_LEN} onInput={autoResize} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', marginTop: 4 }}>
-            <span style={{ color: 'var(--text-muted)' }}>支持 Markdown</span>
-            <span style={{
-              color: commentText.length > MAX_COMMENT_LEN * 0.8 ? (commentText.length >= MAX_COMMENT_LEN ? 'var(--danger)' : 'var(--warning)') : 'var(--text-muted)'
-            }}>{commentText.length}/{MAX_COMMENT_LEN}</span>
-          </div>
-          {commentImagePreview && (
-            <div style={{ position: 'relative', display: 'inline-block', marginTop: 8 }}>
-              <img src={commentImagePreview} alt="预览" style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border)' }} />
-              <button onClick={clearCommentImage} style={{
-                position: 'absolute', top: -6, right: -6, width: 22, height: 22, borderRadius: '50%',
-                background: 'var(--danger)', color: '#fff', border: 'none', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', padding: 0, lineHeight: 1
-              }} title="移除图片" aria-label="移除图片"><i className="fa-solid fa-xmark" /></button>
+            {commentImagePreview && (
+              <div className="relative inline-block">
+                <img src={commentImagePreview} alt="预览" className="w-20 h-20 object-cover rounded-lg border border-base-300" />
+                <button onClick={() => { setCommentImage(null); setCommentImagePreview(null); }} className="absolute -top-1.5 -right-1.5 btn btn-error btn-xs w-5 h-5 min-h-0 p-0 rounded-full">
+                  <i className="fa-solid fa-xmark text-xs" />
+                </button>
+              </div>
+            )}
+            <div className="flex gap-2 items-center">
+              <label className="btn btn-outline btn-xs gap-1 cursor-pointer">
+                <i className="fa-solid fa-image" /> 图片
+                <input type="file" accept="image/*" onChange={e => { const f = e.target.files[0]; if (f) { setCommentImage(f); const r = new FileReader(); r.onloadend = () => setCommentImagePreview(r.result); r.readAsDataURL(f); } }} className="hidden" />
+              </label>
+              <button className="btn btn-primary btn-sm ml-auto" onClick={handleComment} disabled={!commentText.trim() || commentSending}>
+                {commentSending ? <><i className="fa-solid fa-spinner fa-spin" /> 发送中</> : <><i className="fa-solid fa-paper-plane" /> 评论</>}
+              </button>
             </div>
-          )}
-          <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center' }}>
-            <label className="btn btn-outline btn-sm" style={{ cursor: 'pointer', margin: 0 }}>
-              <i className="fa-solid fa-image" /> 图片
-              <input type="file" accept="image/*" onChange={handleCommentImageChange} style={{ display: 'none' }} />
-            </label>
-            <button className="btn btn-primary btn-sm" onClick={handleComment} disabled={!commentText.trim() || commentSending}>
-              {commentSending ? <><i className="fa-solid fa-spinner fa-spin" /> 发送中</> : <><i className="fa-solid fa-paper-plane" /> 评论</>}
-            </button>
           </div>
         </div>
       )}
 
-      <h3 style={{ marginBottom: 12 }}>
-        <i className="fa-regular fa-comments" /> 评论 ({comments.length})
-      </h3>
-      {topComments.length === 0 && (
-        <div className="empty-state" style={{ padding: 32 }}>
-          <div className="icon"><i className="fa-regular fa-comment-dots" /></div>
-          <h3>还没有评论</h3>
-          <p>来成为第一个评论的人吧</p>
+      {/* Comments */}
+      <h3 className="font-bold mb-3"><i className="fa-regular fa-comments text-primary mr-1" /> 评论 ({comments.length})</h3>
+      {topComments.length === 0 ? (
+        <div className="text-center py-8 text-base-content/40">
+          <i className="fa-regular fa-comment-dots text-3xl mb-2 block" />
+          <p className="text-sm">还没有评论，来成为第一个评论的人吧</p>
         </div>
-      )}
-      {topComments.map(c => (
-        <div key={c.id} style={{ padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <div className="post-avatar" style={{ width: 32, height: 32, fontSize: '0.85rem' }}>
-              <i className="fa-solid fa-user-astronaut" />
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                <Link to={`/user/${c.user?.id || c.user_id}`} style={{ fontWeight: 600, textDecoration: 'none', color: 'var(--text)', fontSize: '0.9rem' }}>
-                  {c.user?.username || c.username}
-                </Link>
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{timeAgo(c.created_at)}</span>
-              </div>
-              <p style={{ margin: '4px 0', fontSize: '0.95rem' }}>{c.content}</p>
-              {c.image_url && (
-                <img src={c.image_url} alt="评论图片" style={{ maxWidth: 200, maxHeight: 200, borderRadius: 8, marginTop: 6, border: '1px solid var(--border)', objectFit: 'cover', cursor: 'pointer' }} onClick={() => setLightboxSrc(c.image_url)} />
-              )}
-              <div style={{ display: 'flex', gap: 16, fontSize: '0.85rem' }}>
-                <button onClick={() => handleLike('comment', c.id)}
-                  className={`like-btn${c.has_liked ? ' liked' : ''}`}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer',
-                    color: c.has_liked ? 'var(--like-active)' : 'var(--text-muted)' }}>
-                  <i className={`fa-heart ${c.has_liked ? 'fa-solid' : 'fa-regular'}`} /> {c.like_count}
-                </button>
-                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
-                  onClick={() => { setReplyTo(c.id); setCommentText(`@${c.user?.username || c.username} `); }}>
-                  <i className="fa-solid fa-reply" /> 回复
-                </button>
-              </div>
-              {nestedComments[c.id]?.map(sub => (
-                <div key={sub.id} style={{ marginLeft: 24, marginTop: 8, padding: '8px 0', borderTop: '1px solid var(--border)' }}>
-                  <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                    <Link to={`/user/${sub.user?.id || sub.user_id}`} style={{ fontWeight: 600, textDecoration: 'none', color: 'var(--text)', fontSize: '0.85rem' }}>
-                      {sub.user?.username || sub.username}
-                    </Link>
-                    <span style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>{timeAgo(sub.created_at)}</span>
-                  </div>
-                  <p style={{ margin: '2px 0', fontSize: '0.9rem' }}>{sub.content}</p>
-                  {sub.image_url && (
-                    <img src={sub.image_url} alt="评论图片" style={{ maxWidth: 160, maxHeight: 160, borderRadius: 8, marginTop: 4, border: '1px solid var(--border)', objectFit: 'cover', cursor: 'pointer' }} onClick={() => setLightboxSrc(sub.image_url)} />
-                  )}
+      ) : (
+        <div className="flex flex-col">
+          {topComments.map(c => (
+            <div key={c.id} className="py-3 border-b border-base-300">
+              <div className="flex gap-2">
+                <div className="avatar placeholder">
+                  <div className="bg-primary/20 text-primary rounded-full w-8"><i className="fa-solid fa-user-astronaut text-xs" /></div>
                 </div>
-              ))}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <Link to={`/user/${c.user?.id || c.user_id}`} className="font-semibold text-sm no-underline hover:underline">{c.user?.username || c.username}</Link>
+                    <span className="text-xs text-base-content/40">{timeAgo(c.created_at)}</span>
+                  </div>
+                  <p className="text-sm my-1">{c.content}</p>
+                  <div className="flex gap-4 text-xs">
+                    <button onClick={() => handleLike('comment', c.id)} className={`btn btn-ghost btn-xs gap-0.5 ${c.has_liked ? 'text-error' : 'text-base-content/40'}`}>
+                      <i className={`${c.has_liked ? 'fa-solid' : 'fa-regular'} fa-heart`} /> {c.like_count}
+                    </button>
+                    <button className="btn btn-ghost btn-xs gap-0.5 text-base-content/40" onClick={() => { setReplyTo(c.id); setCommentText(`@${c.user?.username || c.username} `); }}>
+                      <i className="fa-solid fa-reply" /> 回复
+                    </button>
+                  </div>
+                  {nestedComments[c.id]?.map(sub => (
+                    <div key={sub.id} className="ml-6 mt-2 pt-2 border-t border-base-300">
+                      <div className="flex items-center gap-2">
+                        <Link to={`/user/${sub.user?.id || sub.user_id}`} className="font-semibold text-xs no-underline hover:underline">{sub.user?.username || sub.username}</Link>
+                        <span className="text-xs text-base-content/30">{timeAgo(sub.created_at)}</span>
+                      </div>
+                      <p className="text-xs mt-1">{sub.content}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
-      ))}
-
-      {/* 图片灯箱 */}
-      {lightboxSrc && (
-        <>
-          <div className="lightbox-overlay" onClick={() => setLightboxSrc(null)}>
-            <img src={lightboxSrc} alt="查看大图" onClick={e => e.stopPropagation()} />
-          </div>
-          <button className="lightbox-close" onClick={() => setLightboxSrc(null)} aria-label="关闭灯箱">
-            <i className="fa-solid fa-xmark" />
-          </button>
-        </>
       )}
+
+      {/* Lightbox */}
+      {lightboxSrc && (<>
+        <div className="lightbox-overlay" onClick={() => setLightboxSrc(null)}>
+          <img src={lightboxSrc} alt="查看大图" onClick={e => e.stopPropagation()} />
+        </div>
+        <button className="lightbox-close" onClick={() => setLightboxSrc(null)} aria-label="关闭"><i className="fa-solid fa-xmark" /></button>
+      </>)}
     </div>
   );
 }

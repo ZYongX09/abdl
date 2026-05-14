@@ -124,7 +124,7 @@ export default function Home() {
   return (
     <div>
       {/* Header + Search */}
-      <div className="hero-card">
+      <div className="card bg-primary/10 border border-primary/20">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
           <h2 style={{ margin: 0, color: 'var(--hero-text)', fontSize: '1.3rem' }}>
             <i className="fa-solid fa-magnifying-glass" /> 探索纸尿裤
@@ -134,18 +134,18 @@ export default function Home() {
             <i className="fa-solid fa-code-compare" /> {compareMode ? '退出对比' : '对比模式'}
           </button>
         </div>
-        <div className="search-bar">
-          <input className="form-control" placeholder="搜索品牌、型号..." value={search}
+        <div className="join">
+          <input className="input input-bordered input-sm join-item" placeholder="搜索品牌、型号..." value={search}
             onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearch()} />
-          <select className="form-control" value={brandFilter} onChange={e => setBrandFilter(e.target.value)}>
+          <select className="select select-bordered select-sm join-item" value={brandFilter} onChange={e => setBrandFilter(e.target.value)}>
             <option value="">全部品牌</option>
             {brands.map(b => <option key={b} value={b}>{b}</option>)}
           </select>
-          <select className="form-control" value={sizeFilter} onChange={e => setSizeFilter(e.target.value)}>
+          <select className="select select-bordered select-sm join-item" value={sizeFilter} onChange={e => setSizeFilter(e.target.value)}>
             <option value="">全部尺码</option>
             {sizes.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
-          <select className="form-control" value={sort} onChange={e => setSort(e.target.value)}>
+          <select className="select select-bordered select-sm join-item" value={sort} onChange={e => setSort(e.target.value)}>
             <option value="popularity">热度</option>
             <option value="avg_price">价格</option>
             <option value="thickness">厚度</option>

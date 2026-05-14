@@ -184,7 +184,7 @@ export default function Recommendations() {
             <i className="fa-solid fa-circle-info" /> 请先前往 <Link to="/profile" style={{ fontWeight: 700 }}>个人中心</Link> 完善个人资料
           </div>
         )}
-        {error && <div className="alert alert-danger" style={{ marginBottom: 12 }}><i className="fa-solid fa-circle-exclamation" /> {error}</div>}
+        {error && <div className="alert alert-error" style={{ marginBottom: 12 }}><i className="fa-solid fa-circle-exclamation" /> {error}</div>}
         <button className="btn btn-accent" style={{ fontSize: '1.1rem', padding: '12px 40px' }} onClick={openPermission} disabled={streaming}>
           {streaming ? <><i className="fa-solid fa-spinner fa-spin" /> 分析中...</> : <><i className="fa-solid fa-wand-magic-sparkles" /> 开始推荐</>}
         </button>

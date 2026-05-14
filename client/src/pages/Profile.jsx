@@ -216,32 +216,32 @@ export default function Profile() {
                 <div className="profile-edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
                   <div className="form-group">
                     <label>年龄</label>
-                    <input className="form-control" type="number" value={form.age} onChange={update('age')} />
+                    <input className="input input-bordered w-full" type="number" value={form.age} onChange={update('age')} />
                   </div>
                   <div className="form-group">
                     <label>地区</label>
-                    <input className="form-control" value={form.region} onChange={update('region')} />
+                    <input className="input input-bordered w-full" value={form.region} onChange={update('region')} />
                   </div>
                   <div className="form-group">
                     <label>体重 (kg)</label>
-                    <input className="form-control" type="number" step="0.1" value={form.weight} onChange={update('weight')} />
+                    <input className="input input-bordered w-full" type="number" step="0.1" value={form.weight} onChange={update('weight')} />
                   </div>
                   <div className="form-group">
                     <label>腰围 (cm)</label>
-                    <input className="form-control" type="number" step="0.1" value={form.waist} onChange={update('waist')} />
+                    <input className="input input-bordered w-full" type="number" step="0.1" value={form.waist} onChange={update('waist')} />
                   </div>
                   <div className="form-group">
                     <label>臀围 (cm)</label>
-                    <input className="form-control" type="number" step="0.1" value={form.hip} onChange={update('hip')} />
+                    <input className="input input-bordered w-full" type="number" step="0.1" value={form.hip} onChange={update('hip')} />
                   </div>
                   <div className="form-group">
                     <label>偏好款式</label>
-                    <input className="form-control" value={form.style_preference} onChange={update('style_preference')} placeholder="如：日系可爱" />
+                    <input className="input input-bordered w-full" value={form.style_preference} onChange={update('style_preference')} placeholder="如：日系可爱" />
                   </div>
                 </div>
                 <div className="form-group">
                   <label>简介</label>
-                  <textarea className="form-control" value={form.bio} onChange={update('bio')} placeholder="介绍一下自己..." />
+                  <textarea className="input input-bordered w-full" value={form.bio} onChange={update('bio')} placeholder="介绍一下自己..." />
                 </div>
                 <div style={{ display: 'flex', gap: 12 }}>
                   <button className="btn btn-primary" onClick={handleSave}>

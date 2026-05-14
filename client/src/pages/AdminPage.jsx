@@ -209,26 +209,26 @@ export default function AdminPage() {
               <h3>{editingDiaper.id ? <><i className="fa-solid fa-pen" /> 编辑</> : <><i className="fa-solid fa-plus" /> 添加</>}纸尿裤</h3>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
                 <div className="form-group"><label>品牌 *</label>
-                  <input className="form-control" value={editingDiaper.brand||''} onChange={e=>setEditingDiaper(f=>({...f,brand:e.target.value}))} /></div>
+                  <input className="input input-bordered w-full" value={editingDiaper.brand||''} onChange={e=>setEditingDiaper(f=>({...f,brand:e.target.value}))} /></div>
                 <div className="form-group"><label>型号 *</label>
-                  <input className="form-control" value={editingDiaper.model||''} onChange={e=>setEditingDiaper(f=>({...f,model:e.target.value}))} /></div>
+                  <input className="input input-bordered w-full" value={editingDiaper.model||''} onChange={e=>setEditingDiaper(f=>({...f,model:e.target.value}))} /></div>
                 <div className="form-group"><label>类型</label>
-                  <select className="form-control" value={editingDiaper.product_type||'纸尿裤'} onChange={e=>setEditingDiaper(f=>({...f,product_type:e.target.value}))}>
+                  <select className="input input-bordered w-full" value={editingDiaper.product_type||'纸尿裤'} onChange={e=>setEditingDiaper(f=>({...f,product_type:e.target.value}))}>
                     <option>纸尿裤</option><option>拉拉裤</option><option>一体裤</option></select></div>
                 <div className="form-group"><label>厚度 (1-5)</label>
-                  <input className="form-control" type="number" min="1" max="5" value={editingDiaper.thickness||3} onChange={e=>setEditingDiaper(f=>({...f,thickness:Number(e.target.value)}))} /></div>
+                  <input className="input input-bordered w-full" type="number" min="1" max="5" value={editingDiaper.thickness||3} onChange={e=>setEditingDiaper(f=>({...f,thickness:Number(e.target.value)}))} /></div>
                 <div className="form-group"><label>厂家标称吸水量</label>
-                  <input className="form-control" value={editingDiaper.absorbency_mfr||''} onChange={e=>setEditingDiaper(f=>({...f,absorbency_mfr:e.target.value}))} /></div>
+                  <input className="input input-bordered w-full" value={editingDiaper.absorbency_mfr||''} onChange={e=>setEditingDiaper(f=>({...f,absorbency_mfr:e.target.value}))} /></div>
                 <div className="form-group"><label>成人实际吸水量</label>
-                  <input className="form-control" value={editingDiaper.absorbency_adult||''} onChange={e=>setEditingDiaper(f=>({...f,absorbency_adult:e.target.value}))} /></div>
+                  <input className="input input-bordered w-full" value={editingDiaper.absorbency_adult||''} onChange={e=>setEditingDiaper(f=>({...f,absorbency_adult:e.target.value}))} /></div>
                 <div className="form-group"><label>材质</label>
-                  <input className="form-control" value={editingDiaper.material||''} onChange={e=>setEditingDiaper(f=>({...f,material:e.target.value}))} /></div>
+                  <input className="input input-bordered w-full" value={editingDiaper.material||''} onChange={e=>setEditingDiaper(f=>({...f,material:e.target.value}))} /></div>
                 <div className="form-group"><label>均价</label>
-                  <input className="form-control" value={editingDiaper.avg_price||''} onChange={e=>setEditingDiaper(f=>({...f,avg_price:e.target.value}))} /></div>
+                  <input className="input input-bordered w-full" value={editingDiaper.avg_price||''} onChange={e=>setEditingDiaper(f=>({...f,avg_price:e.target.value}))} /></div>
                 <div className="form-group"><label>特点（逗号分隔）</label>
-                  <input className="form-control" value={editingDiaper.features||''} onChange={e=>setEditingDiaper(f=>({...f,features:e.target.value}))} /></div>
+                  <input className="input input-bordered w-full" value={editingDiaper.features||''} onChange={e=>setEditingDiaper(f=>({...f,features:e.target.value}))} /></div>
                 <div className="form-group"><label>图片URL</label>
-                  <input className="form-control" value={editingDiaper.image_url||''} onChange={e=>setEditingDiaper(f=>({...f,image_url:e.target.value}))} /></div>
+                  <input className="input input-bordered w-full" value={editingDiaper.image_url||''} onChange={e=>setEditingDiaper(f=>({...f,image_url:e.target.value}))} /></div>
                 <div className="form-group">
                   <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <input type="checkbox" checked={editingDiaper.is_baby_diaper===1} onChange={e=>setEditingDiaper(f=>({...f,is_baby_diaper:e.target.checked?1:0}))} />
@@ -318,17 +318,17 @@ export default function AdminPage() {
             <div className="card" style={{ marginBottom: 16 }}>
               <h3>{editingWiki.id ? <><i className="fa-solid fa-pen" /> 编辑</> : <><i className="fa-solid fa-plus" /> 添加</>}Wiki</h3>
               <div className="form-group"><label>纸尿裤ID *</label>
-                <input className="form-control" type="number" value={editingWiki.diaper_id||''} onChange={e=>setEditingWiki(f=>({...f,diaper_id:e.target.value}))} /></div>
+                <input className="input input-bordered w-full" type="number" value={editingWiki.diaper_id||''} onChange={e=>setEditingWiki(f=>({...f,diaper_id:e.target.value}))} /></div>
               <div className="form-group"><label>产品介绍</label>
-                <textarea className="form-control" rows={3} value={editingWiki.intro||''} onChange={e=>setEditingWiki(f=>({...f,intro:e.target.value}))} /></div>
+                <textarea className="input input-bordered w-full" rows={3} value={editingWiki.intro||''} onChange={e=>setEditingWiki(f=>({...f,intro:e.target.value}))} /></div>
               <div className="form-group"><label>吸水性能评测</label>
-                <textarea className="form-control" rows={3} value={editingWiki.absorbency_review||''} onChange={e=>setEditingWiki(f=>({...f,absorbency_review:e.target.value}))} /></div>
+                <textarea className="input input-bordered w-full" rows={3} value={editingWiki.absorbency_review||''} onChange={e=>setEditingWiki(f=>({...f,absorbency_review:e.target.value}))} /></div>
               <div className="form-group"><label>舒适度评测</label>
-                <textarea className="form-control" rows={3} value={editingWiki.comfort_review||''} onChange={e=>setEditingWiki(f=>({...f,comfort_review:e.target.value}))} /></div>
+                <textarea className="input input-bordered w-full" rows={3} value={editingWiki.comfort_review||''} onChange={e=>setEditingWiki(f=>({...f,comfort_review:e.target.value}))} /></div>
               <div className="form-group"><label>用户体验总结</label>
-                <textarea className="form-control" rows={3} value={editingWiki.user_experience||''} onChange={e=>setEditingWiki(f=>({...f,user_experience:e.target.value}))} /></div>
+                <textarea className="input input-bordered w-full" rows={3} value={editingWiki.user_experience||''} onChange={e=>setEditingWiki(f=>({...f,user_experience:e.target.value}))} /></div>
               <div className="form-group"><label>尺码选择建议</label>
-                <textarea className="form-control" rows={3} value={editingWiki.size_guide||''} onChange={e=>setEditingWiki(f=>({...f,size_guide:e.target.value}))} /></div>
+                <textarea className="input input-bordered w-full" rows={3} value={editingWiki.size_guide||''} onChange={e=>setEditingWiki(f=>({...f,size_guide:e.target.value}))} /></div>
               <div style={{ display: 'flex', gap: 12 }}>
                 <button className="btn btn-primary" onClick={handleSaveWiki}>
                   <i className="fa-solid fa-floppy-disk" /> 保存
@@ -501,16 +501,16 @@ export default function AdminPage() {
             <div className="card" style={{ marginBottom: 16 }}>
               <h3>{editingTerm.id ? <><i className="fa-solid fa-pen" /> 编辑</> : <><i className="fa-solid fa-plus" /> 添加</>}术语</h3>
               <div className="form-group"><label>术语 *</label>
-                <input className="form-control" value={editingTerm.term||''} onChange={e=>setEditingTerm(f=>({...f,term:e.target.value}))} /></div>
+                <input className="input input-bordered w-full" value={editingTerm.term||''} onChange={e=>setEditingTerm(f=>({...f,term:e.target.value}))} /></div>
               <div className="form-group"><label>缩写</label>
-                <input className="form-control" value={editingTerm.abbreviation||''} onChange={e=>setEditingTerm(f=>({...f,abbreviation:e.target.value}))} /></div>
+                <input className="input input-bordered w-full" value={editingTerm.abbreviation||''} onChange={e=>setEditingTerm(f=>({...f,abbreviation:e.target.value}))} /></div>
               <div className="form-group"><label>定义 *</label>
-                <textarea className="form-control" rows={3} value={editingTerm.definition||''} onChange={e=>setEditingTerm(f=>({...f,definition:e.target.value}))} /></div>
+                <textarea className="input input-bordered w-full" rows={3} value={editingTerm.definition||''} onChange={e=>setEditingTerm(f=>({...f,definition:e.target.value}))} /></div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
                 <div className="form-group"><label>分类</label>
-                  <input className="form-control" value={editingTerm.category||''} onChange={e=>setEditingTerm(f=>({...f,category:e.target.value}))} /></div>
+                  <input className="input input-bordered w-full" value={editingTerm.category||''} onChange={e=>setEditingTerm(f=>({...f,category:e.target.value}))} /></div>
                 <div className="form-group"><label>相关术语</label>
-                  <input className="form-control" value={editingTerm.related_terms||''} onChange={e=>setEditingTerm(f=>({...f,related_terms:e.target.value}))} /></div>
+                  <input className="input input-bordered w-full" value={editingTerm.related_terms||''} onChange={e=>setEditingTerm(f=>({...f,related_terms:e.target.value}))} /></div>
               </div>
               <div style={{ display: 'flex', gap: 12 }}>
                 <button className="btn btn-primary" onClick={handleSaveTerm}>
