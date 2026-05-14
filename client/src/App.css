@@ -1139,26 +1139,6 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
   }
 
   /* 焕新视觉开启时：低模糊高透明 */
-  .glass-enabled .mobile-bottom-nav-inner {
-    background: rgba(255, 255, 255, 0.45);
-    -webkit-backdrop-filter: saturate(140%) blur(8px);
-    backdrop-filter: saturate(140%) blur(8px);
-    box-shadow:
-      0 0 0 0.5px rgba(255, 255, 255, 0.15),
-      0 2px 12px rgba(0, 0, 0, 0.04),
-      0 8px 28px rgba(0, 0, 0, 0.06);
-    border: 0.5px solid rgba(255, 255, 255, 0.3);
-  }
-  [data-theme="dark"] .glass-enabled .mobile-bottom-nav-inner {
-    background: rgba(30, 33, 40, 0.45);
-    -webkit-backdrop-filter: saturate(140%) blur(8px);
-    backdrop-filter: saturate(140%) blur(8px);
-    box-shadow:
-      0 0 0 0.5px rgba(255, 255, 255, 0.04),
-      0 2px 12px rgba(0, 0, 0, 0.15),
-      0 8px 28px rgba(0, 0, 0, 0.2);
-    border: 0.5px solid rgba(255, 255, 255, 0.06);
-  }
 
   /* 底部导航栏入场动画 */
   .mobile-bottom-nav {
@@ -1307,65 +1287,17 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
    ================================================================ */
 
 /* 焕新视觉 — LiquidGlass 直接包裹，无需 CSS backdrop-filter */
-.glass-enabled .card,
-.glass-enabled .diaper-card,
-.glass-enabled .rank-item,
-.glass-enabled .hero-card,
-.glass-enabled .modal {
-  background: transparent;
-  box-shadow: none;
-  border: none;
-}
-.glass-enabled .sidebar-desktop,
-.glass-enabled .sidebar-mobile {
-  background: transparent;
-  border-right: none;
-}
 
 
 
 /* 内容层级 */
-.glass-enabled .card > *,
-.glass-enabled .diaper-card > *,
-.glass-enabled .rank-item > *,
-.glass-enabled .hero-card > *,
-.glass-enabled .modal > * {
-  position: relative;
-  z-index: 1;
-}
 
 /* 过渡 */
-.glass-enabled .card,.glass-enabled .diaper-card,.glass-enabled .rank-item,
-.glass-enabled .modal,.glass-enabled .sidebar-desktop,.glass-enabled .sidebar-mobile,
-.glass-enabled .hero-card,.glass-enabled .form-control,
-.glass-enabled .btn-outline,.glass-enabled .btn-primary,
-.glass-enabled .btn-accent,.glass-enabled .btn-danger {
-  transition: background 0.35s ease, backdrop-filter 0.35s ease, box-shadow 0.35s ease;
-}
 
 /* 按钮/输入框 — 保持轻微毛玻璃（LiquidGlass 不包裹小元素） */
-.glass-enabled .btn-outline,
-.glass-enabled .btn-primary,
-.glass-enabled .btn-accent,
-.glass-enabled .btn-danger {
-  backdrop-filter: blur(4px) saturate(130%);
-  -webkit-backdrop-filter: blur(4px) saturate(130%);
-}
 
-.glass-enabled .form-control {
-  background: rgba(255,255,255,0.3);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-.glass-enabled[data-theme="dark"] .form-control {
-  background: rgba(18,18,28,0.4);
-}
 
 /* 移动端底栏保持毛玻璃 */
-.glass-enabled .mobile-bottom-nav-inner {
-  backdrop-filter: saturate(140%) blur(12px);
-  -webkit-backdrop-filter: saturate(140%) blur(12px);
-}
 
 
 .sidebar-link {
@@ -1566,11 +1498,6 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
   from { background-position: 200% 0; }
   to { background-position: -200% 0; }
 }
-.glass-enabled .sidebar-link.active {
-  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 50%, var(--primary) 100%);
-  background-size: 200% 100%;
-  animation: navHighlight 2s ease infinite;
-}
 
 /* ================================================================
    焕新视觉 v2 — 玻璃折射 + 液体惯性增强
@@ -1579,34 +1506,6 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
 /* ---- 玻璃折射：多层伪元素光效 ---- */
 
 /* ① 折射光扫掠过效果 — 始终可见的光学折射条纹 */
-.glass-enabled .card::before,
-.glass-enabled .diaper-card::before,
-.glass-enabled .rank-item::before,
-.glass-enabled .hero-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.35;
-  background: linear-gradient(
-    105deg,
-    transparent 28%,
-    rgba(255,255,255,0.09) 34%,
-    rgba(255,255,255,0.18) 37%,
-    rgba(255,255,255,0.06) 40%,
-    transparent 46%
-  );
-  background-size: 220% 100%;
-  animation: glassRefractionSweep 3.5s ease-in-out infinite;
-}
-.glass-enabled .card:hover::before,
-.glass-enabled .diaper-card:hover::before,
-.glass-enabled .rank-item:hover::before,
-.glass-enabled .hero-card:hover::before {
-  opacity: 0.55;
-}
 
 @keyframes glassRefractionSweep {
   0%   { background-position: 220% 0; }
@@ -1614,38 +1513,6 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
 }
 
 /* ② 棱镜色散边框 — 彩色光晕在玻璃边缘折射，始终可见 */
-.glass-enabled .card::after,
-.glass-enabled .diaper-card::after,
-.glass-enabled .rank-item::after,
-.glass-enabled .hero-card::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.5;
-  background: linear-gradient(
-    135deg,
-    rgba(168,216,240,0.45) 0%,
-    rgba(255,183,197,0.35) 25%,
-    rgba(200,180,255,0.35) 50%,
-    rgba(168,240,200,0.3) 75%,
-    rgba(168,216,240,0.45) 100%
-  );
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  padding: 1px;
-  animation: prismaticShift 5s linear infinite;
-}
-.glass-enabled .card:hover::after,
-.glass-enabled .diaper-card:hover::after,
-.glass-enabled .rank-item:hover::after,
-.glass-enabled .hero-card:hover::after {
-  opacity: 0.8;
-}
 
 @keyframes prismaticShift {
   0%   { filter: hue-rotate(0deg) brightness(1); }
@@ -1654,24 +1521,6 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
 }
 
 /* ③ 焦散波纹 — 模拟光穿过玻璃投射的波纹 */
-.glass-enabled .hero-card {
-  position: relative;
-  overflow: hidden;
-}
-.glass-enabled .hero-card .caustics-layer {
-  content: '';
-  position: absolute;
-  inset: -40%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.25;
-  background:
-    radial-gradient(ellipse at 30% 20%, rgba(168,216,240,0.55) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 60%, rgba(255,183,197,0.4) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(168,216,240,0.4) 0%, transparent 40%);
-  animation: causticsFloat 7s ease-in-out infinite;
-  filter: blur(28px);
-}
 
 @keyframes causticsFloat {
   0%   { transform: translate(-5%, -5%) scale(1); }
@@ -1682,148 +1531,21 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
 }
 
 /* ④ 玻璃表面微闪光 — 随鼠标移动的镜面高光 */
-.glass-enabled .card,
-.glass-enabled .diaper-card,
-.glass-enabled .rank-item,
-.glass-enabled .hero-card,
-.glass-enabled .modal,
-.glass-enabled .sidebar-desktop,
-.glass-enabled .sidebar-mobile {
-  position: relative;
-  overflow: hidden;
-}
 
 /* 镜面高光层 (使用 JS 设置的 --glass-light-x/y) */
-.glass-enabled .card .specular-layer,
-.glass-enabled .diaper-card .specular-layer,
-.glass-enabled .rank-item .specular-layer,
-.glass-enabled .hero-card .specular-layer,
-.glass-enabled .modal .specular-layer {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.18;
-  background: radial-gradient(
-    circle at calc(var(--glass-light-x, 0.25) * 100%) calc(var(--glass-light-y, 0.25) * 100%),
-    rgba(255,255,255,0.9) 0%,
-    rgba(255,255,255,0.35) 20%,
-    rgba(255,255,255,0.08) 40%,
-    transparent 60%
-  );
-  transition: opacity 0.3s ease;
-}
-.glass-enabled .card:hover .specular-layer,
-.glass-enabled .diaper-card:hover .specular-layer,
-.glass-enabled .rank-item:hover .specular-layer,
-.glass-enabled .hero-card:hover .specular-layer {
-  opacity: 0.28;
-}
 
 /* ⑤ 深色模式下的折射适配 */
-.glass-enabled[data-theme="dark"] .card::before,
-.glass-enabled[data-theme="dark"] .diaper-card::before,
-.glass-enabled[data-theme="dark"] .rank-item::before,
-.glass-enabled[data-theme="dark"] .hero-card::before {
-  background: linear-gradient(
-    105deg,
-    transparent 30%,
-    rgba(200,220,255,0.04) 35%,
-    rgba(200,220,255,0.08) 37%,
-    rgba(200,220,255,0.02) 40%,
-    transparent 45%
-  );
-  background-size: 200% 100%;
-}
 
-.glass-enabled[data-theme="dark"] .card::after,
-.glass-enabled[data-theme="dark"] .diaper-card::after,
-.glass-enabled[data-theme="dark"] .rank-item::after,
-.glass-enabled[data-theme="dark"] .hero-card::after {
-  background: linear-gradient(
-    135deg,
-    rgba(126,184,212,0.2) 0%,
-    rgba(245,152,158,0.15) 25%,
-    rgba(160,140,220,0.15) 50%,
-    rgba(126,200,160,0.12) 75%,
-    rgba(126,184,212,0.2) 100%
-  );
-}
 
-.glass-enabled[data-theme="dark"] .card .specular-layer,
-.glass-enabled[data-theme="dark"] .diaper-card .specular-layer,
-.glass-enabled[data-theme="dark"] .rank-item .specular-layer,
-.glass-enabled[data-theme="dark"] .hero-card .specular-layer {
-  background: radial-gradient(
-    circle at calc(var(--glass-light-x, 0.25) * 100%) calc(var(--glass-light-y, 0.25) * 100%),
-    rgba(180,200,255,0.6) 0%,
-    rgba(180,200,255,0.2) 20%,
-    rgba(180,200,255,0.05) 40%,
-    transparent 60%
-  );
-}
 
 /* ⑥ 液体惯性关闭/回位过渡 */
-.glass-enabled .card,
-.glass-enabled .diaper-card,
-.glass-enabled .rank-item,
-.glass-enabled .hero-card,
-.glass-enabled .post-card {
-  will-change: transform;
-}
 
-/* 当 glass-enabled 移除时恢复 transition（由 JS 清理 transform） */
-.glass-enabled .card:not([style*="transform"]),
-.glass-enabled .diaper-card:not([style*="transform"]),
-.glass-enabled .rank-item:not([style*="transform"]) {
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.35s ease;
-}
 
 /* ====== 焕新视觉 — 移动端适配 ======
    禁用伪元素 (::before/::after) 和 overflow:hidden，
    因为它们会破坏移动端 flex 滚动容器的高度计算，导致大片空白 */
 @media (max-width: 768px) {
-  .glass-enabled .card,
-  .glass-enabled .diaper-card,
-  .glass-enabled .rank-item,
-  .glass-enabled .hero-card,
-  .glass-enabled .modal {
-    overflow: visible; /* 不能用 hidden，会破坏滚动 */
-  }
   /* 禁用折射光扫掠 (::before) 和棱镜色散边框 (::after) */
-  .glass-enabled .card::before,
-  .glass-enabled .diaper-card::before,
-  .glass-enabled .rank-item::before,
-  .glass-enabled .hero-card::before,
-  .glass-enabled .card::after,
-  .glass-enabled .diaper-card::after,
-  .glass-enabled .rank-item::after,
-  .glass-enabled .hero-card::after {
-    display: none;
-  }
   /* 禁用焦散层（hero-card 内注入的 div） */
-  .glass-enabled .caustics-layer {
-    display: none;
-  }
   /* 保留基本毛玻璃效果 */
-  .glass-enabled .card,
-  .glass-enabled .diaper-card,
-  .glass-enabled .rank-item,
-  .glass-enabled .hero-card {
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(8px) saturate(110%);
-    -webkit-backdrop-filter: blur(8px) saturate(110%);
-    border: 1px solid rgba(255,255,255,0.3);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-  }
-  [data-theme="dark"] .glass-enabled .card,
-  [data-theme="dark"] .glass-enabled .diaper-card,
-  [data-theme="dark"] .glass-enabled .rank-item,
-  [data-theme="dark"] .glass-enabled .hero-card {
-    background: rgba(25,25,36,0.6);
-    border-color: rgba(255,255,255,0.06);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-  }
 }

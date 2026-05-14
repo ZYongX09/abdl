@@ -4,8 +4,6 @@ import Sidebar from './components/Sidebar';
 import MobileBottomNav from './components/MobileBottomNav';
 import BackToTop from './components/BackToTop';
 import ErrorBoundary from './components/ErrorBoundary';
-import GlobalMouseTracker from './components/GlobalMouseTracker';
-import LiquidScroll from './components/LiquidScroll';
 import ForumFeed from './pages/ForumFeed';
 import PostDetail from './pages/PostDetail';
 import NotificationsPage from './pages/NotificationsPage';
@@ -89,13 +87,6 @@ export default function App() {
     localStorage.setItem('abdl_theme', theme);
   }, [theme]);
 
-  // Initialize glass effect from settings
-  useEffect(() => {
-    try {
-      const glass = JSON.parse(localStorage.getItem('abdl_settings_glassEffect'));
-      if (glass) document.documentElement.classList.add('glass-enabled');
-    } catch {}
-  }, []);
 
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
   const navigate = useNavigate();
@@ -130,8 +121,6 @@ export default function App() {
 
   return (
     <div className="app-layout">
-      <GlobalMouseTracker />
-      <LiquidScroll />
       <ScrollToTop />
       <Sidebar />
       <div className="app-main-content">

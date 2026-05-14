@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { rankingsAPI } from '../api';
 import LoadingSkeleton from '../components/LoadingSkeleton';
-import Glass from '../components/Glass';
 
 
 const DIM_TABS = [
@@ -92,7 +91,7 @@ export default function Rankings() {
       ) : (
         rankings.map((item, i) => (
           <Link to={`/diaper/${item.id}`} key={item.id} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <Glass preset="rank" className="rank-item stagger-item" style={{ animationDelay: `${i * 0.06}s` }}>
+            <div className="rank-item stagger-item" style={{ animationDelay: `${i * 0.06}s` }}>
               <div className={`rank-number ${i===0?'top1':i===1?'top2':i===2?'top3':''}`}>
                 {i < 3 ? <i className={`fa-solid ${MEDALS[i]}`} style={{ color: MEDAL_COLORS[i], fontSize: '1.6rem' }} /> : `#${i+1}`}
               </div>
@@ -113,7 +112,7 @@ export default function Rankings() {
                 {tab==='popular' && <div style={{ fontWeight: 700, color: 'var(--accent-dark)' }}>{item.rating_count} 评价</div>}
                 {!['hot','absorbency','popular'].includes(tab) && item.avg_score != null && <div className="score-badge"><i className="fa-solid fa-star" style={{color:'var(--warning)',marginRight:3,fontSize:'0.7rem'}} />{Number(item.avg_score).toFixed(1)}</div>}
               </div>
-            </Glass>
+            </div>
           </Link>
         ))
       )}

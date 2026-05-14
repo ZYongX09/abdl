@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
 import { authAPI } from '../api';
-import Glass from '../components/Glass';
 
 
 function getStoredSetting(key, fallback) {
@@ -19,15 +18,7 @@ export default function Settings() {
   const [animations, setAnimations] = useState(() => getStoredSetting('animations') ?? true);
   const [aiPrivacy, setAiPrivacy] = useState(() => getStoredSetting('aiPrivacy') || { basic: true, body: true, prefs: true, bio: false, feelings: true });
   const [msg, setMsg] = useState('');
-  const [glassEffect, setGlassEffect] = useState(() => getStoredSetting('glassEffect') ?? false);
 
-
-  // Apply glass effect — 直接启用液态玻璃
-  useEffect(() => {
-    setStoredSetting('glassEffect', glassEffect);
-    document.documentElement.classList.toggle('glass-enabled', glassEffect);
-    document.documentElement.classList.toggle('liquid-glass-enabled', glassEffect);
-  }, [glassEffect]);
 
   // Apply theme — 切换非多彩主题时自动关闭焕新视觉
   useEffect(() => {
@@ -37,9 +28,6 @@ export default function Settings() {
     document.documentElement.setAttribute('data-theme', resolved);
     localStorage.setItem('abdl_theme', resolved);
     setStoredSetting('theme', theme);
-    if (resolved !== 'colorful' && glassEffect) {
-      setGlassEffect(false);
-    }
   }, [theme]);
 
   // Apply animation preference
@@ -87,7 +75,7 @@ export default function Settings() {
       )}
 
       {/* 外观 */}
-      <Glass preset="card" className="card">
+      <div className="card">
         <h3 style={{ marginBottom: 16 }}>
           <i className="fa-solid fa-palette" /> 外观
         </h3>
@@ -125,26 +113,7 @@ export default function Settings() {
             </button>
           </label>
         </div>
-
-        {/* 焕新视觉 — 仅多彩主题可用 */}
-        {theme === 'colorful' && (
-        <div className="form-group" style={{ marginTop: 16 }}>
-          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
-            <span>
-              <i className="fa-solid fa-gem" style={{ marginRight: 8 }} />
-              焕新视觉
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 400 }}>卡片和面板使用半透明毛玻璃质感，带来沉浸式视觉体验</div>
-            </span>
-            <button
-              className={`btn btn-sm ${glassEffect ? 'btn-primary' : 'btn-outline'}`}
-              onClick={() => setGlassEffect(!glassEffect)}
-              style={{ minWidth: 80, textAlign: 'center' }}>
-              {glassEffect ? '已开启' : '已关闭'}
-            </button>
-          </label>
-        </div>
-        )}
-      </Glass>
+      </div>
 
       {/* AI 隐私 */}
       <div className="card">
