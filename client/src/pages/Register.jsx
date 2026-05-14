@@ -16,10 +16,8 @@ export default function Register() {
 
   const update = (field) => (e) => setForm(f => ({ ...f, [field]: e.target.value }));
 
-  // Auto-focus username field
   useEffect(() => { usernameRef.current?.focus(); }, []);
 
-  // Password strength calculation
   const passwordStrength = useMemo(() => {
     const p = form.password;
     let score = 0;
@@ -59,86 +57,87 @@ export default function Register() {
   };
 
   return (
-    <div style={{ maxWidth: 500, margin: '40px auto' }}>
+    <div className="max-w-lg mx-auto mt-10">
       <div className="card">
-        <h2 style={{ textAlign: 'center', marginBottom: 24 }}>
-          <i className="fa-solid fa-user-plus" style={{ color: 'var(--accent)' }} /> 加入 ABDL Space
-        </h2>
-        {error && <div className="alert alert-danger">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>用户名 *</label>
-            <input ref={usernameRef} className="form-control" value={form.username} onChange={update('username')} placeholder="你的昵称" required />
-          </div>
-          <div className="form-group">
-            <label>邮箱</label>
-            <input className="form-control" type="email" value={form.email} onChange={update('email')} placeholder="选填" />
-          </div>
-          <div className="form-group">
-            <label>密码 *</label>
-            <div style={{ position: 'relative' }}>
-              <input className="form-control" type={showPassword ? 'text' : 'password'} value={form.password}
-                onChange={update('password')} placeholder="至少 6 位" required
-                style={{ paddingRight: 44 }} />
-              <button type="button" onClick={() => setShowPassword(!showPassword)}
-                style={{ position: 'absolute', right: 4, top: '50%', transform: 'translateY(-50%)',
-                  background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)',
-                  fontSize: '1rem', padding: '6px 10px', borderRadius: 6 }}
-                tabIndex={-1} aria-label={showPassword ? '隐藏密码' : '显示密码'}>
-                <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
-              </button>
+        <div className="card-body">
+          <h2 className="card-title justify-center text-xl mb-2">
+            <i className="fa-solid fa-user-plus" style={{ color: 'var(--accent)' }} /> 加入 ABDL Space
+          </h2>
+          {error && <div className="alert alert-error mb-3"><span>{error}</span></div>}
+          <form onSubmit={handleSubmit}>
+            <div className="form-control mb-3">
+              <label className="label"><span className="label-text">用户名 *</span></label>
+              <input ref={usernameRef} className="input input-bordered w-full" value={form.username} onChange={update('username')} placeholder="你的昵称" required />
             </div>
-            {form.password.length > 0 && (
-              <div className="password-strength">
-                <div className="password-strength-bar">
-                  <div className="password-strength-bar-fill" style={{
-                    width: `${(passwordStrength / 5) * 100}%`,
-                    background: strengthColors[passwordStrength]
-                  }} />
-                </div>
-                <span className="password-strength-text" style={{ color: strengthColors[passwordStrength] }}>
-                  密码强度: {strengthLabels[passwordStrength]}
-                </span>
+            <div className="form-control mb-3">
+              <label className="label"><span className="label-text">邮箱</span></label>
+              <input className="input input-bordered w-full" type="email" value={form.email} onChange={update('email')} placeholder="选填" />
+            </div>
+            <div className="form-control mb-4">
+              <label className="label"><span className="label-text">密码 *</span></label>
+              <div className="relative">
+                <input className="input input-bordered w-full pr-10" type={showPassword ? 'text' : 'password'} value={form.password}
+                  onChange={update('password')} placeholder="至少 6 位" required />
+                <button type="button" onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 btn btn-ghost btn-xs"
+                  tabIndex={-1} aria-label={showPassword ? '隐藏密码' : '显示密码'}>
+                  <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+                </button>
               </div>
-            )}
-          </div>
-          <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px solid var(--border)' }} />
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: 12 }}>
-            <i className="fa-solid fa-circle-info" /> 以下信息帮助 AI 为你推荐最合适的纸尿裤（选填，可后续补充）
+              {form.password.length > 0 && (
+                <div className="mt-2">
+                  <div className="w-full h-1.5 rounded-full bg-base-300 overflow-hidden">
+                    <div className="h-full rounded-full transition-all" style={{
+                      width: `${(passwordStrength / 5) * 100}%`,
+                      background: strengthColors[passwordStrength]
+                    }} />
+                  </div>
+                  <span className="text-xs mt-1 block" style={{ color: strengthColors[passwordStrength] }}>
+                    密码强度: {strengthLabels[passwordStrength]}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <div className="divider">可选信息</div>
+            <p className="text-sm text-base-content/60 mb-4">
+              <i className="fa-solid fa-circle-info mr-1" /> 以下信息帮助 AI 为你推荐最合适的纸尿裤（可后续补充）
+            </p>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="form-control">
+                <label className="label"><span className="label-text">年龄</span></label>
+                <input className="input input-bordered w-full" type="number" value={form.age} onChange={update('age')} placeholder="岁" />
+              </div>
+              <div className="form-control">
+                <label className="label"><span className="label-text">地区</span></label>
+                <input className="input input-bordered w-full" value={form.region} onChange={update('region')} placeholder="城市" />
+              </div>
+              <div className="form-control">
+                <label className="label"><span className="label-text">体重 (kg)</span></label>
+                <input className="input input-bordered w-full" type="number" step="0.1" value={form.weight} onChange={update('weight')} placeholder="kg" />
+              </div>
+              <div className="form-control">
+                <label className="label"><span className="label-text">腰围 (cm)</span></label>
+                <input className="input input-bordered w-full" type="number" step="0.1" value={form.waist} onChange={update('waist')} placeholder="cm" />
+              </div>
+              <div className="form-control">
+                <label className="label"><span className="label-text">臀围 (cm)</span></label>
+                <input className="input input-bordered w-full" type="number" step="0.1" value={form.hip} onChange={update('hip')} placeholder="cm" />
+              </div>
+              <div className="form-control">
+                <label className="label"><span className="label-text">偏好款式</span></label>
+                <input className="input input-bordered w-full" value={form.style_preference} onChange={update('style_preference')} placeholder="如：日系可爱" />
+              </div>
+            </div>
+
+            <button className="btn btn-accent w-full" disabled={loading}>
+              {loading ? <><i className="fa-solid fa-spinner fa-spin" /> 注册中...</> : <><i className="fa-solid fa-baby" /> 注册</>}
+            </button>
+          </form>
+          <p className="text-center mt-4 text-sm">
+            已有账号？<Link to="/login" className="link link-primary">去登录</Link>
           </p>
-          <div className="register-grid">
-            <div className="form-group">
-              <label>年龄</label>
-              <input className="form-control" type="number" value={form.age} onChange={update('age')} placeholder="岁" />
-            </div>
-            <div className="form-group">
-              <label>地区</label>
-              <input className="form-control" value={form.region} onChange={update('region')} placeholder="城市" />
-            </div>
-            <div className="form-group">
-              <label>体重 (kg)</label>
-              <input className="form-control" type="number" step="0.1" value={form.weight} onChange={update('weight')} placeholder="kg" />
-            </div>
-            <div className="form-group">
-              <label>腰围 (cm)</label>
-              <input className="form-control" type="number" step="0.1" value={form.waist} onChange={update('waist')} placeholder="cm" />
-            </div>
-            <div className="form-group">
-              <label>臀围 (cm)</label>
-              <input className="form-control" type="number" step="0.1" value={form.hip} onChange={update('hip')} placeholder="cm" />
-            </div>
-            <div className="form-group">
-              <label>偏好款式</label>
-              <input className="form-control" value={form.style_preference} onChange={update('style_preference')} placeholder="如：日系可爱" />
-            </div>
-          </div>
-          <button className="btn btn-accent" style={{ width: '100%', marginTop: 8 }} disabled={loading}>
-            {loading ? <><i className="fa-solid fa-spinner fa-spin" /> 注册中...</> : <><i className="fa-solid fa-baby" /> 注册</>}
-          </button>
-        </form>
-        <p style={{ textAlign: 'center', marginTop: 16, fontSize: '0.9rem' }}>
-          已有账号？<Link to="/login">去登录</Link>
-        </p>
+        </div>
       </div>
     </div>
   );
