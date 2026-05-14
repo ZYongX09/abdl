@@ -97,6 +97,153 @@
   --overlay-bg: rgba(0,0,0,0.6);
 }
 
+/* ============================================================
+   多彩主题 — 马卡龙渐变动画背景
+   宝宝蓝 #A8D8F0 · 淡粉 #FFB7C5 · 薰衣草紫 #C5B8E8 · 奶油黄 #FFF3CD
+   ============================================================ */
+[data-theme="colorful"] {
+  --primary: #9BB8E0;
+  --primary-dark: #7A9CD0;
+  --primary-light: rgba(168,216,240,0.25);
+  --accent: #F0A0B8;
+  --accent-dark: #D88CA0;
+  --bg: transparent;
+  --bg-card: rgba(255,255,255,0.55);
+  --bg-sidebar: rgba(255,255,255,0.45);
+  --border: rgba(255,255,255,0.5);
+  --text: #3A4A5C;
+  --text-light: #6B7B8D;
+  --text-muted: #8A9AAA;
+  --success: #6BC67A;
+  --danger: #E07070;
+  --warning: #E8B830;
+  --shadow: 0 4px 20px rgba(168,180,216,0.2);
+  --shadow-hover: 0 8px 36px rgba(168,180,216,0.35);
+  --skeleton-base: rgba(255,255,255,0.3);
+  --skeleton-shine: rgba(255,255,255,0.6);
+  --input-bg: rgba(255,255,255,0.4);
+  --rating-bg: rgba(255,255,255,0.4);
+  --rating-border: rgba(255,255,255,0.5);
+  --success-bg: rgba(107,198,122,0.15);
+  --warning-bg: rgba(232,184,48,0.12);
+  --feeling-bg: rgba(255,183,197,0.1);
+  --feeling-border: rgba(255,183,197,0.3);
+  --tag-bg: rgba(168,216,240,0.25);
+  --tag-color: #6A9EC0;
+  --badge-bg: rgba(255,243,205,0.5);
+  --badge-color: #8A7020;
+  --hero-bg: linear-gradient(135deg, rgba(168,216,240,0.4) 0%, rgba(255,183,197,0.3) 50%, rgba(197,184,232,0.3) 100%);
+  --hero-text: #4A6080;
+  --table-border: rgba(255,255,255,0.4);
+  --table-stripe: rgba(255,255,255,0.2);
+  --sidebar-search-icon: #8A9AAA;
+  --post-border: rgba(255,255,255,0.3);
+  --sub-post-border: rgba(255,255,255,0.2);
+  --like-active: #E07070;
+  --link-color: #6A9EC0;
+  --overlay-bg: rgba(0,0,0,0.25);
+}
+
+/* 多彩主题 — 动态渐变背景 */
+[data-theme="colorful"] body,
+[data-theme="colorful"] {
+  background: linear-gradient(
+    -45deg,
+    #A8D8F0,
+    #FFB7C5,
+    #C5B8E8,
+    #FFF3CD,
+    #DEEEFF,
+    #FFD0DC,
+    #D8D0F0,
+    #FFF8E8
+  );
+  background-size: 400% 400%;
+  animation: colorfulGradient 20s ease infinite;
+  min-height: 100vh;
+}
+
+@keyframes colorfulGradient {
+  0%   { background-position: 0% 50%; }
+  25%  { background-position: 100% 0%; }
+  50%  { background-position: 100% 50%; }
+  75%  { background-position: 0% 100%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 多彩主题 — 卡片自带毛玻璃 */
+[data-theme="colorful"] .card,
+[data-theme="colorful"] .diaper-card,
+[data-theme="colorful"] .rank-item,
+[data-theme="colorful"] .hero-card,
+[data-theme="colorful"] .modal {
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: 0 4px 24px rgba(168,180,216,0.15);
+}
+
+/* 多彩主题 — 侧边栏毛玻璃 */
+[data-theme="colorful"] .sidebar-desktop,
+[data-theme="colorful"] .sidebar-mobile {
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border-right: 1px solid rgba(255,255,255,0.4);
+}
+
+/* 多彩主题 — 导航栏 */
+[data-theme="colorful"] .navbar {
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+}
+
+/* 多彩主题 — 按钮增强 */
+[data-theme="colorful"] .btn-primary {
+  background: linear-gradient(135deg, #A8D8F0, #C5B8E8);
+  border: none;
+  color: #3A4A5C;
+}
+[data-theme="colorful"] .btn-primary:hover {
+  background: linear-gradient(135deg, #90C8E0, #B0A8D8);
+}
+[data-theme="colorful"] .btn-accent {
+  background: linear-gradient(135deg, #FFB7C5, #FFF3CD);
+  border: none;
+  color: #5A4040;
+}
+
+/* 多彩主题 — 输入框 */
+[data-theme="colorful"] .form-control {
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.5);
+}
+[data-theme="colorful"] .form-control:focus {
+  border-color: #A8D8F0;
+  box-shadow: 0 0 0 3px rgba(168,216,240,0.2);
+}
+
+/* 多彩主题 — 移动端底栏 */
+[data-theme="colorful"] .mobile-bottom-nav-inner {
+  background: rgba(255,255,255,0.45);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-top: 1px solid rgba(255,255,255,0.4);
+}
+
+/* 多彩主题 — 标签滚动条 */
+[data-theme="colorful"] ::-webkit-scrollbar-thumb {
+  background: rgba(168,216,240,0.4);
+}
+[data-theme="colorful"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(168,216,240,0.6);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }

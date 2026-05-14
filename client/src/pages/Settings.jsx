@@ -95,6 +95,7 @@ export default function Settings() {
             {[
               { key: 'light', label: '浅色', icon: 'fa-sun' },
               { key: 'dark', label: '深色', icon: 'fa-moon' },
+              { key: 'colorful', label: '多彩', icon: 'fa-wand-magic-sparkles' },
               { key: 'system', label: '跟随系统', icon: 'fa-display' },
             ].map(opt => (
               <button key={opt.key}
