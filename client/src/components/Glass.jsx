@@ -57,6 +57,17 @@ export default function Glass({
 
   // 液态玻璃模式 + 设备支持
   if (liquidEnabled && deviceSupported && config) {
+    // LiquidGlass 默认 inline-flex + padding 24px 32px + gap 24px，会破坏布局
+    // 必须覆盖为 block + 零间距
+    const mergedStyle = {
+      display: 'block',
+      padding: 0,
+      gap: 0,
+      margin: 0,
+      overflow: 'visible',
+      width: '100%',
+      ...style,
+    };
     return (
       <Suspense fallback={
         <Tag className={`${glassClassName} ${className}`} style={style} onClick={onClick} {...rest}>
@@ -69,9 +80,11 @@ export default function Glass({
           mouseContainer={mouseContainer}
           onClick={onClick}
           className={`${className} liquid-glass-active`}
-          style={style}
+          style={mergedStyle}
         >
-          {children}
+          <Tag className={glassClassName} style={{ position: 'relative', zIndex: 1 }}>
+            {children}
+          </Tag>
         </LiquidGlass>
       </Suspense>
     );

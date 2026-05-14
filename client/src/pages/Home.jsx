@@ -290,13 +290,15 @@ export default function Home() {
               <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8 }}>
                 {hotRankings.map((d, i) => (
                   <Link to={`/diaper/${d.id}`} key={d.id} className="stagger-item" style={{ textDecoration: 'none', color: 'inherit', minWidth: 200, animationDelay: `${i * 0.06}s` }}>
-                    <Glass preset="card" glassClassName="diaper-card">
+                    <Glass preset="card">
+                    <div className="diaper-card">
                       <div className="brand">TOP {i + 1}</div>
                       <div className="model">{d.brand} {d.model}</div>
                       <div className="meta">
                         <span className="score-badge"><i className="fa-solid fa-star" style={{ color: 'var(--warning)' }} /> {Number(d.avg_score||0).toFixed(1)}</span>
                         <span>{d.sizes?.[0]?.label || ''}码</span>
                       </div>
+                    </div>
                     </Glass>
                   </Link>
                 ))}
@@ -324,7 +326,8 @@ export default function Home() {
                       style={{ width: 14, height: 14, accentColor: 'var(--primary)' }} />
                   </label>
                 )}
-                <Glass preset="card" glassClassName="diaper-card" as={Link} to={`/diaper/${d.id}`} style={compareMode ? { paddingTop: 32 } : {}}>
+                <Glass preset="card">
+                <Link to={`/diaper/${d.id}`} className="diaper-card" style={compareMode ? { paddingTop: 32 } : {}}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <div className="brand">{d.brand}</div>
                     {d.is_baby_diaper === 1 && (
@@ -349,6 +352,7 @@ export default function Home() {
                     <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{d.rating_count} 评价</span>
                     {d.avg_price && <span style={{ fontWeight: 600 }}>{d.avg_price}</span>}
                   </div>
+                </Link>
                 </Glass>
               </div>
             ))}
