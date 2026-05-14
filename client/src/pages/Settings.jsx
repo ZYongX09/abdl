@@ -135,19 +135,16 @@ export default function Settings() {
               { key: 'bio', label: '个人简介', desc: '个人资料中的简介', icon: 'fa-pen' },
               { key: 'feelings', label: '使用感受记录', desc: '你对各款纸尿裤的感受评分', icon: 'fa-note-sticky' },
             ].map(opt => (
-              <label key={opt.key} className={`label cursor-pointer rounded-lg border transition-all ${
-                aiPrivacy[opt.key]
-                  ? 'bg-primary/10 border-primary'
-                  : 'bg-base-200 border-base-300'
-              }`}>
-                <div className="flex items-center gap-3">
-                  <input type="checkbox" checked={aiPrivacy[opt.key]} onChange={() => toggleAiPrivacy(opt.key)}
-                    className="checkbox checkbox-sm checkbox-primary" />
-                  <i className={`fa-solid ${opt.icon} text-primary`} />
-                  <div>
-                    <div className="font-semibold text-sm">{opt.label}</div>
-                    <div className="text-xs text-base-content/50">{opt.desc}</div>
-                  </div>
+              <label key={opt.key} className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all" style={{
+                background: aiPrivacy[opt.key] ? 'var(--primary-light)' : 'var(--input-bg)',
+                border: `1px solid ${aiPrivacy[opt.key] ? 'var(--primary)' : 'var(--border)'}`,
+              }}>
+                <input type="checkbox" checked={aiPrivacy[opt.key]} onChange={() => toggleAiPrivacy(opt.key)}
+                  className="checkbox checkbox-sm checkbox-primary" />
+                <i className={`fa-solid ${opt.icon}`} style={{ color: 'var(--primary-dark)' }} />
+                <div>
+                  <div className="font-semibold text-sm">{opt.label}</div>
+                  <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{opt.desc}</div>
                 </div>
               </label>
             ))}
