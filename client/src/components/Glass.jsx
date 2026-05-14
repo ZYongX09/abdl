@@ -8,16 +8,12 @@ const LiquidGlass = lazy(() => import('liquid-glass-react'));
  * Glass — 液态玻璃包装组件
  *
  * 三级降级策略：
- * 1. 高级材质（liquid-glass-enabled）+ 设备支持 → LiquidGlass 组件
- * 2. 焕新视觉（glass-enabled）→ CSS backdrop-filter 毛玻璃（由 CSS 控制）
+ * 1. 高级材质（glass-enabled）+ 设备支持 → LiquidGlass 覆盖层
+ * 2. 焕新视觉（glass-enabled）→ CSS backdrop-filter 毛玻璃
  * 3. 无效果 → 普通不透明背景
  *
- * @param {'card'|'panel'|'button'|'input'|'nav'|'modal'|'rank'} preset - 效果预设
- * @param {string} className - 附加 CSS 类名
- * @param {string} glassClassName - 启用 CSS 毛玻璃时的类名（如 'card', 'diaper-card'）
- * @param {object} style - 附加内联样式
- * @param {React.RefObject} mouseContainer - 鼠标追踪容器 ref
- * @param {object} liquidProps - 透传给 LiquidGlass 的额外 props
+ * LiquidGlass 组件内部 transform/top/left 会破坏布局，
+ * 所以把它放在绝对定位的 overlay 层，不影响文档流。
  */
 export default function Glass({
   children,
@@ -25,8 +21,6 @@ export default function Glass({
   className = '',
   glassClassName = 'card',
   style = {},
-  mouseContainer = null,
-  liquidProps = {},
   onClick,
   as: Tag = 'div',
   ...rest
@@ -34,6 +28,7 @@ export default function Glass({
   const [liquidEnabled, setLiquidEnabled] = useState(false);
   const [deviceSupported, setDeviceSupported] = useState(false);
   const configRef = useRef(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const check = () => {
@@ -57,36 +52,34 @@ export default function Glass({
 
   // 液态玻璃模式 + 设备支持
   if (liquidEnabled && deviceSupported && config) {
-    // LiquidGlass 默认 inline-flex + padding 24px 32px + gap 24px，会破坏布局
-    // 必须覆盖为 block + 零间距
-    const mergedStyle = {
-      display: 'block',
-      padding: 0,
-      gap: 0,
-      margin: 0,
-      overflow: 'visible',
-      width: '100%',
-      ...style,
-    };
     return (
-      <Suspense fallback={
-        <Tag className={`${glassClassName} ${className}`} style={style} onClick={onClick} {...rest}>
+      <Tag ref={containerRef} className={`${glassClassName} ${className} liquid-glass-active`} style={{ ...style, position: 'relative' }} onClick={onClick} {...rest}>
+        {/* LiquidGlass 绝对定位覆盖层，不影响文档流 */}
+        <Suspense fallback={null}>
+          <LiquidGlass
+            {...config}
+            displacementScale={0}
+            blurAmount={0.04}
+            mouseContainer={containerRef}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              transform: 'none',
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          >
+            <span />
+          </LiquidGlass>
+        </Suspense>
+        {/* 内容层在覆盖层之上 */}
+        <div style={{ position: 'relative', zIndex: 1 }}>
           {children}
-        </Tag>
-      }>
-        <LiquidGlass
-          {...config}
-          {...liquidProps}
-          mouseContainer={mouseContainer}
-          onClick={onClick}
-          className={`${className} liquid-glass-active`}
-          style={mergedStyle}
-        >
-          <Tag className={glassClassName} style={{ position: 'relative', zIndex: 1 }}>
-            {children}
-          </Tag>
-        </LiquidGlass>
-      </Suspense>
+        </div>
+      </Tag>
     );
   }
 
