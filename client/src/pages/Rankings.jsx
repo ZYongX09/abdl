@@ -33,9 +33,10 @@ export default function Rankings() {
       </h2>
 
       <div className="flex flex-col items-center gap-4 mb-6">
-        <div className="tabs tabs-boxed" role="tablist">
+        <div className="join" role="tablist">
           {DIM_TABS.map(t => (
-            <button key={t.key} role="tab" className={`tab ${tab === t.key ? 'tab-active' : ''}`}
+            <button key={t.key} role="tab"
+              className={`btn join-item ${tab === t.key ? 'btn-primary' : 'btn-outline'}`}
               onClick={() => setTab(t.key)}>
               <i className={`fa-solid ${t.fa} mr-1`} />{t.label}
             </button>
