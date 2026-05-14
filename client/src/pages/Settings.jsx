@@ -29,7 +29,7 @@ export default function Settings() {
     document.documentElement.classList.toggle('liquid-glass-enabled', glassEffect);
   }, [glassEffect]);
 
-  // Apply theme
+  // Apply theme — 切换非多彩主题时自动关闭焕新视觉
   useEffect(() => {
     const resolved = theme === 'system'
       ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
@@ -37,6 +37,9 @@ export default function Settings() {
     document.documentElement.setAttribute('data-theme', resolved);
     localStorage.setItem('abdl_theme', resolved);
     setStoredSetting('theme', theme);
+    if (resolved !== 'colorful' && glassEffect) {
+      setGlassEffect(false);
+    }
   }, [theme]);
 
   // Apply animation preference
@@ -123,6 +126,8 @@ export default function Settings() {
           </label>
         </div>
 
+        {/* 焕新视觉 — 仅多彩主题可用 */}
+        {theme === 'colorful' && (
         <div className="form-group" style={{ marginTop: 16 }}>
           <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
             <span>
@@ -138,6 +143,7 @@ export default function Settings() {
             </button>
           </label>
         </div>
+        )}
       </Glass>
 
       {/* AI 隐私 */}
