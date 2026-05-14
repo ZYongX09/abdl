@@ -134,63 +134,54 @@ export default function Home() {
             <i className="fa-solid fa-code-compare" /> {compareMode ? '退出对比' : '对比模式'}
           </button>
         </div>
-        <div className="join">
-          <input className="input input-bordered join-item" placeholder="搜索品牌、型号..." value={search}
+        <div className="flex flex-wrap gap-2">
+          <input className="input input-bordered flex-1 min-w-[180px]" placeholder="搜索品牌、型号..." value={search}
             onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearch()} />
-          <select className="select select-bordered join-item" value={brandFilter} onChange={e => setBrandFilter(e.target.value)}>
+          <select className="select select-bordered" value={brandFilter} onChange={e => setBrandFilter(e.target.value)}>
             <option value="">全部品牌</option>
             {brands.map(b => <option key={b} value={b}>{b}</option>)}
           </select>
-          <select className="select select-bordered join-item" value={sizeFilter} onChange={e => setSizeFilter(e.target.value)}>
+          <select className="select select-bordered" value={sizeFilter} onChange={e => setSizeFilter(e.target.value)}>
             <option value="">全部尺码</option>
             {sizes.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
-          <select className="select select-bordered join-item" value={sort} onChange={e => setSort(e.target.value)}>
+          <select className="select select-bordered" value={sort} onChange={e => setSort(e.target.value)}>
             <option value="popularity">热度</option>
             <option value="avg_price">价格</option>
             <option value="thickness">厚度</option>
           </select>
           <button className="btn btn-primary" onClick={handleSearch}>
-            <i className="fa-solid fa-search" /> 搜索
+            <i className="fa-solid fa-search" />
           </button>
         </div>
         {(brandFilter || sizeFilter || sort !== 'popularity' || search) && (
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 10, alignItems: 'center' }}>
+          <div className="flex flex-wrap gap-2 items-center mt-3">
             {search && (
-              <span className="filter-tag">
+              <span className="badge badge-ghost gap-1">
                 搜索: {search}
-                <button className="tag-close" onClick={() => setSearch('')} aria-label="清除搜索">
-                  <i className="fa-solid fa-xmark" />
-                </button>
+                <button className="btn btn-ghost btn-xs" onClick={() => setSearch('')}><i className="fa-solid fa-xmark" /></button>
               </span>
             )}
             {brandFilter && (
-              <span className="filter-tag">
+              <span className="badge badge-ghost gap-1">
                 {brandFilter}
-                <button className="tag-close" onClick={() => setBrandFilter('')} aria-label="清除品牌筛选">
-                  <i className="fa-solid fa-xmark" />
-                </button>
+                <button className="btn btn-ghost btn-xs" onClick={() => setBrandFilter('')}><i className="fa-solid fa-xmark" /></button>
               </span>
             )}
             {sizeFilter && (
-              <span className="filter-tag">
+              <span className="badge badge-ghost gap-1">
                 {sizeFilter}码
-                <button className="tag-close" onClick={() => setSizeFilter('')} aria-label="清除尺码筛选">
-                  <i className="fa-solid fa-xmark" />
-                </button>
+                <button className="btn btn-ghost btn-xs" onClick={() => setSizeFilter('')}><i className="fa-solid fa-xmark" /></button>
               </span>
             )}
             {sort !== 'popularity' && (
-              <span className="filter-tag">
+              <span className="badge badge-ghost gap-1">
                 排序: {sort === 'avg_price' ? '价格' : sort === 'thickness' ? '厚度' : sort}
-                <button className="tag-close" onClick={() => setSort('popularity')} aria-label="重置排序">
-                  <i className="fa-solid fa-xmark" />
-                </button>
+                <button className="btn btn-ghost btn-xs" onClick={() => setSort('popularity')}><i className="fa-solid fa-xmark" /></button>
               </span>
             )}
-            <button className="btn btn-outline btn-sm" style={{ fontSize: '0.75rem', padding: '5px 14px' }}
-              onClick={() => { setSearch(''); setBrandFilter(''); setSizeFilter(''); setSort('popularity'); }}>
-              <i className="fa-solid fa-rotate-left" /> 清除全部
+            <button className="btn btn-ghost btn-sm" onClick={() => { setSearch(''); setBrandFilter(''); setSizeFilter(''); setSort('popularity'); }}>
+              <i className="fa-solid fa-rotate-left mr-1" /> 清除全部
             </button>
           </div>
         )}
