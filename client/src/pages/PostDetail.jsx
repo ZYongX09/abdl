@@ -3,14 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { forumAPI } from '../api';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
-
-function timeAgo(d) {
-  if (!d) return '';
-  const diff = Date.now()-new Date(d).getTime();
-  const m=Math.floor(diff/60000),h=Math.floor(diff/3600000),day=Math.floor(diff/86400000);
-  if(m<1)return'刚刚';if(m<60)return`${m}分钟前`;if(h<24)return`${h}小时前`;if(day<7)return`${day}天前`;
-  return new Date(d).toLocaleDateString('zh-CN');
-}
+import { timeAgo } from '../utils';
 
 export default function PostDetail() {
   const { id } = useParams();
@@ -25,6 +18,7 @@ export default function PostDetail() {
   const [commentImage, setCommentImage] = useState(null);
   const [commentImagePreview, setCommentImagePreview] = useState(null);
   const [lightboxSrc, setLightboxSrc] = useState(null);
+  const [commentSending, setCommentSending] = useState(false);
   const commentTextareaRef = useRef(null);
 
   const autoResize = useCallback(() => {
@@ -37,12 +31,17 @@ export default function PostDetail() {
   useEffect(() => { autoResize(); }, [commentText, autoResize]);
   useEffect(() => { loadPost(); }, [id]);
 
-  // Close lightbox on Escape
+  // Close lightbox on Escape & lock body scroll
   useEffect(() => {
     if (!lightboxSrc) return;
     const onKey = (e) => { if (e.key === 'Escape') setLightboxSrc(null); };
     document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
+    };
   }, [lightboxSrc]);
 
   const loadPost = async () => {
@@ -57,12 +56,14 @@ export default function PostDetail() {
   };
 
   const handleComment = async () => {
-    if (!commentText.trim()) return;
+    if (!commentText.trim() || commentSending) return;
+    setCommentSending(true);
     try {
       await forumAPI.comment(id, { content: commentText, parent_id: replyTo, image_url: commentImagePreview || null });
       setCommentText(''); setReplyTo(null); setCommentImage(null); setCommentImagePreview(null);
       loadPost();
     } catch(e) { addToast(e.message, 'error'); }
+    finally { setCommentSending(false); }
   };
 
   const handleCommentImageChange = (e) => {
@@ -79,7 +80,7 @@ export default function PostDetail() {
     setCommentImagePreview(null);
   };
 
-  if (loading) return <div className="loading-spinner"><div className="spinner" /><span>加载中</span></div>;
+  if (loading) return <div className="loading-spinner" role="status" aria-live="polite"><div className="spinner" /><span>加载中</span></div>;
   if (!post) return <div className="alert alert-danger">帖子不存在</div>;
 
   const nestedComments = {};
@@ -180,8 +181,8 @@ export default function PostDetail() {
               <i className="fa-solid fa-image" /> 图片
               <input type="file" accept="image/*" onChange={handleCommentImageChange} style={{ display: 'none' }} />
             </label>
-            <button className="btn btn-primary btn-sm" onClick={handleComment} disabled={!commentText.trim()}>
-              <i className="fa-solid fa-paper-plane" /> 评论
+            <button className="btn btn-primary btn-sm" onClick={handleComment} disabled={!commentText.trim() || commentSending}>
+              {commentSending ? <><i className="fa-solid fa-spinner fa-spin" /> 发送中</> : <><i className="fa-solid fa-paper-plane" /> 评论</>}
             </button>
           </div>
         </div>
