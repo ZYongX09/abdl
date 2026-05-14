@@ -1255,6 +1255,19 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
   }
 }
 
+/* ====== 注册页响应式 ====== */
+.register-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+@media (max-width: 480px) {
+  .register-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
 /* ====== 通用辅助类 ====== */
 .text-muted { color: var(--text-muted); }
 .text-light { color: var(--text-light); }

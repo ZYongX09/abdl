@@ -15,7 +15,7 @@ function setStoredSetting(key, val) {
 export default function Settings() {
   const { user } = useAuth();
   const { addToast } = useToast();
-  const [theme, setTheme] = useState(() => getStoredSetting('theme') || localStorage.getItem('abdl_theme') || 'system');
+  const [theme, setTheme] = useState(() => getStoredSetting('theme') || localStorage.getItem('abdl_theme') || 'colorful');
   const [animations, setAnimations] = useState(() => getStoredSetting('animations') ?? true);
   const [aiPrivacy, setAiPrivacy] = useState(() => getStoredSetting('aiPrivacy') || { basic: true, body: true, prefs: true, bio: false, feelings: true });
   const [msg, setMsg] = useState('');

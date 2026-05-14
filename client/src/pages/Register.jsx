@@ -106,7 +106,7 @@ export default function Register() {
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: 12 }}>
             <i className="fa-solid fa-circle-info" /> 以下信息帮助 AI 为你推荐最合适的纸尿裤（选填，可后续补充）
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
+          <div className="register-grid">
             <div className="form-group">
               <label>年龄</label>
               <input className="form-control" type="number" value={form.age} onChange={update('age')} placeholder="岁" />

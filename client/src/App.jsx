@@ -27,7 +27,7 @@ import Settings from './pages/Settings';
 function getInitialTheme() {
   const saved = localStorage.getItem('abdl_theme');
   if (saved) return saved;
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return 'colorful';
 }
 
 function ScrollProgress() {
