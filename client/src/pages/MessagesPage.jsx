@@ -159,7 +159,8 @@ export default function MessagesPage() {
             <div key={c.id} onClick={() => openChat(c.other_id)} style={{
               padding: '12px 16px', cursor: 'pointer', borderBottom: '1px solid var(--border)',
               background: activeOther?.id === c.other_id ? 'var(--primary-light)' : 'var(--bg-card)',
-              transition: 'background 0.15s ease',
+              borderLeft: activeOther?.id === c.other_id ? '3px solid var(--primary-dark)' : '3px solid transparent',
+              transition: 'background 0.15s ease, border-left-color 0.15s ease',
             }}
             onMouseOver={e => { if (activeOther?.id !== c.other_id) e.currentTarget.style.background = 'var(--input-bg)'; }}
             onMouseOut={e => { if (activeOther?.id !== c.other_id) e.currentTarget.style.background = 'var(--bg-card)'; }}>

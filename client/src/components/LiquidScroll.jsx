@@ -77,7 +77,8 @@ export default function LiquidScroll() {
 
   useEffect(() => {
     const checkGlass = () => {
-      const active = document.documentElement.classList.contains('glass-enabled');
+      const active = document.documentElement.classList.contains('glass-enabled')
+        && !document.documentElement.classList.contains('liquid-glass-enabled');
       if (active !== isActiveRef.current) {
         isActiveRef.current = active;
         active ? collectElements() : deactivate();

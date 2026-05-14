@@ -1095,6 +1095,19 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
   box-shadow: 0 -4px 16px rgba(0,0,0,0.3);
 }
 
+/* ====== Profile 页面响应式 ====== */
+@media (max-width: 600px) {
+  .profile-edit-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .profile-info-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .profile-info-grid dt {
+    padding-bottom: 0;
+  }
+}
+
 /* ====== 通用辅助类 ====== */
 .text-muted { color: var(--text-muted); }
 .text-light { color: var(--text-light); }
@@ -1206,6 +1219,75 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
 .glass-enabled .btn-outline,.glass-enabled .btn-primary,
 .glass-enabled .btn-accent,.glass-enabled .btn-danger {
   transition: background 0.35s ease, backdrop-filter 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* ================================================================
+   液态玻璃模式 — liquid-glass-enabled
+   LiquidGlass 组件提供动态折射，CSS 退居透明背景
+   ================================================================ */
+
+/* 液态玻璃模式下，卡片/面板改为透明，让 LiquidGlass 的 canvas 效果可见 */
+.liquid-glass-enabled .card,
+.liquid-glass-enabled .diaper-card,
+.liquid-glass-enabled .rank-item,
+.liquid-glass-enabled .hero-card,
+.liquid-glass-enabled .modal {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: none;
+}
+
+.liquid-glass-enabled[data-theme="dark"] .card,
+.liquid-glass-enabled[data-theme="dark"] .diaper-card,
+.liquid-glass-enabled[data-theme="dark"] .rank-item,
+.liquid-glass-enabled[data-theme="dark"] .hero-card,
+.liquid-glass-enabled[data-theme="dark"] .modal {
+  background: transparent;
+  border-color: rgba(255,255,255,0.08);
+}
+
+/* 液态玻璃模式下，侧边栏透明 */
+.liquid-glass-enabled .sidebar-desktop,
+.liquid-glass-enabled .sidebar-mobile {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* 液态玻璃模式下，按钮/输入框保持轻微效果（LiquidGlass 不会包裹这些小元素） */
+.liquid-glass-enabled .btn-outline,
+.liquid-glass-enabled .btn-primary,
+.liquid-glass-enabled .btn-accent,
+.liquid-glass-enabled .btn-danger {
+  backdrop-filter: blur(4px) saturate(130%);
+  -webkit-backdrop-filter: blur(4px) saturate(130%);
+}
+
+.liquid-glass-enabled .form-control {
+  background: rgba(255,255,255,0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.liquid-glass-enabled[data-theme="dark"] .form-control {
+  background: rgba(18,18,28,0.4);
+}
+
+/* 液态玻璃模式下，移动端底栏保持毛玻璃 */
+.liquid-glass-enabled .mobile-bottom-nav-inner {
+  backdrop-filter: saturate(140%) blur(12px);
+  -webkit-backdrop-filter: saturate(140%) blur(12px);
+}
+
+/* LiquidGlass 容器内文字样式 */
+.liquid-glass-enabled .card > *,
+.liquid-glass-enabled .diaper-card > *,
+.liquid-glass-enabled .rank-item > *,
+.liquid-glass-enabled .hero-card > *,
+.liquid-glass-enabled .modal > * {
+  position: relative;
+  z-index: 1;
 }
 
 

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { diapersAPI, rankingsAPI, compareAPI } from '../api';
 import LoadingSkeleton from '../components/LoadingSkeleton';
+import Glass from '../components/Glass';
 
 const DIMS = [
   { key: 'absorption_score', label: '吸水量' },
@@ -123,7 +124,7 @@ export default function Home() {
   return (
     <div>
       {/* Header + Search */}
-      <div className="hero-card">
+      <Glass preset="card" glassClassName="hero-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
           <h2 style={{ margin: 0, color: 'var(--hero-text)', fontSize: '1.3rem' }}>
             <i className="fa-solid fa-magnifying-glass" /> 探索纸尿裤
@@ -193,7 +194,7 @@ export default function Home() {
             </button>
           </div>
         )}
-      </div>
+      </Glass>
 
       {/* Compare mode header */}
       {compareMode && (
@@ -289,14 +290,14 @@ export default function Home() {
               <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8 }}>
                 {hotRankings.map((d, i) => (
                   <Link to={`/diaper/${d.id}`} key={d.id} className="stagger-item" style={{ textDecoration: 'none', color: 'inherit', minWidth: 200, animationDelay: `${i * 0.06}s` }}>
-                    <div className="diaper-card">
+                    <Glass preset="card" glassClassName="diaper-card">
                       <div className="brand">TOP {i + 1}</div>
                       <div className="model">{d.brand} {d.model}</div>
                       <div className="meta">
                         <span className="score-badge"><i className="fa-solid fa-star" style={{ color: 'var(--warning)' }} /> {Number(d.avg_score||0).toFixed(1)}</span>
                         <span>{d.sizes?.[0]?.label || ''}码</span>
                       </div>
-                    </div>
+                    </Glass>
                   </Link>
                 ))}
               </div>
@@ -323,7 +324,7 @@ export default function Home() {
                       style={{ width: 14, height: 14, accentColor: 'var(--primary)' }} />
                   </label>
                 )}
-                <Link to={`/diaper/${d.id}`} className="diaper-card" style={compareMode ? { paddingTop: 32 } : {}}>
+                <Glass preset="card" glassClassName="diaper-card" as={Link} to={`/diaper/${d.id}`} style={compareMode ? { paddingTop: 32 } : {}}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <div className="brand">{d.brand}</div>
                     {d.is_baby_diaper === 1 && (
@@ -348,7 +349,7 @@ export default function Home() {
                     <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{d.rating_count} 评价</span>
                     {d.avg_price && <span style={{ fontWeight: 600 }}>{d.avg_price}</span>}
                   </div>
-                </Link>
+                </Glass>
               </div>
             ))}
           </div>

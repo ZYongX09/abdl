@@ -198,7 +198,7 @@ export default function Profile() {
 
             {!editing ? (
               <div>
-                <dl style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '12px 16px', fontSize: '0.95rem' }}>
+                <dl className="profile-info-grid" style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '12px 16px', fontSize: '0.95rem' }}>
                   <dt style={{ fontWeight: 600, color: 'var(--text-muted)' }}>年龄</dt><dd>{user.age || '未设置'}</dd>
                   <dt style={{ fontWeight: 600, color: 'var(--text-muted)' }}>地区</dt><dd>{user.region || '未设置'}</dd>
                   <dt style={{ fontWeight: 600, color: 'var(--text-muted)' }}>体重</dt><dd>{user.weight ? `${user.weight} kg` : '未设置'}</dd>
@@ -213,7 +213,7 @@ export default function Profile() {
               </div>
             ) : (
               <div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
+                <div className="profile-edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
                   <div className="form-group">
                     <label>年龄</label>
                     <input className="form-control" type="number" value={form.age} onChange={update('age')} />

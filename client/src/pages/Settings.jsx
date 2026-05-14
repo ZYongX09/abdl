@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
 import { authAPI } from '../api';
+import { canRunLiquidGlass } from '../utils/glassPerf';
+import Glass from '../components/Glass';
 
 function getStoredSetting(key, fallback) {
   try { return JSON.parse(localStorage.getItem('abdl_settings_' + key)); } catch { return fallback; }
@@ -18,12 +20,29 @@ export default function Settings() {
   const [aiPrivacy, setAiPrivacy] = useState(() => getStoredSetting('aiPrivacy') || { basic: true, body: true, prefs: true, bio: false, feelings: true });
   const [msg, setMsg] = useState('');
   const [glassEffect, setGlassEffect] = useState(() => getStoredSetting('glassEffect') ?? false);
+  const [liquidGlass, setLiquidGlass] = useState(() => getStoredSetting('liquidGlass') ?? false);
+  const [deviceSupported, setDeviceSupported] = useState(false);
 
   // Apply glass effect — NO cleanup so it persists across page navigation
   useEffect(() => {
     setStoredSetting('glassEffect', glassEffect);
     document.documentElement.classList.toggle('glass-enabled', glassEffect);
+    // 关闭焕新视觉时，液态玻璃也关闭
+    if (!glassEffect) {
+      setLiquidGlass(false);
+    }
   }, [glassEffect]);
+
+  // Apply liquid glass effect
+  useEffect(() => {
+    setStoredSetting('liquidGlass', liquidGlass);
+    document.documentElement.classList.toggle('liquid-glass-enabled', liquidGlass && glassEffect);
+  }, [liquidGlass, glassEffect]);
+
+  // 检测设备是否支持液态玻璃
+  useEffect(() => {
+    setDeviceSupported(canRunLiquidGlass());
+  }, []);
 
   // Apply theme
   useEffect(() => {
@@ -80,7 +99,7 @@ export default function Settings() {
       )}
 
       {/* 外观 */}
-      <div className="card">
+      <Glass preset="card" glassClassName="card">
         <h3 style={{ marginBottom: 16 }}>
           <i className="fa-solid fa-palette" /> 外观
         </h3>
@@ -133,7 +152,26 @@ export default function Settings() {
             </button>
           </label>
         </div>
-      </div>
+
+        <div className="form-group" style={{ marginTop: 16 }}>
+          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: glassEffect ? 'pointer' : 'default' }}>
+            <span>
+              <i className="fa-solid fa-droplet" style={{ marginRight: 8, color: glassEffect ? 'var(--primary-dark)' : 'var(--text-muted)' }} />
+              液态玻璃
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 400 }}>
+                {!glassEffect ? '需先开启焕新视觉' : !deviceSupported ? '当前设备性能不足，已自动降级为毛玻璃' : 'Apple 风格动态折射效果，卡片随鼠标产生液态形变'}
+              </div>
+            </span>
+            <button
+              className={`btn btn-sm ${!glassEffect ? 'btn-outline' : liquidGlass ? 'btn-primary' : 'btn-outline'}`}
+              onClick={() => glassEffect && setLiquidGlass(!liquidGlass)}
+              disabled={!glassEffect}
+              style={{ minWidth: 80, textAlign: 'center', opacity: glassEffect ? 1 : 0.4 }}>
+              {!glassEffect ? '需开启' : liquidGlass ? '已开启' : '已关闭'}
+            </button>
+          </label>
+        </div>
+      </Glass>
 
       {/* AI 隐私 */}
       <div className="card">
