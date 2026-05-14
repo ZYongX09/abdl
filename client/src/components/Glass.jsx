@@ -68,7 +68,7 @@ export default function Glass({
           {...liquidProps}
           mouseContainer={mouseContainer}
           onClick={onClick}
-          className={className}
+          className={`${className} liquid-glass-active`}
           style={style}
         >
           {children}
