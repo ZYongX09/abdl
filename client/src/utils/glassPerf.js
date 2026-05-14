@@ -77,73 +77,73 @@ export function getGlassConfig(preset = 'card') {
   if (!canRunLiquidGlass()) return null;
 
   const configs = {
-    // 卡片：标准折射 + 轻微粗糙
+    // 卡片：明显折射 + 色散
     card: {
-      displacementScale: 40,
+      displacementScale: 60,
       blurAmount: 0.0625,
-      saturation: 130,
-      aberrationIntensity: 1,
-      elasticity: 0.1,
+      saturation: 140,
+      aberrationIntensity: 2,
+      elasticity: 0.15,
       cornerRadius: 20,
       mode: 'standard',
     },
     // 面板：侧边栏/大面板
     panel: {
-      displacementScale: 30,
+      displacementScale: 45,
       blurAmount: 0.08,
-      saturation: 120,
-      aberrationIntensity: 0.5,
-      elasticity: 0.05,
+      saturation: 130,
+      aberrationIntensity: 1.5,
+      elasticity: 0.1,
       cornerRadius: 16,
       mode: 'standard',
     },
-    // 按钮：高折射 + 弹性
+    // 按钮：高折射 + 高弹性
     button: {
-      displacementScale: 64,
+      displacementScale: 70,
       blurAmount: 0.1,
-      saturation: 140,
-      aberrationIntensity: 2,
+      saturation: 150,
+      aberrationIntensity: 3,
       elasticity: 0.35,
       cornerRadius: 100,
       mode: 'standard',
     },
-    // 输入框：轻微折射
+    // 输入框：中等折射
     input: {
-      displacementScale: 25,
+      displacementScale: 40,
       blurAmount: 0.05,
-      saturation: 120,
-      aberrationIntensity: 0.5,
-      elasticity: 0.05,
+      saturation: 130,
+      aberrationIntensity: 1.5,
+      elasticity: 0.1,
       cornerRadius: 12,
       mode: 'standard',
     },
     // 导航栏：轻量
     nav: {
-      displacementScale: 20,
+      displacementScale: 30,
       blurAmount: 0.04,
-      saturation: 110,
-      aberrationIntensity: 0.3,
-      elasticity: 0.02,
+      saturation: 120,
+      aberrationIntensity: 1,
+      elasticity: 0.05,
       cornerRadius: 0,
       mode: 'standard',
     },
     // 弹窗：高对比
     modal: {
-      displacementScale: 50,
+      displacementScale: 65,
       blurAmount: 0.08,
-      saturation: 135,
-      aberrationIntensity: 1.5,
-      elasticity: 0.15,
+      saturation: 145,
+      aberrationIntensity: 2.5,
+      elasticity: 0.2,
       cornerRadius: 24,
       mode: 'standard',
     },
-    // 排行项：轻微
+    // 排行项：中等
     rank: {
-      displacementScale: 35,
+      displacementScale: 50,
       blurAmount: 0.06,
-      saturation: 125,
-      aberrationIntensity: 0.8,
-      elasticity: 0.08,
+      saturation: 135,
+      aberrationIntensity: 2,
+      elasticity: 0.12,
       cornerRadius: 16,
       mode: 'standard',
     },

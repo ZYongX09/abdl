@@ -53,26 +53,23 @@ export default function Glass({
   // 液态玻璃模式 + 设备支持
   if (liquidEnabled && deviceSupported && config) {
     return (
-      <Tag ref={containerRef} className={`${glassClassName} ${className} liquid-glass-active`} style={{ ...style, position: 'relative' }} onClick={onClick} {...rest}>
-        {/* LiquidGlass 绝对定位覆盖层，不影响文档流 */}
+      <Tag ref={containerRef} className={`${glassClassName} ${className} liquid-glass-active`} style={{ ...style, position: 'relative', overflow: 'hidden' }} onClick={onClick} {...rest}>
+        {/* LiquidGlass 绝对定位覆盖层，视觉效果层 */}
         <Suspense fallback={null}>
           <LiquidGlass
             {...config}
-            displacementScale={0}
-            blurAmount={0.04}
             mouseContainer={containerRef}
             style={{
               position: 'absolute',
-              top: 0,
-              left: 0,
+              top: '50%',
+              left: '50%',
               width: '100%',
               height: '100%',
-              transform: 'none',
               pointerEvents: 'none',
               zIndex: 0,
             }}
           >
-            <span />
+            <span style={{ display: 'block', width: '100%', height: '100%' }} />
           </LiquidGlass>
         </Suspense>
         {/* 内容层在覆盖层之上 */}
