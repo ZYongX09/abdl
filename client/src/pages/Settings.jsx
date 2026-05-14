@@ -127,7 +127,7 @@ export default function Settings() {
           <p className="text-sm text-base-content/60 mb-3">
             设置 AI 推荐时默认发送哪些个人数据（可在推荐页面临时修改）
           </p>
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             {[
               { key: 'basic', label: '基本信息', desc: '年龄、地区', icon: 'fa-user' },
               { key: 'body', label: '身材数据', desc: '体重、腰围、臀围', icon: 'fa-ruler' },
@@ -143,8 +143,8 @@ export default function Settings() {
                   className="checkbox checkbox-xs checkbox-primary" />
                 <i className={`fa-solid ${opt.icon}`} style={{ color: 'var(--primary-dark)' }} />
                 <div>
-                  <div className="font-semibold text-sm">{opt.label}</div>
-                  <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{opt.desc}</div>
+                  <div className="font-semibold text-base">{opt.label}</div>
+                  <div className="text-sm" style={{ color: 'var(--text-muted)' }}>{opt.desc}</div>
                 </div>
               </label>
             ))}
@@ -168,13 +168,13 @@ export default function Settings() {
               { type: 'history', label: '清除推荐历史', desc: '删除 AI 推荐历史记录', icon: 'fa-clock-rotate-left' },
               { type: 'all', label: '清除全部缓存', desc: '清除帖子、评论等所有本地数据（保留账号和设置）', icon: 'fa-triangle-exclamation', danger: true },
             ].map(item => (
-              <div key={item.type} className="flex items-center justify-between gap-3 py-2 border-b border-base-300">
+              <div key={item.type} className="flex items-center justify-between gap-4 py-3.5 border-b border-base-300">
                 <div>
-                  <div className="font-semibold text-sm">
+                  <div className="font-semibold text-base">
                     <i className={`fa-solid ${item.icon} mr-1.5 ${item.danger ? 'text-error' : 'text-base-content/50'}`} />
                     {item.label}
                   </div>
-                  <div className="text-xs text-base-content/50">{item.desc}</div>
+                  <div className="text-sm text-base-content/60">{item.desc}</div>
                 </div>
                 <button className={`btn btn-sm ${item.danger ? 'btn-error' : 'btn-outline'}`}
                   onClick={() => handleClearData(item.type)}>
@@ -192,7 +192,7 @@ export default function Settings() {
           <h3 className="card-title">
             <i className="fa-solid fa-circle-info" /> 关于
           </h3>
-          <div className="flex flex-col gap-2 text-sm">
+          <div className="flex flex-col gap-3 text-sm">
             <div className="flex justify-between">
               <span className="text-base-content/50">版本</span>
               <span>v5.8.5</span>
