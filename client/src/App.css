@@ -9,6 +9,29 @@
   --color-primary-content: oklch(0.30 0.04 230);
 }
 
+/* daisyUI 全局调整 — 柔软宽松 */
+.card-body {
+  padding: 1.5rem;
+  gap: 0.75rem;
+}
+.card-title {
+  margin-bottom: 0.5rem;
+}
+/* 复选框 — 小巧柔和 */
+.checkbox {
+  border-width: 1.5px;
+  border-color: var(--border);
+  border-radius: 6px;
+}
+.checkbox:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+.checkbox:checked:after {
+  color: white;
+  font-size: 0.65rem;
+}
+
 /* ============================================================
    ABDL Space v5 — 增强版全局样式
    主题色: #A8D8F0 (宝宝蓝) — 深色模式 + 动画优化

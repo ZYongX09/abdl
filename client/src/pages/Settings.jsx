@@ -63,7 +63,7 @@ export default function Settings() {
   };
 
   return (
-    <div style={{ maxWidth: 700, margin: '0 auto' }}>
+    <div style={{ maxWidth: 700, margin: '0 auto' }} className="flex flex-col gap-5">
       <h2 style={{ marginBottom: 20 }}>
         <i className="fa-solid fa-gear" /> 设置
       </h2>
@@ -127,7 +127,7 @@ export default function Settings() {
           <p className="text-sm text-base-content/60 mb-3">
             设置 AI 推荐时默认发送哪些个人数据（可在推荐页面临时修改）
           </p>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2.5">
             {[
               { key: 'basic', label: '基本信息', desc: '年龄、地区', icon: 'fa-user' },
               { key: 'body', label: '身材数据', desc: '体重、腰围、臀围', icon: 'fa-ruler' },
@@ -140,7 +140,7 @@ export default function Settings() {
                 border: `1px solid ${aiPrivacy[opt.key] ? 'var(--primary)' : 'var(--border)'}`,
               }}>
                 <input type="checkbox" checked={aiPrivacy[opt.key]} onChange={() => toggleAiPrivacy(opt.key)}
-                  className="checkbox checkbox-sm checkbox-primary" />
+                  className="checkbox checkbox-xs checkbox-primary" />
                 <i className={`fa-solid ${opt.icon}`} style={{ color: 'var(--primary-dark)' }} />
                 <div>
                   <div className="font-semibold text-sm">{opt.label}</div>
