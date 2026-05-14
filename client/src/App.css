@@ -244,28 +244,7 @@
   background: rgba(168,216,240,0.6);
 }
 
-/* ================================================================
-   Glass 组件 — 抵消 LiquidGlass 内部 translate(-50%,-50%)
-   LiquidGlass 始终应用 top:50% + left:50% + translate(-50%,-50%)
-   通过 CSS 反向抵消，让组件在文档流中正常布局
-   ================================================================ */
-.glass-wrapper {
-  /* 抵消子元素的 translate(-50%,-50%) */
-  transform: translate(50%, 50%);
-}
-.glass-wrapper > * {
-  /* LiquidGlass 内部元素：覆盖 top/left 为 0，保持在容器内 */
-  top: 0 !important;
-  left: 0 !important;
-}
-/* 内部 .glass div：覆盖默认 inline-flex + padding */
-.glass-wrapper .glass {
-  display: block !important;
-  padding: 0 !important;
-  gap: 0 !important;
-  width: 100% !important;
-  overflow: visible !important;
-}
+
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
