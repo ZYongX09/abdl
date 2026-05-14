@@ -1591,6 +1591,90 @@ a {
   animation: cardFloatIn 0.4s ease-out both;
 }
 
+/* ====== 认证页面装饰 ====== */
+@keyframes authFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-8px) rotate(2deg); }
+  66% { transform: translateY(4px) rotate(-1deg); }
+}
+@keyframes authPulse {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.25; transform: scale(1.08); }
+}
+.auth-page-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+.auth-page-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  opacity: 0.15;
+  animation: authPulse 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+.auth-page-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -40px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.1;
+  animation: authPulse 8s ease-in-out 2s infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+[data-theme="dark"] .auth-page-wrapper::before {
+  background: var(--primary);
+  opacity: 0.08;
+}
+[data-theme="dark"] .auth-page-wrapper::after {
+  background: var(--accent);
+  opacity: 0.06;
+}
+
+/* ====== Hero Card 增强 ====== */
+.hero-card {
+  position: relative;
+  overflow: hidden;
+}
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: -30%; right: -10%;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  animation: authFloat 8s ease-in-out infinite;
+  pointer-events: none;
+}
+[data-theme="dark"] .hero-card::before {
+  background: rgba(255,255,255,0.05);
+}
+
+/* ====== 卡片悬停统一增强 ====== */
+.card {
+  will-change: transform;
+}
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* ====== 发帖表单动画 ====== */
+@keyframes formSlideDown {
+  from { opacity: 0; transform: translateY(-12px); max-height: 0; }
+  to { opacity: 1; transform: translateY(0); max-height: 600px; }
+}
+.post-form-enter {
+  animation: formSlideDown 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+
 
 /* ================================================================
    焕新视觉 v2 — 玻璃折射 + 液体惯性增强

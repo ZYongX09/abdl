@@ -57,11 +57,20 @@ export default function Register() {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10">
+    <div className="max-w-lg mx-auto mt-10 auth-page-wrapper">
+      {/* Hero Header */}
+      <div className="hero-card text-center py-6 mb-4" style={{ background: 'var(--hero-bg)', borderRadius: '1.25rem' }}>
+        <div style={{ fontSize: '2.8rem', marginBottom: 8 }}>
+          <i className="fa-solid fa-user-plus" style={{ color: 'var(--accent-dark)' }} />
+        </div>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--hero-text)', marginBottom: 4 }}>加入 ABDL Space</h1>
+        <p style={{ fontSize: '0.9rem', color: 'var(--text-light)' }}>创建账号，开始你的纸尿裤评测之旅</p>
+      </div>
+
       <div className="card">
         <div className="card-body">
           <h2 className="card-title justify-center text-xl mb-2">
-            <i className="fa-solid fa-user-plus" style={{ color: 'var(--accent)' }} /> 加入 ABDL Space
+            <i className="fa-solid fa-user-plus" style={{ color: 'var(--accent)' }} /> 注册
           </h2>
           {error && <div className="alert alert-error mb-3"><span>{error}</span></div>}
           <form onSubmit={handleSubmit}>

@@ -72,20 +72,26 @@ export default function ForumFeed() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-5">
-        <h2 className="text-xl font-bold flex-1">
-          <i className="fa-regular fa-comments text-primary" /> 社区论坛
-        </h2>
-        {user && (<>
-          <Link to="/notifications" className="btn btn-ghost btn-sm indicator">
-            <i className={`fa-solid fa-bell${notifCount > 0 ? ' bell-shake' : ''}`} />
-            {notifCount > 0 && <span className="badge badge-xs badge-primary indicator-item">{notifCount}</span>}
-          </Link>
-          <button className="btn btn-accent btn-sm" onClick={() => setShowForm(!showForm)}>
-            <i className="fa-solid fa-pen" /> 发帖
-          </button>
-        </>)}
+      {/* Hero Header */}
+      <div className="hero-card mb-5" style={{ padding: '20px 24px' }}>
+        <div className="flex items-center gap-3">
+          <div style={{ fontSize: '1.8rem', color: 'var(--primary-dark)' }}>
+            <i className="fa-regular fa-comments" />
+          </div>
+          <div className="flex-1">
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--hero-text)', margin: 0 }}>社区论坛</h2>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-light)', margin: 0 }}>分享评测、交流心得、发现好物</p>
+          </div>
+          {user && (<>
+            <Link to="/notifications" className="btn btn-ghost btn-sm indicator">
+              <i className={`fa-solid fa-bell${notifCount > 0 ? ' bell-shake' : ''}`} />
+              {notifCount > 0 && <span className="badge badge-xs badge-primary indicator-item">{notifCount}</span>}
+            </Link>
+            <button className="btn btn-accent btn-sm" onClick={() => setShowForm(!showForm)}>
+              <i className="fa-solid fa-pen" /> 发帖
+            </button>
+          </>)}
+        </div>
       </div>
 
       <GuessYouLike />
@@ -101,7 +107,7 @@ export default function ForumFeed() {
 
       {/* Post Form */}
       {showForm && (
-        <div className="card mb-4">
+        <div className="card mb-4 post-form-enter">
           <div className="card-body gap-3">
             {msg && <div className={`alert ${msg.includes('成功')?'alert-success':'alert-error'} text-sm`}><span>{msg}</span></div>}
             <textarea ref={postTextareaRef} className="textarea textarea-bordered w-full" rows={4}
