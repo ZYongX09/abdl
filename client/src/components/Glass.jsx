@@ -3,24 +3,22 @@ import { lazy, Suspense } from 'react';
 const LiquidGlass = lazy(() => import('liquid-glass-react'));
 
 /**
- * Glass — iOS 26 风格液态玻璃组件
+ * Glass — 照搬官方用法的液态玻璃组件
  *
- * 直接使用 LiquidGlass 作为效果层，官方用法：
- * - position:absolute 脱离文档流，不占布局空间
- * - top:50% + left:50% + translate(-50%,-50%) = 居中于父容器
- * - width:100% + height:100% = 填充父容器
- * - 父容器 position:relative + overflow:hidden 裁剪边界
+ * LiquidGlass 内部始终应用 translate(-50%,-50%)。
+ * 通过 CSS transform: translate(+50%,+50%) 反向抵消，
+ * 让组件在文档流中正常布局。
  */
 
 const PRESETS = {
-  card:    { displacementScale: 60, blurAmount: 0.0625, saturation: 140, aberrationIntensity: 2,   elasticity: 0.15, cornerRadius: 20,  mode: 'standard' },
-  hero:    { displacementScale: 70, blurAmount: 0.08,   saturation: 150, aberrationIntensity: 2.5, elasticity: 0.2,  cornerRadius: 24,  mode: 'standard' },
-  panel:   { displacementScale: 50, blurAmount: 0.1,    saturation: 135, aberrationIntensity: 1.5, elasticity: 0.1,  cornerRadius: 16,  mode: 'standard' },
-  button:  { displacementScale: 70, blurAmount: 0.1,    saturation: 150, aberrationIntensity: 3,   elasticity: 0.35, cornerRadius: 100, mode: 'standard' },
-  rank:    { displacementScale: 55, blurAmount: 0.0625, saturation: 140, aberrationIntensity: 2,   elasticity: 0.12, cornerRadius: 16,  mode: 'standard' },
-  nav:     { displacementScale: 35, blurAmount: 0.08,   saturation: 130, aberrationIntensity: 1,   elasticity: 0.05, cornerRadius: 0,   mode: 'standard' },
-  modal:   { displacementScale: 65, blurAmount: 0.08,   saturation: 145, aberrationIntensity: 2.5, elasticity: 0.2,  cornerRadius: 24,  mode: 'standard' },
-  sidebar: { displacementScale: 45, blurAmount: 0.1,    saturation: 130, aberrationIntensity: 1.5, elasticity: 0.08, cornerRadius: 0,   mode: 'standard' },
+  card:    { displacementScale: 60, blurAmount: 0.0625, saturation: 140, aberrationIntensity: 2,   elasticity: 0.15, cornerRadius: 20 },
+  hero:    { displacementScale: 70, blurAmount: 0.08,   saturation: 150, aberrationIntensity: 2.5, elasticity: 0.2,  cornerRadius: 24 },
+  panel:   { displacementScale: 50, blurAmount: 0.1,    saturation: 135, aberrationIntensity: 1.5, elasticity: 0.1,  cornerRadius: 16 },
+  button:  { displacementScale: 64, blurAmount: 0.1,    saturation: 130, aberrationIntensity: 2,   elasticity: 0.35, cornerRadius: 100 },
+  rank:    { displacementScale: 55, blurAmount: 0.0625, saturation: 140, aberrationIntensity: 2,   elasticity: 0.12, cornerRadius: 16 },
+  sidebar: { displacementScale: 45, blurAmount: 0.1,    saturation: 130, aberrationIntensity: 1.5, elasticity: 0.08, cornerRadius: 0 },
+  modal:   { displacementScale: 65, blurAmount: 0.08,   saturation: 145, aberrationIntensity: 2.5, elasticity: 0.2,  cornerRadius: 24 },
+  nav:     { displacementScale: 35, blurAmount: 0.08,   saturation: 130, aberrationIntensity: 1,   elasticity: 0.05, cornerRadius: 0 },
 };
 
 export default function Glass({
@@ -28,44 +26,35 @@ export default function Glass({
   preset = 'card',
   className = '',
   style = {},
+  padding = '0',
   onClick,
+  mouseContainer,
   ...rest
 }) {
   const config = PRESETS[preset] || PRESETS.card;
 
   return (
     <div
-      className={className}
+      className={`glass-wrapper ${className}`}
       style={{
         position: 'relative',
-        overflow: 'hidden',
+        overflow: 'visible',
         ...style,
       }}
-      onClick={onClick}
       {...rest}
     >
-      {/* LiquidGlass 效果层：absolute 脱离文档流，居中填充父容器 */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<div className={className} style={style}>{children}</div>}>
         <LiquidGlass
           {...config}
-          padding="0"
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-          }}
+          padding={padding}
+          onClick={onClick}
+          mouseContainer={mouseContainer}
+          className="glass-inner"
+          style={{ position: 'relative' }}
         >
-          <div style={{ width: '100%', height: '100%' }} />
+          {children}
         </LiquidGlass>
       </Suspense>
-
-      {/* 内容层：在效果层之上，保持可交互 */}
-      <div style={{ position: 'relative', zIndex: 10, pointerEvents: 'auto' }}>
-        {children}
-      </div>
     </div>
   );
 }
