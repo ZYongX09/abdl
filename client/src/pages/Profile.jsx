@@ -241,7 +241,7 @@ export default function Profile() {
                 </div>
                 <div className="form-group">
                   <label>简介</label>
-                  <textarea className="input input-bordered w-full" value={form.bio} onChange={update('bio')} placeholder="介绍一下自己..." />
+                  <textarea className="textarea textarea-bordered w-full" value={form.bio} onChange={update('bio')} placeholder="介绍一下自己..." />
                 </div>
                 <div style={{ display: 'flex', gap: 12 }}>
                   <button className="btn btn-primary" onClick={handleSave}>

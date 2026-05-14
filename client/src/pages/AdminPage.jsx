@@ -213,7 +213,7 @@ export default function AdminPage() {
                 <div className="form-group"><label>型号 *</label>
                   <input className="input input-bordered w-full" value={editingDiaper.model||''} onChange={e=>setEditingDiaper(f=>({...f,model:e.target.value}))} /></div>
                 <div className="form-group"><label>类型</label>
-                  <select className="input input-bordered w-full" value={editingDiaper.product_type||'纸尿裤'} onChange={e=>setEditingDiaper(f=>({...f,product_type:e.target.value}))}>
+                  <select className="select select-bordered w-full" value={editingDiaper.product_type||'纸尿裤'} onChange={e=>setEditingDiaper(f=>({...f,product_type:e.target.value}))}>
                     <option>纸尿裤</option><option>拉拉裤</option><option>一体裤</option></select></div>
                 <div className="form-group"><label>厚度 (1-5)</label>
                   <input className="input input-bordered w-full" type="number" min="1" max="5" value={editingDiaper.thickness||3} onChange={e=>setEditingDiaper(f=>({...f,thickness:Number(e.target.value)}))} /></div>
@@ -320,15 +320,15 @@ export default function AdminPage() {
               <div className="form-group"><label>纸尿裤ID *</label>
                 <input className="input input-bordered w-full" type="number" value={editingWiki.diaper_id||''} onChange={e=>setEditingWiki(f=>({...f,diaper_id:e.target.value}))} /></div>
               <div className="form-group"><label>产品介绍</label>
-                <textarea className="input input-bordered w-full" rows={3} value={editingWiki.intro||''} onChange={e=>setEditingWiki(f=>({...f,intro:e.target.value}))} /></div>
+                <textarea className="textarea textarea-bordered w-full" rows={3} value={editingWiki.intro||''} onChange={e=>setEditingWiki(f=>({...f,intro:e.target.value}))} /></div>
               <div className="form-group"><label>吸水性能评测</label>
-                <textarea className="input input-bordered w-full" rows={3} value={editingWiki.absorbency_review||''} onChange={e=>setEditingWiki(f=>({...f,absorbency_review:e.target.value}))} /></div>
+                <textarea className="textarea textarea-bordered w-full" rows={3} value={editingWiki.absorbency_review||''} onChange={e=>setEditingWiki(f=>({...f,absorbency_review:e.target.value}))} /></div>
               <div className="form-group"><label>舒适度评测</label>
-                <textarea className="input input-bordered w-full" rows={3} value={editingWiki.comfort_review||''} onChange={e=>setEditingWiki(f=>({...f,comfort_review:e.target.value}))} /></div>
+                <textarea className="textarea textarea-bordered w-full" rows={3} value={editingWiki.comfort_review||''} onChange={e=>setEditingWiki(f=>({...f,comfort_review:e.target.value}))} /></div>
               <div className="form-group"><label>用户体验总结</label>
-                <textarea className="input input-bordered w-full" rows={3} value={editingWiki.user_experience||''} onChange={e=>setEditingWiki(f=>({...f,user_experience:e.target.value}))} /></div>
+                <textarea className="textarea textarea-bordered w-full" rows={3} value={editingWiki.user_experience||''} onChange={e=>setEditingWiki(f=>({...f,user_experience:e.target.value}))} /></div>
               <div className="form-group"><label>尺码选择建议</label>
-                <textarea className="input input-bordered w-full" rows={3} value={editingWiki.size_guide||''} onChange={e=>setEditingWiki(f=>({...f,size_guide:e.target.value}))} /></div>
+                <textarea className="textarea textarea-bordered w-full" rows={3} value={editingWiki.size_guide||''} onChange={e=>setEditingWiki(f=>({...f,size_guide:e.target.value}))} /></div>
               <div style={{ display: 'flex', gap: 12 }}>
                 <button className="btn btn-primary" onClick={handleSaveWiki}>
                   <i className="fa-solid fa-floppy-disk" /> 保存
@@ -505,7 +505,7 @@ export default function AdminPage() {
               <div className="form-group"><label>缩写</label>
                 <input className="input input-bordered w-full" value={editingTerm.abbreviation||''} onChange={e=>setEditingTerm(f=>({...f,abbreviation:e.target.value}))} /></div>
               <div className="form-group"><label>定义 *</label>
-                <textarea className="input input-bordered w-full" rows={3} value={editingTerm.definition||''} onChange={e=>setEditingTerm(f=>({...f,definition:e.target.value}))} /></div>
+                <textarea className="textarea textarea-bordered w-full" rows={3} value={editingTerm.definition||''} onChange={e=>setEditingTerm(f=>({...f,definition:e.target.value}))} /></div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
                 <div className="form-group"><label>分类</label>
                   <input className="input input-bordered w-full" value={editingTerm.category||''} onChange={e=>setEditingTerm(f=>({...f,category:e.target.value}))} /></div>

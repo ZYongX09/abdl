@@ -28,9 +28,14 @@ export default function Rankings() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h2 className="text-center text-xl font-bold mb-5">
-        <i className="fa-solid fa-trophy text-warning" /> 排行榜
-      </h2>
+      {/* Hero Header */}
+      <div className="hero-card mb-5" style={{ padding: '20px 24px', textAlign: 'center' }}>
+        <div style={{ fontSize: '2rem', marginBottom: 8, color: 'var(--primary-dark)' }}>
+          <i className="fa-solid fa-trophy" />
+        </div>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--hero-text)', margin: 0 }}>排行榜</h2>
+        <p style={{ fontSize: '0.8rem', color: 'var(--text-light)', margin: '4px 0 0' }}>发现最受欢迎、吸收力最强的纸尿裤</p>
+      </div>
 
       <div className="flex flex-col items-center gap-4 mb-8">
         <div className="join" role="tablist">
