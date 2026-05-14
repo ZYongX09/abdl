@@ -75,6 +75,13 @@ function ScrollToTop() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
     document.title = getTitle(pathname);
+    // Trigger page transition animation
+    const el = document.querySelector('.page-enter');
+    if (el) {
+      el.classList.remove('page-enter');
+      void el.offsetWidth; // force reflow
+      el.classList.add('page-enter');
+    }
   }, [pathname]);
   return null;
 }
@@ -137,7 +144,7 @@ export default function App() {
       <Sidebar />
       <div className="app-main-content">
 
-        <div className="container page-enter" key={location.pathname} style={{ maxWidth: 860, padding: '24px 20px' }}>
+        <div className="container page-enter" style={{ maxWidth: 860, padding: '24px 20px' }}>
           <ErrorBoundary>
           <Routes>
             <Route path="/" element={<ForumFeed />} />
