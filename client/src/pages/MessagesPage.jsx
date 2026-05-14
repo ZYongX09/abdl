@@ -63,20 +63,26 @@ export default function MessagesPage() {
     } catch {}
   };
 
+  const [chatLoading, setChatLoading] = useState(false);
+
   const openChat = async (otherId) => {
     if (otherId === NOTIF_SYSTEM_ID) {
       setActiveOther({ id: NOTIF_SYSTEM_ID, username: '系统通知' });
       setMessages(notifs);
+      setChatLoading(false);
       // Mark all as read
       forumAPI.readAllNotifications().then(() => { setUnreadNotifs(0); loadNotifs(); }).catch(() => {});
       return;
     }
+    // Clear stale messages immediately while loading new conversation
+    setMessages([]);
+    setChatLoading(true);
     setActiveOther(otherId);
     try {
       const d = await messagesAPI.withUser(otherId);
       setMessages(d.messages || []);
       setActiveOther(d.other);
-    } catch {}
+    } catch {} finally { setChatLoading(false); }
     setTimeout(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight; }, 100);
   };
 
@@ -250,7 +256,9 @@ export default function MessagesPage() {
               </button>
             </div>
             <div ref={chatRef} style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {messages.length === 0 ? (
+              {chatLoading ? (
+                <LoadingSkeleton count={3} type="feed" />
+              ) : messages.length === 0 ? (
                 <div className="empty-state" style={{ padding: 40 }}>
                   <div className="icon"><i className="fa-regular fa-paper-plane" /></div>
                   <p>开始聊天吧</p>
