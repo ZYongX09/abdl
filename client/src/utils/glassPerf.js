@@ -13,6 +13,11 @@ let _canRunLiquidGlass = undefined;
 export function canRunLiquidGlass() {
   if (_canRunLiquidGlass !== undefined) return _canRunLiquidGlass;
 
+  // 调试阶段：跳过低端设备检测，强制启用
+  _canRunLiquidGlass = true;
+  return _canRunLiquidGlass;
+
+  /*
   // 1. 基础检测：是否支持 backdrop-filter（Safari/Firefox 部分支持）
   const supportsBackdrop = CSS.supports('backdrop-filter', 'blur(1px)');
 
@@ -30,6 +35,7 @@ export function canRunLiquidGlass() {
   _canRunLiquidGlass = supportsBackdrop && !isLowEnd && !prefersReducedMotion && !isMobile;
 
   return _canRunLiquidGlass;
+  */
 }
 
 /**

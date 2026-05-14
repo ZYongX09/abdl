@@ -77,8 +77,8 @@ export default function LiquidScroll() {
 
   useEffect(() => {
     const checkGlass = () => {
-      const active = document.documentElement.classList.contains('glass-enabled')
-        && !document.documentElement.classList.contains('liquid-glass-enabled');
+      // 液态玻璃模式下禁用，由 LiquidGlass 组件处理效果
+      const active = false;
       if (active !== isActiveRef.current) {
         isActiveRef.current = active;
         active ? collectElements() : deactivate();

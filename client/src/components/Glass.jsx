@@ -37,9 +37,9 @@ export default function Glass({
 
   useEffect(() => {
     const check = () => {
-      const hasLiquid = document.documentElement.classList.contains('liquid-glass-enabled');
-      setLiquidEnabled(hasLiquid);
-      if (hasLiquid && !configRef.current) {
+      const hasGlass = document.documentElement.classList.contains('glass-enabled');
+      setLiquidEnabled(hasGlass);
+      if (hasGlass && !configRef.current) {
         configRef.current = getGlassConfig(preset);
         setDeviceSupported(canRunLiquidGlass());
       }
