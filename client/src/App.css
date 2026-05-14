@@ -620,9 +620,7 @@ div:focus-visible, span:focus-visible, main:focus-visible, section:focus-visible
   to { opacity: 1; transform: translateY(0); }
 }
 /* 交错动画 — 列表项逐个出现 */
-.stagger-item {
-  animation: cardSlideIn 0.4s ease-out both;
-}
+/* 交错动画 — 列表项逐个出现 (延迟由下方 .stagger-item nth-child 控制) */
 .stagger-item:nth-child(1) { animation-delay: 0s; }
 .stagger-item:nth-child(2) { animation-delay: 0.05s; }
 .stagger-item:nth-child(3) { animation-delay: 0.1s; }
@@ -904,9 +902,12 @@ select.form-control {
 [data-theme="dark"] .hero-card { background: linear-gradient(135deg, #2A3F50 0%, #283540 50%, #3A2830 100%); }
 [data-theme="dark"] input[type="range"] { filter: brightness(0.9); }
 
-/* 全局过渡（限定常用元素，避免 SVG/伪元素性能浪费） */
-a, button, input, select, textarea, div, span, p, h1, h2, h3, h4, h5, h6,
-li, label, section, article, nav, header, footer, main, aside, details, summary {
+/* 主题切换过渡 — 仅限需要响应主题变化的元素，避免全元素性能浪费 */
+body, .card, .diaper-card, .rank-item, .hero-card, .modal,
+.btn, .input, .select, .textarea, .badge, .alert,
+.sidebar-desktop, .sidebar-mobile, .sidebar-link, .navbar,
+.form-control, .tag, .theme-toggle, .theme-toggle-float,
+.toast, .post-card, .back-to-top, .kbd, .tab {
   transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
@@ -1103,7 +1104,6 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
 }
 
 /* ====== 交错入场动画 ====== */
-/* 让 stagger-item 的 cardFloatIn 保留，不再强制禁用 */
 
 /* ====== 图片灯箱 ====== */
 .lightbox-overlay {
@@ -1367,23 +1367,6 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
   .theme-toggle-float { top: auto; bottom: 80px; right: 16px; width: 40px; height: 40px; font-size: 1rem; }
 }
 
-/* ================================================================
-   焕新视觉 — 毛玻璃悬浮面板（纯 blur + 半透明，无光影投射）
-   实际用途：内容层级分离，卡片/侧栏/弹窗在背景上悬浮
-   ================================================================ */
-
-/* 焕新视觉 — LiquidGlass 直接包裹，无需 CSS backdrop-filter */
-
-
-
-/* 内容层级 */
-
-/* 过渡 */
-
-/* 按钮/输入框 — 保持轻微毛玻璃（LiquidGlass 不包裹小元素） */
-
-
-/* 移动端底栏保持毛玻璃 */
 
 
 .sidebar-link {
@@ -1468,14 +1451,7 @@ a {
   transition: color 0.2s ease;
 }
 
-@keyframes staggerFadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.stagger-item {
-  opacity: 0;
-  animation: staggerFadeIn 0.4s ease-out forwards;
-}
+
 
 /* 平滑缩放反馈 */
 @keyframes tapFeedback {
@@ -1660,9 +1636,6 @@ a {
 /* ====== 卡片悬停统一增强 ====== */
 .card {
   will-change: transform;
-}
-.card:hover {
-  transform: translateY(-2px);
 }
 
 /* ====== 发帖表单动画 ====== */
