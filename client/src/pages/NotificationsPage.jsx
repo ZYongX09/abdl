@@ -24,8 +24,8 @@ export default function Notifications() {
     } catch(e) {} finally { setLoading(false); }
   };
 
-  if (!user) return <div style={{textAlign:'center',padding:60}}><h2><i className="fa-solid fa-circle-exclamation" /> 请先登录</h2></div>;
-  if (loading) return <div className="loading-spinner" role="status" aria-live="polite"><div className="spinner" /><span>加载通知</span></div>;
+  if (!user) return <div className="text-center py-16"><h2><i className="fa-solid fa-circle-exclamation" /> 请先登录</h2></div>;
+  if (loading) return <div className="flex justify-center py-16"><span className="loading loading-spinner loading-lg text-primary"></span></div>;
 
   const getLink = (n) => {
     if (n.type === 'like') return `/forum/${n.related_id}`;
@@ -34,46 +34,34 @@ export default function Notifications() {
   };
 
   return (
-    <div style={{ maxWidth: 600, margin: '0 auto' }}>
-      <h2 style={{ marginBottom: 16 }}>
-        <i className="fa-solid fa-bell" /> 通知
-      </h2>
+    <div className="max-w-xl mx-auto">
+      <h2 className="text-xl font-bold mb-4"><i className="fa-solid fa-bell text-primary" /> 通知</h2>
       {notifs.length === 0 ? (
-        <div className="empty-state">
-          <div className="icon"><i className="fa-solid fa-bell-slash" /></div>
-          <h3>暂无通知</h3>
+        <div className="text-center py-16 text-base-content/40">
+          <i className="fa-solid fa-bell-slash text-4xl mb-3 block" />
+          <p>暂无通知</p>
         </div>
       ) : (
-        notifs.map((n, i) => (
-          <Link to={getLink(n)} key={n.id} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div className="stagger-item" style={{
-              padding: '12px 16px', borderRadius: 12, marginBottom: 8,
-              background: n.read ? 'var(--bg-card)' : 'var(--primary-light)',
-              border: `1px solid ${n.read ? 'var(--border)' : 'var(--primary)'}`,
-              transition: 'all 0.2s', cursor: 'pointer',
-              animationDelay: `${i * 0.04}s`,
-            }}
-            onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = 'var(--shadow)'; }}
-            onMouseOut={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
-              <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                <span style={{ fontSize: '1.3rem', color: n.type === 'like' ? 'var(--like-active)' : 'var(--primary-dark)' }}>
+        <div className="flex flex-col gap-2">
+          {notifs.map((n, i) => (
+            <Link to={getLink(n)} key={n.id} className="no-underline text-inherit">
+              <div className={`flex items-center gap-3 p-3 rounded-xl border transition-all hover:-translate-y-0.5 hover:shadow ${
+                n.read ? 'bg-base-100 border-base-300' : 'bg-primary/10 border-primary/30'
+              }`} style={{ animationDelay: `${i * 0.04}s` }}>
+                <span className={`text-lg ${n.type === 'like' ? 'text-error' : 'text-primary'}`}>
                   <i className={`fa-solid ${typeIcons[n.type] || 'fa-circle'}`} />
                 </span>
-                <div style={{ flex: 1 }}>
-                  <span style={{ fontWeight: n.read?400:600 }}>
+                <div className="flex-1">
+                  <span className={`text-sm ${n.read ? 'font-normal' : 'font-semibold'}`}>
                     {n.message || '互动了你的内容'}
                   </span>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 2 }}>
-                    {timeAgo(n.created_at)}
-                  </div>
+                  <div className="text-xs text-base-content/40 mt-0.5">{timeAgo(n.created_at)}</div>
                 </div>
-                {!n.read && (
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--primary-dark)' }} />
-                )}
+                {!n.read && <div className="w-2 h-2 rounded-full bg-primary" />}
               </div>
-            </div>
-          </Link>
-        ))
+            </Link>
+          ))}
+        </div>
       )}
     </div>
   );

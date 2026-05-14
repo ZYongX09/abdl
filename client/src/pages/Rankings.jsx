@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { rankingsAPI } from '../api';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 
-
 const DIM_TABS = [
   { key: 'hot', fa: 'fa-fire', label: '热门' },
   { key: 'absorbency', fa: 'fa-droplet', label: '吸收' },
@@ -16,7 +15,6 @@ const DIM_TABS = [
   { key: 'value_score', fa: 'fa-gem', label: '性价比' },
 ];
 
-const MEDALS = ['fa-medal', 'fa-medal', 'fa-medal'];
 const MEDAL_COLORS = ['#F0C040', '#B0B0B0', '#CD7F32'];
 
 export default function Rankings() {
@@ -31,90 +29,88 @@ export default function Rankings() {
     const isDim = !['hot','absorbency','popular'].includes(tab);
     const api = isDim ? rankingsAPI.dimension(tab)
       : tab==='hot' ? rankingsAPI.hot() : tab==='absorbency' ? rankingsAPI.absorbency() : rankingsAPI.popular();
-
-    api.then(data => {
-      setRankings(data.rankings || []);
-      setCached(data.cached || false);
-    }).catch(err => {
-      console.error('[Rankings]', err);
-    }).finally(() => setLoading(false));
+    api.then(data => { setRankings(data.rankings || []); setCached(data.cached || false); })
+      .catch(console.error).finally(() => setLoading(false));
   }, [tab]);
 
+  const mainTabs = DIM_TABS.filter(t => ['hot','absorbency','popular'].includes(t.key));
+  const dimTabs = DIM_TABS.filter(t => !['hot','absorbency','popular'].includes(t.key));
+
   return (
-    <div style={{ maxWidth: 700, margin: '0 auto' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: 20 }}>
-        <i className="fa-solid fa-trophy" /> 排行榜
+    <div className="max-w-2xl mx-auto">
+      <h2 className="text-center text-xl font-bold mb-5">
+        <i className="fa-solid fa-trophy text-warning" /> 排行榜
       </h2>
-      <div style={{ marginBottom: 20 }}>
-        <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 10 }} role="tablist" aria-label="排行榜分类">
-          {DIM_TABS.filter(t => ['hot','absorbency','popular'].includes(t.key)).map(t => (
-            <button key={t.key}
-              role="tab"
-              aria-selected={tab===t.key}
-              className={`btn ${tab===t.key?'btn-primary':'btn-outline'} btn-sm`}
+
+      <div className="flex flex-col items-center gap-3 mb-5">
+        <div className="tabs tabs-boxed tabs-sm" role="tablist">
+          {mainTabs.map(t => (
+            <button key={t.key} role="tab" className={`tab ${tab === t.key ? 'tab-active' : ''}`}
               onClick={() => setTab(t.key)}>
-              <i className={`fa-solid ${t.fa}`} style={{ marginRight: 4 }} />{t.label}
+              <i className={`fa-solid ${t.fa} mr-1`} />{t.label}
             </button>
           ))}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center', marginBottom: 8 }}>
-          <span style={{ flex: '0 0 auto', width: 36, height: 1, background: 'var(--border)' }} />
-          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', fontWeight: 500 }}>
-            <i className="fa-solid fa-bars-staggered" style={{ marginRight: 4, fontSize: '0.7rem' }} /> 按维度评分排序
+        <div className="flex items-center gap-3 w-full max-w-xs">
+          <div className="flex-1 h-px bg-base-300" />
+          <span className="text-xs text-base-content/50 whitespace-nowrap">
+            <i className="fa-solid fa-bars-staggered mr-1" /> 按维度评分排序
           </span>
-          <span style={{ flex: '1', height: 1, background: 'var(--border)', maxWidth: 140 }} />
+          <div className="flex-1 h-px bg-base-300" />
         </div>
-        <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }} role="tablist" aria-label="维度评分排序">
-          {DIM_TABS.filter(t => !['hot','absorbency','popular'].includes(t.key)).map(t => (
-            <button key={t.key}
-              role="tab"
-              aria-selected={tab===t.key}
-              className={`btn ${tab===t.key?'btn-primary':'btn-outline'} btn-sm`}
+        <div className="flex flex-wrap gap-1.5 justify-center" role="tablist">
+          {dimTabs.map(t => (
+            <button key={t.key} role="tab"
+              className={`btn btn-xs ${tab===t.key?'btn-primary':'btn-ghost'}`}
               onClick={() => setTab(t.key)}>
-              <i className={`fa-solid ${t.fa}`} style={{ marginRight: 4 }} />{t.label}
+              <i className={`fa-solid ${t.fa} mr-0.5`} />{t.label}
             </button>
           ))}
         </div>
       </div>
+
       {cached && (
-        <div className="alert alert-info" style={{ textAlign: 'center', fontSize: '0.85rem' }}>
+        <div className="alert alert-info mb-4 text-sm">
           <i className="fa-solid fa-clock" /> 每24小时更新
         </div>
       )}
+
       {loading ? (
         <LoadingSkeleton count={6} type="rank" />
       ) : rankings.length === 0 ? (
-        <div className="empty-state">
-          <div className="icon"><i className="fa-solid fa-chart-bar" /></div>
-          <h3>暂无数据</h3>
+        <div className="text-center py-16 text-base-content/40">
+          <i className="fa-solid fa-chart-bar text-4xl mb-3 block" />
+          <p>暂无数据</p>
         </div>
       ) : (
-        rankings.map((item, i) => (
-          <Link to={`/diaper/${item.id}`} key={item.id} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div className="rank-item stagger-item" style={{ animationDelay: `${i * 0.06}s` }}>
-              <div className={`rank-number ${i===0?'top1':i===1?'top2':i===2?'top3':''}`}>
-                {i < 3 ? <i className={`fa-solid ${MEDALS[i]}`} style={{ color: MEDAL_COLORS[i], fontSize: '1.6rem' }} /> : `#${i+1}`}
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 700 }}>{item.brand} {item.model}</div>
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                  <span className="tag">{item.product_type}</span>
-                  {item.absorbency_adult && (
-                    <span className="tag">
-                      <i className="fa-solid fa-droplet" /> {item.absorbency_adult}
-                    </span>
-                  )}
+        <div className="flex flex-col gap-2">
+          {rankings.map((item, i) => (
+            <Link to={`/diaper/${item.id}`} key={item.id} className="no-underline text-inherit">
+              <div className="rank-item stagger-item flex items-center gap-4 p-4 rounded-xl" style={{ animationDelay: `${i * 0.06}s` }}>
+                <div className={`rank-number w-10 text-center font-bold text-lg ${i===0?'top1':i===1?'top2':i===2?'top3':'text-base-content/40'}`}>
+                  {i < 3 ? <i className="fa-solid fa-medal text-xl" style={{ color: MEDAL_COLORS[i] }} /> : `#${i+1}`}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold truncate">{item.brand} {item.model}</div>
+                  <div className="text-sm text-base-content/50 flex gap-1.5 mt-0.5">
+                    <span className="badge badge-sm badge-ghost">{item.product_type}</span>
+                    {item.absorbency_adult && (
+                      <span className="badge badge-sm badge-ghost">
+                        <i className="fa-solid fa-droplet" /> {item.absorbency_adult}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="text-right">
+                  {tab==='hot' && <div className="badge badge-warning gap-1"><i className="fa-solid fa-star" /> {Number(item.avg_score||0).toFixed(1)}</div>}
+                  {tab==='absorbency' && <div className="font-bold text-primary">{item.absorbency_adult||item.absorbency_mfr}</div>}
+                  {tab==='popular' && <div className="font-bold text-accent">{item.rating_count} 评价</div>}
+                  {!['hot','absorbency','popular'].includes(tab) && item.avg_score != null && <div className="badge badge-warning gap-1"><i className="fa-solid fa-star" />{Number(item.avg_score).toFixed(1)}</div>}
                 </div>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                {tab==='hot' && <div className="score-badge"><i className="fa-solid fa-star" /> {Number(item.avg_score||0).toFixed(1)}</div>}
-                {tab==='absorbency' && <div style={{ fontWeight: 700, color: 'var(--primary-dark)' }}>{item.absorbency_adult||item.absorbency_mfr}</div>}
-                {tab==='popular' && <div style={{ fontWeight: 700, color: 'var(--accent-dark)' }}>{item.rating_count} 评价</div>}
-                {!['hot','absorbency','popular'].includes(tab) && item.avg_score != null && <div className="score-badge"><i className="fa-solid fa-star" style={{color:'var(--warning)',marginRight:3,fontSize:'0.7rem'}} />{Number(item.avg_score).toFixed(1)}</div>}
-              </div>
-            </div>
-          </Link>
-        ))
+            </Link>
+          ))}
+        </div>
       )}
     </div>
   );

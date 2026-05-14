@@ -1,49 +1,26 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
-const TABS = [
-  { path: '/', label: '论坛', icon: 'fa-regular fa-comments', activeIcon: 'fa-solid fa-comments' },
-  { path: '/diapers', label: '纸尿裤', icon: 'fa-solid fa-box', activeIcon: 'fa-solid fa-box-open' },
-  { path: '/rankings', label: '排行榜', icon: 'fa-solid fa-trophy', activeIcon: 'fa-solid fa-trophy' },
-  { path: '/recommend', label: '推荐', icon: 'fa-solid fa-robot', activeIcon: 'fa-solid fa-robot' },
-  { path: '/profile', label: '我的', icon: 'fa-regular fa-user', activeIcon: 'fa-solid fa-user' },
-];
-
 export default function MobileBottomNav() {
-  const location = useLocation();
   const { user } = useAuth();
+  const location = useLocation();
 
-  const isActive = (path) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
-  };
-
-  // Hide on login/register pages
-  if (['/login', '/register'].includes(location.pathname)) return null;
+  const items = [
+    { path: '/', icon: 'fa-regular fa-comments', label: '论坛' },
+    { path: '/diapers', icon: 'fa-solid fa-box', label: '纸尿裤' },
+    { path: '/rankings', icon: 'fa-solid fa-trophy', label: '排行' },
+    ...(user ? [{ path: '/recommend', icon: 'fa-solid fa-robot', label: '推荐' }] : []),
+    { path: '/settings', icon: 'fa-solid fa-gear', label: '设置' },
+  ];
 
   return (
-    <nav className="mobile-bottom-nav" aria-label="移动端导航">
-      <div className="mobile-bottom-nav-inner">
-        {TABS.map(tab => {
-          // Profile tab: go to login if not authenticated
-          const targetPath = tab.path === '/profile' && !user ? '/login' : tab.path;
-          const active = isActive(tab.path);
-          return (
-            <Link
-              key={tab.path}
-              to={targetPath}
-              className={`mobile-tab-item ${active ? 'active' : ''}`}
-              aria-label={tab.label}
-              aria-current={active ? 'page' : undefined}
-            >
-              <div className="mobile-tab-icon-wrapper">
-                <i className={active ? tab.activeIcon : tab.icon} />
-              </div>
-              <span className="mobile-tab-label">{tab.label}</span>
-            </Link>
-          );
-        })}
-      </div>
-    </nav>
+    <div className="btm-nav btm-nav-sm md:hidden bg-base-100/90 backdrop-blur-md border-t border-base-300">
+      {items.map(item => (
+        <Link key={item.path} to={item.path} className={location.pathname === item.path ? 'active text-primary' : 'text-base-content/60'}>
+          <i className={item.icon} />
+          <span className="btm-nav-label text-xs">{item.label}</span>
+        </Link>
+      ))}
+    </div>
   );
 }

@@ -60,8 +60,7 @@ export default function ForumFeed() {
       if (image) { const r = await uploadImage(image); imgUrl = r.url; }
       await forumAPI.create({ content, diaper_id: diaperId||null, image_url: imgUrl });
       setContent(''); setDiaperId(''); setImage(null); setShowForm(false);
-      loadPosts();
-      setMsg('');
+      loadPosts(); setMsg('');
     } catch(e) { setMsg(e.message); }
     finally { setUploading(false); }
   };
@@ -71,157 +70,136 @@ export default function ForumFeed() {
     try { await forumAPI.like({ target_type: 'post', target_id: postId }); loadPosts(page); } catch {}
   };
 
-  const handleSearch = () => { loadPosts(); };
-
   return (
-    <div style={{ maxWidth: 700, margin: '0 auto' }}>
-      <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 20 }}>
-        <h2 style={{ margin: 0, flex: 1 }}>
-          <i className="fa-regular fa-comments" /> 社区论坛
+    <div className="max-w-2xl mx-auto">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-5">
+        <h2 className="text-xl font-bold flex-1">
+          <i className="fa-regular fa-comments text-primary" /> 社区论坛
         </h2>
-        {user && (
-          <>
-            <Link to="/notifications" style={{ position: 'relative', textDecoration: 'none', fontSize: '1.3rem', color: 'var(--text)' }}>
-              <i className={`fa-solid fa-bell${notifCount > 0 ? ' bell-shake' : ''}`} />
-              {notifCount > 0 && (
-                <span className="notif-badge" style={{ position: 'absolute', top: -6, right: -8 }}>{notifCount}</span>
-              )}
-            </Link>
-            <button className="btn btn-accent" onClick={() => setShowForm(!showForm)}>
-              <i className="fa-solid fa-pen" /> 发帖
-            </button>
-          </>
-        )}
+        {user && (<>
+          <Link to="/notifications" className="btn btn-ghost btn-sm indicator">
+            <i className={`fa-solid fa-bell${notifCount > 0 ? ' bell-shake' : ''}`} />
+            {notifCount > 0 && <span className="badge badge-xs badge-primary indicator-item">{notifCount}</span>}
+          </Link>
+          <button className="btn btn-accent btn-sm" onClick={() => setShowForm(!showForm)}>
+            <i className="fa-solid fa-pen" /> 发帖
+          </button>
+        </>)}
       </div>
 
       <GuessYouLike />
 
-      <div className="search-bar" style={{ marginBottom: 16 }}>
-        <div style={{ position: 'relative', flex: 1, minWidth: 180 }}>
-          <input className="form-control" placeholder="搜索帖子内容..." value={search}
-            onChange={e=>setSearch(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleSearch()}
-            style={{ paddingRight: search ? 36 : undefined, width: '100%' }} />
-          {search && (
-            <button
-              type="button"
-              onClick={() => setSearch('')}
-              aria-label="清除搜索"
-              style={{
-                position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
-                background: 'var(--input-bg)', border: 'none', borderRadius: '50%',
-                width: 22, height: 22, cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'var(--text-muted)', fontSize: '0.7rem',
-                transition: 'color 0.15s, background 0.15s',
-              }}
-              onMouseOver={e => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.background = 'var(--border)'; }}
-              onMouseOut={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'var(--input-bg)'; }}
-            >
-              <i className="fa-solid fa-xmark" />
-            </button>
-          )}
-        </div>
-        <button className="btn btn-primary btn-sm" onClick={handleSearch}>
-          <i className="fa-solid fa-search" /> 搜索
+      {/* Search */}
+      <div className="join mb-4 w-full">
+        <input className="input input-bordered input-sm join-item flex-1" placeholder="搜索帖子内容..." value={search}
+          onChange={e=>setSearch(e.target.value)} onKeyDown={e=>e.key==='Enter'&&loadPosts()} />
+        <button className="btn btn-primary btn-sm join-item" onClick={() => loadPosts()}>
+          <i className="fa-solid fa-search" />
         </button>
       </div>
 
+      {/* Post Form */}
       {showForm && (
-        <div className="card" style={{ marginBottom: 16 }}>
-          {msg && <div className={`alert ${msg.includes('成功')?'alert-success':'alert-danger'}`}>{msg}</div>}
-          <textarea ref={postTextareaRef} className="form-control auto-resize" rows={4} placeholder="分享你的想法..." value={content} onChange={e=>setContent(e.target.value)} maxLength={5000} onInput={autoResize} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
-            <span style={{ fontSize: '0.75rem', color: content.length > 4500 ? 'var(--danger)' : content.length > 3500 ? 'var(--warning)' : 'var(--text-muted)' }}>
-              {content.length}/5000
-            </span>
-          </div>
-          <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-            <label className="btn btn-outline btn-sm" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-              <i className="fa-solid fa-image" /> 选择图片
-              <input type="file" accept="image/*" onChange={e=>setImage(e.target.files[0])} style={{ display: 'none' }} />
-            </label>
-            {image && (
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                <img src={URL.createObjectURL(image)} alt="预览" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border)' }} />
-                <button onClick={() => setImage(null)} style={{
-                  position: 'absolute', top: -6, right: -6, width: 20, height: 20, borderRadius: '50%',
-                  border: 'none', background: 'var(--danger)', color: 'white', cursor: 'pointer',
-                  fontSize: '0.65rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  lineHeight: 1
-                }} title="移除图片" aria-label="移除图片"><i className="fa-solid fa-xmark" /></button>
-              </div>
-            )}
-            <button className="btn btn-primary btn-sm" onClick={handlePost} disabled={uploading||!content.trim()}>
-              {uploading ? '发布中...' : '发布'}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {loading && posts.length === 0 ? <LoadingSkeleton type="feed" count={4} /> : posts.length === 0 ? (
-        <div className="empty-state">
-          <div className="icon"><i className="fa-solid fa-feather" /></div>
-          <h3>{search ? '没有找到匹配的帖子' : '还没有帖子'}</h3>
-          <p>{search ? '试试换个关键词搜索' : '成为第一个发帖的人吧'}</p>
-        </div>
-      ) : (
-        posts.map((p, i) => (
-          <div key={p.id} className="card stagger-item" style={{ marginBottom: 12, animationDelay: `${i * 0.05}s` }}>
-            <div style={{ display: 'flex', gap: 12 }}>
-              <div className="post-avatar">
-                <i className="fa-solid fa-user-astronaut" />
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <Link to={`/user/${p.user?.id}`} style={{ fontWeight: 700, textDecoration: 'none', color: 'var(--text)' }}>
-                    {p.user?.username}
-                  </Link>
-                  {user && p.user?.id !== user.id && (
-                    <Link to={`/messages?to=${encodeURIComponent(p.user?.username)}`} className="btn btn-outline btn-sm"
-                      style={{ fontSize: '0.7rem', padding: '2px 10px' }} title="发私信">
-                      <i className="fa-solid fa-paper-plane" />
-                    </Link>
-                  )}
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                    @{p.user?.username} · {timeAgo(p.created_at)}
-                  </span>
-                </div>
-                <Link to={`/forum/${p.id}`} style={{ textDecoration: 'none', color: 'var(--text)' }}>
-                  <p style={{ margin: '8px 0', whiteSpace: 'pre-wrap', lineHeight: 1.5 }}>{p.content}</p>
-                </Link>
-                {p.images?.length > 0 && (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 4, marginBottom: 8 }}>
-                    {p.images.map((img, i) => <img key={i} src={img.image_url} alt="" loading="lazy" style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 8 }} onError={(e) => { e.target.style.display = 'none'; }} />)}
+        <div className="card mb-4">
+          <div className="card-body gap-3">
+            {msg && <div className={`alert ${msg.includes('成功')?'alert-success':'alert-error'} text-sm`}><span>{msg}</span></div>}
+            <textarea ref={postTextareaRef} className="textarea textarea-bordered w-full" rows={4}
+              placeholder="分享你的想法..." value={content} onChange={e=>setContent(e.target.value)}
+              maxLength={5000} onInput={autoResize} />
+            <div className="flex justify-between items-center">
+              <span className={`text-xs ${content.length > 4500 ? 'text-error' : content.length > 3500 ? 'text-warning' : 'text-base-content/40'}`}>
+                {content.length}/5000
+              </span>
+              <div className="flex gap-2 items-center">
+                <label className="btn btn-outline btn-xs gap-1 cursor-pointer">
+                  <i className="fa-solid fa-image" /> 图片
+                  <input type="file" accept="image/*" onChange={e=>setImage(e.target.files[0])} className="hidden" />
+                </label>
+                {image && (
+                  <div className="relative inline-block">
+                    <img src={URL.createObjectURL(image)} alt="预览" className="w-12 h-12 object-cover rounded-lg border border-base-300" />
+                    <button onClick={() => setImage(null)} className="absolute -top-1.5 -right-1.5 btn btn-error btn-xs w-5 h-5 min-h-0 p-0 rounded-full" title="移除">
+                      <i className="fa-solid fa-xmark text-xs" />
+                    </button>
                   </div>
                 )}
-                {p.diaper && (
-                  <Link to={`/diaper/${p.diaper.id}`} className="tag" style={{ textDecoration: 'none' }}>
-                    <i className="fa-solid fa-tag" /> {p.diaper.brand} {p.diaper.model}
-                  </Link>
-                )}
-                <div style={{ display: 'flex', gap: 24, marginTop: 8 }}>
-                  <button onClick={() => handleLike(p.id)}
-                    className={`like-btn${p.has_liked ? ' liked' : ''}`}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer',
-                      color: p.has_liked ? 'var(--like-active)' : 'var(--text-muted)', fontSize: '0.9rem' }}>
-                    <i className={`fa-heart ${p.has_liked ? 'fa-solid' : 'fa-regular'}`} /> {p.like_count}
-                  </button>
-                  <Link to={`/forum/${p.id}`} style={{ textDecoration: 'none', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                    <i className="fa-regular fa-comment" /> {p.comment_count}
-                  </Link>
-                  <button onClick={(e) => { e.preventDefault(); navigator.clipboard?.writeText(window.location.origin + '/forum/' + p.id).then(() => addToast('链接已复制到剪贴板', 'success', 2000)).catch(()=>{}); }} title="复制链接" style={{ color: 'var(--text-muted)', fontSize: '0.9rem', background: 'none', border: 'none', cursor: 'pointer' }} aria-label="复制帖子链接">
-                    <i className="fa-solid fa-share-nodes" /> 分享
-                  </button>
-                </div>
+                <button className="btn btn-primary btn-sm" onClick={handlePost} disabled={uploading||!content.trim()}>
+                  {uploading ? '发布中...' : '发布'}
+                </button>
               </div>
             </div>
           </div>
-        ))
+        </div>
+      )}
+
+      {/* Posts */}
+      {loading && posts.length === 0 ? <LoadingSkeleton type="feed" count={4} /> : posts.length === 0 ? (
+        <div className="text-center py-16 text-base-content/40">
+          <i className="fa-solid fa-feather text-4xl mb-3 block" />
+          <h3 className="font-semibold mb-1">{search ? '没有找到匹配的帖子' : '还没有帖子'}</h3>
+          <p className="text-sm">{search ? '试试换个关键词搜索' : '成为第一个发帖的人吧'}</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {posts.map((p, i) => (
+            <div key={p.id} className="card stagger-item" style={{ animationDelay: `${i * 0.05}s` }}>
+              <div className="card-body gap-3">
+                <div className="flex gap-3">
+                  <div className="avatar placeholder">
+                    <div className="bg-primary/20 text-primary rounded-full w-10">
+                      <i className="fa-solid fa-user-astronaut" />
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Link to={`/user/${p.user?.id}`} className="font-bold text-sm no-underline hover:underline">
+                        {p.user?.username}
+                      </Link>
+                      {user && p.user?.id !== user.id && (
+                        <Link to={`/messages?to=${encodeURIComponent(p.user?.username)}`} className="btn btn-ghost btn-xs" title="发私信">
+                          <i className="fa-solid fa-paper-plane" />
+                        </Link>
+                      )}
+                      <span className="text-xs text-base-content/40">@{p.user?.username} · {timeAgo(p.created_at)}</span>
+                    </div>
+                    <Link to={`/forum/${p.id}`} className="no-underline text-inherit">
+                      <p className="my-2 whitespace-pre-wrap leading-relaxed text-sm">{p.content}</p>
+                    </Link>
+                    {p.images?.length > 0 && (
+                      <div className="grid grid-cols-3 gap-1 mb-2">
+                        {p.images.map((img, i) => <img key={i} src={img.image_url} alt="" loading="lazy" className="w-full h-28 object-cover rounded-lg" onError={(e) => { e.target.style.display = 'none'; }} />)}
+                      </div>
+                    )}
+                    {p.diaper && (
+                      <Link to={`/diaper/${p.diaper.id}`} className="badge badge-ghost badge-sm gap-1 no-underline">
+                        <i className="fa-solid fa-tag" /> {p.diaper.brand} {p.diaper.model}
+                      </Link>
+                    )}
+                    <div className="flex gap-6 mt-2">
+                      <button onClick={() => handleLike(p.id)}
+                        className={`btn btn-ghost btn-xs gap-1 ${p.has_liked ? 'text-error' : 'text-base-content/40'}`}>
+                        <i className={`${p.has_liked ? 'fa-solid' : 'fa-regular'} fa-heart`} /> {p.like_count}
+                      </button>
+                      <Link to={`/forum/${p.id}`} className="btn btn-ghost btn-xs gap-1 text-base-content/40 no-underline">
+                        <i className="fa-regular fa-comment" /> {p.comment_count}
+                      </Link>
+                      <button onClick={() => navigator.clipboard?.writeText(window.location.origin + '/forum/' + p.id).then(() => addToast('链接已复制', 'success', 2000)).catch(()=>{})}
+                        className="btn btn-ghost btn-xs gap-1 text-base-content/40">
+                        <i className="fa-solid fa-share-nodes" /> 分享
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
 
       {hasMore && !loading && (
-        <div style={{ textAlign: 'center', padding: 16 }}>
-          <button className="btn btn-outline" onClick={() => loadPosts(page+1, true)} disabled={loadingMore}>
+        <div className="text-center py-4">
+          <button className="btn btn-outline btn-sm" onClick={() => loadPosts(page+1, true)} disabled={loadingMore}>
             {loadingMore ? <><i className="fa-solid fa-spinner fa-spin" /> 加载中...</> : <><i className="fa-solid fa-chevron-down" /> 加载更多</>}
           </button>
         </div>
