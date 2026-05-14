@@ -135,7 +135,7 @@ export default function Settings() {
               { key: 'bio', label: '个人简介', desc: '个人资料中的简介', icon: 'fa-pen' },
               { key: 'feelings', label: '使用感受记录', desc: '你对各款纸尿裤的感受评分', icon: 'fa-note-sticky' },
             ].map(opt => (
-              <label key={opt.key} className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all" style={{
+              <label key={opt.key} className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all" style={{
                 background: aiPrivacy[opt.key] ? 'var(--primary-light)' : 'var(--input-bg)',
                 border: `1px solid ${aiPrivacy[opt.key] ? 'var(--primary)' : 'var(--border)'}`,
               }}>

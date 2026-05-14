@@ -11,11 +11,19 @@
 
 /* daisyUI 全局调整 — 柔软宽松 */
 .card-body {
-  padding: 1.5rem;
-  gap: 0.75rem;
+  padding: 2rem;
+  gap: 1rem;
 }
 .card-title {
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.15rem;
+}
+.form-control {
+  margin-bottom: 0.75rem;
+}
+.label {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 /* 复选框 — 小巧柔和 */
 .checkbox {
