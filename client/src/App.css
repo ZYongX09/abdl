@@ -787,11 +787,6 @@ select.form-control {
 .diaper-card .brand { font-size: 0.75rem; color: var(--primary-dark); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
 .diaper-card .model { font-size: 1.15rem; font-weight: 700; margin: 4px 0; }
 .diaper-card .meta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; font-size: 0.85rem; color: var(--text-light); }
-.score-badge {
-  display: inline-block; background: var(--primary-light);
-  color: var(--primary-dark); padding: 3px 12px; border-radius: 1rem;
-  font-weight: 700; font-size: 0.85rem;
-}
 
 /* ====== 排行榜条目 ====== */
 .rank-item {
