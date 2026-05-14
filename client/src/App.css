@@ -1167,7 +1167,7 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
   box-shadow: 0 8px 32px rgba(0,0,0,0.35);
 }
 
-/* LiquidGlass 包装的组件：透明背景让 canvas 效果可见 */
+/* LiquidGlass 包装的组件：透明背景让效果可见 */
 .glass-enabled .liquid-glass-active {
   background: transparent !important;
   backdrop-filter: none !important;
@@ -1178,31 +1178,18 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
 .glass-enabled[data-theme="dark"] .liquid-glass-active {
   border-color: rgba(255,255,255,0.06) !important;
 }
-/* LiquidGlass 内部 .glass div 的布局覆盖 */
+/* LiquidGlass 内部 .glass div：覆盖默认 inline-flex，填充容器 */
 .liquid-glass-active .glass {
   display: block !important;
   padding: 0 !important;
   gap: 0 !important;
-  overflow: visible !important;
   width: 100% !important;
   height: 100% !important;
+  overflow: hidden !important;
 }
-/* LiquidGlass 子元素全部填充容器 */
-.liquid-glass-active > * {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-}
-/* 内容层保持相对定位 */
-.liquid-glass-active > div:last-child {
+.liquid-glass-active .glass > * {
   position: relative;
-  top: auto;
-  left: auto;
-  transform: none;
-  width: 100%;
-  height: auto;
+  z-index: 1;
 }
 
 /* 侧边栏 — 毛玻璃 */

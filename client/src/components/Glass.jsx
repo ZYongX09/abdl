@@ -6,11 +6,12 @@ const LiquidGlass = lazy(() => import('liquid-glass-react'));
 /**
  * Glass — iOS 26 液态玻璃包装组件
  *
- * LiquidGlass 组件内部使用 top:50% + left:50% + translate(-50%,-50%) 居中。
- * 正确用法：外层 position:relative 让百分比相对父元素，
- *           内层 LiquidGlass 的居中变换在容器内部完成。
+ * LiquidGlass 内部 5 个子元素全部使用:
+ *   position: relative, top: 50%, left: 50%, transform: translate(-50%,-50%)
  *
- * @param {'card'|'panel'|'button'|'input'|'nav'|'modal'|'rank'} preset
+ * 用 position:absolute 让这 5 个元素脱离文档流，
+ * top:50% + left:50% + translate(-50%,-50%) = 在父容器内完美居中。
+ * 父容器由内容撑开高度，LiquidGlass 填充整个父容器。
  */
 export default function Glass({
   children,
@@ -42,7 +43,6 @@ export default function Glass({
 
   const config = configRef.current;
 
-  // LiquidGlass 模式
   if (liquidEnabled && deviceSupported && config) {
     return (
       <div
@@ -59,7 +59,7 @@ export default function Glass({
         onClick={onClick}
         {...rest}
       >
-        {/* LiquidGlass 效果层：top:50% + left:50% + translate(-50%,-50%) = 居中于父容器 */}
+        {/* LiquidGlass: absolute 脱离文档流, top:50%+left:50%+translate(-50%,-50%)=居中 */}
         <Suspense fallback={null}>
           <LiquidGlass
             {...config}
@@ -76,14 +76,13 @@ export default function Glass({
           </LiquidGlass>
         </Suspense>
         {/* 内容层 */}
-        <div style={{ position: 'relative', zIndex: 10, pointerEvents: 'auto' }}>
+        <div style={{ position: 'relative', zIndex: 10 }}>
           {children}
         </div>
       </div>
     );
   }
 
-  // CSS 毛玻璃降级
   return (
     <div className={`${glassClassName} ${className}`} style={style} onClick={onClick} {...rest}>
       {children}
