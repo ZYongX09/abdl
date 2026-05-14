@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { diapersAPI, rankingsAPI, compareAPI } from '../api';
 import LoadingSkeleton from '../components/LoadingSkeleton';
+import Glass from '../components/Glass';
 
 
 const DIMS = [
@@ -124,7 +125,7 @@ export default function Home() {
   return (
     <div>
       {/* Header + Search */}
-      <div className="hero-card">
+      <Glass preset="card" className="hero-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
           <h2 style={{ margin: 0, color: 'var(--hero-text)', fontSize: '1.3rem' }}>
             <i className="fa-solid fa-magnifying-glass" /> 探索纸尿裤
@@ -194,7 +195,7 @@ export default function Home() {
             </button>
           </div>
         )}
-      </div>
+      </Glass>
 
       {/* Compare mode header */}
       {compareMode && (
@@ -326,8 +327,8 @@ export default function Home() {
                       style={{ width: 14, height: 14, accentColor: 'var(--primary)' }} />
                   </label>
                 )}
-                <div>
-                <Link to={`/diaper/${d.id}`} className="diaper-card" style={compareMode ? { paddingTop: 32 } : {}}>
+                <Glass preset="card" className="diaper-card" style={compareMode ? { paddingTop: 32 } : {}}>
+                <Link to={`/diaper/${d.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <div className="brand">{d.brand}</div>
                     {d.is_baby_diaper === 1 && (
@@ -353,7 +354,7 @@ export default function Home() {
                     {d.avg_price && <span style={{ fontWeight: 600 }}>{d.avg_price}</span>}
                   </div>
                 </Link>
-                </div>
+                </Glass>
               </div>
             ))}
           </div>

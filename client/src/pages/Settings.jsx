@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
 import { authAPI } from '../api';
+import Glass from '../components/Glass';
 
 
 function getStoredSetting(key, fallback) {
@@ -83,7 +84,7 @@ export default function Settings() {
       )}
 
       {/* 外观 */}
-      <div className="card">
+      <Glass preset="card" className="card">
         <h3 style={{ marginBottom: 16 }}>
           <i className="fa-solid fa-palette" /> 外观
         </h3>
@@ -136,7 +137,7 @@ export default function Settings() {
             </button>
           </label>
         </div>
-      </div>
+      </Glass>
 
       {/* AI 隐私 */}
       <div className="card">

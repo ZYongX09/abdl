@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { forumAPI, messagesAPI } from '../api';
+import Glass from './Glass';
 
 
 function SearchBar({ onSearch }) {
@@ -201,9 +202,9 @@ export default function Sidebar() {
       </button>
 
       {/* Desktop sidebar - always visible, part of flex layout */}
-      <div className="sidebar sidebar-desktop">
+      <Glass preset="panel" className="sidebar sidebar-desktop">
         {sidebarContent}
-      </div>
+      </Glass>
 
       {/* Mobile overlay */}
       <div className={`sidebar-overlay ${mobileOpen ? 'open' : ''}`} onClick={closeMobile} />
