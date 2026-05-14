@@ -61,7 +61,7 @@ export default function Rankings() {
         <div className="flex flex-wrap gap-1.5 justify-center" role="tablist">
           {dimTabs.map(t => (
             <button key={t.key} role="tab"
-              className={`btn btn-xs ${tab===t.key?'btn-primary':'btn-ghost'}`}
+              className={`btn btn-sm ${tab===t.key?'btn-primary':'btn-ghost'}`}
               onClick={() => setTab(t.key)}>
               <i className={`fa-solid ${t.fa} mr-0.5`} />{t.label}
             </button>

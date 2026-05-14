@@ -135,17 +135,17 @@ export default function Home() {
           </button>
         </div>
         <div className="join">
-          <input className="input input-bordered input-sm join-item" placeholder="搜索品牌、型号..." value={search}
+          <input className="input input-bordered join-item" placeholder="搜索品牌、型号..." value={search}
             onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearch()} />
-          <select className="select select-bordered select-sm join-item" value={brandFilter} onChange={e => setBrandFilter(e.target.value)}>
+          <select className="select select-bordered join-item" value={brandFilter} onChange={e => setBrandFilter(e.target.value)}>
             <option value="">全部品牌</option>
             {brands.map(b => <option key={b} value={b}>{b}</option>)}
           </select>
-          <select className="select select-bordered select-sm join-item" value={sizeFilter} onChange={e => setSizeFilter(e.target.value)}>
+          <select className="select select-bordered join-item" value={sizeFilter} onChange={e => setSizeFilter(e.target.value)}>
             <option value="">全部尺码</option>
             {sizes.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
-          <select className="select select-bordered select-sm join-item" value={sort} onChange={e => setSort(e.target.value)}>
+          <select className="select select-bordered join-item" value={sort} onChange={e => setSort(e.target.value)}>
             <option value="popularity">热度</option>
             <option value="avg_price">价格</option>
             <option value="thickness">厚度</option>

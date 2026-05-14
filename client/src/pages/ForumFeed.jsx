@@ -92,7 +92,7 @@ export default function ForumFeed() {
 
       {/* Search */}
       <div className="join mb-4 w-full">
-        <input className="input input-bordered input-sm join-item flex-1" placeholder="搜索帖子内容..." value={search}
+        <input className="input input-bordered join-item flex-1" placeholder="搜索帖子内容..." value={search}
           onChange={e=>setSearch(e.target.value)} onKeyDown={e=>e.key==='Enter'&&loadPosts()} />
         <button className="btn btn-primary btn-sm join-item" onClick={() => loadPosts()}>
           <i className="fa-solid fa-search" />

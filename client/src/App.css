@@ -25,19 +25,152 @@
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
+
+/* 输入框/选择框/文本域 — 加大尺寸 */
+.input {
+  height: 3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 0.95rem;
+}
+.input-sm {
+  height: 2.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  font-size: 0.875rem;
+}
+.select {
+  height: 3rem;
+  padding-left: 1rem;
+  padding-right: 2.5rem;
+  font-size: 0.95rem;
+}
+.select-sm {
+  height: 2.5rem;
+  padding-left: 0.75rem;
+  font-size: 0.875rem;
+}
+.textarea {
+  padding: 1rem;
+  font-size: 0.95rem;
+  min-height: 5rem;
+}
+.textarea-bordered {
+  border-width: 1px;
+}
+.input-bordered, .select-bordered {
+  border-width: 1px;
+}
+
+/* 按钮 — 加大尺寸和圆角 */
+.btn {
+  min-height: 2.75rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  font-size: 0.9rem;
+  border-radius: 0.75rem;
+}
+.btn-sm {
+  min-height: 2.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 0.8rem;
+  border-radius: 0.625rem;
+}
+.btn-xs {
+  min-height: 1.75rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+}
+.btn-lg {
+  min-height: 3.25rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  font-size: 1rem;
+}
+
 /* 复选框 — 小巧柔和 */
 .checkbox {
   border-width: 1.5px;
   border-color: var(--border);
   border-radius: 6px;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 .checkbox:checked {
   background-color: var(--primary);
   border-color: var(--primary);
 }
-.checkbox:checked:after {
-  color: white;
-  font-size: 0.65rem;
+.checkbox-xs {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Badge */
+.badge {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+}
+.badge-sm {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.7rem;
+}
+.badge-xs {
+  padding: 0.0625rem 0.375rem;
+  font-size: 0.625rem;
+}
+
+/* Alert */
+.alert {
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+}
+
+/* Tabs */
+.tabs {
+  border-radius: 0.75rem;
+}
+.tab {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 0.5rem;
+}
+
+/* Kbd */
+.kbd {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.375rem;
+}
+
+/* Divider */
+.divider {
+  margin: 1rem 0;
+}
+
+/* Navbar */
+.navbar {
+  min-height: 4rem;
+  padding: 0 1rem;
+}
+
+/* Bottom nav */
+.btm-nav {
+  height: 4rem;
+}
+
+/* Loading */
+.loading {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.loading-lg {
+  width: 3rem;
+  height: 3rem;
 }
 
 /* ============================================================
