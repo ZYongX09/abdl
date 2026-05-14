@@ -96,29 +96,31 @@ export default function ForumFeed() {
 
       <GuessYouLike />
 
-      <div className="search-bar" style={{ marginBottom: 16, position: 'relative' }}>
-        <input className="form-control" placeholder="搜索帖子内容..." value={search}
-          onChange={e=>setSearch(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleSearch()}
-          style={{ paddingRight: search ? 36 : undefined }} />
-        {search && (
-          <button
-            type="button"
-            onClick={() => setSearch('')}
-            aria-label="清除搜索"
-            style={{
-              position: 'absolute', right: 90, top: '50%', transform: 'translateY(-50%)',
-              background: 'var(--input-bg)', border: 'none', borderRadius: '50%',
-              width: 22, height: 22, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: 'var(--text-muted)', fontSize: '0.7rem',
-              transition: 'color 0.15s, background 0.15s',
-            }}
-            onMouseOver={e => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.background = 'var(--border)'; }}
-            onMouseOut={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'var(--input-bg)'; }}
-          >
-            <i className="fa-solid fa-xmark" />
-          </button>
-        )}
+      <div className="search-bar" style={{ marginBottom: 16 }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: 180 }}>
+          <input className="form-control" placeholder="搜索帖子内容..." value={search}
+            onChange={e=>setSearch(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleSearch()}
+            style={{ paddingRight: search ? 36 : undefined, width: '100%' }} />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch('')}
+              aria-label="清除搜索"
+              style={{
+                position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
+                background: 'var(--input-bg)', border: 'none', borderRadius: '50%',
+                width: 22, height: 22, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'var(--text-muted)', fontSize: '0.7rem',
+                transition: 'color 0.15s, background 0.15s',
+              }}
+              onMouseOver={e => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.background = 'var(--border)'; }}
+              onMouseOut={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'var(--input-bg)'; }}
+            >
+              <i className="fa-solid fa-xmark" />
+            </button>
+          )}
+        </div>
         <button className="btn btn-primary btn-sm" onClick={handleSearch}>
           <i className="fa-solid fa-search" /> 搜索
         </button>

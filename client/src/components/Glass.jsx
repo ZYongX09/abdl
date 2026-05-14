@@ -11,7 +11,7 @@ const PRESETS = {
   sidebar: { cornerRadius: 0,  elasticity: 0.08, displacementScale: 45, blurAmount: 0.1,    saturation: 130, aberrationIntensity: 1.5 },
 };
 
-export default function Glass({ children, preset = 'card', className = '', style = {}, onClick, as: Tag = 'div', ...rest }) {
+export default function Glass({ children, preset = 'card', className = '', style = {}, onClick, ...rest }) {
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
@@ -22,16 +22,32 @@ export default function Glass({ children, preset = 'card', className = '', style
     return () => obs.disconnect();
   }, []);
 
+  // 关闭焕新视觉 → 普通 div
   if (!enabled) {
-    return <Tag className={className} style={style} onClick={onClick} {...rest}>{children}</Tag>;
+    return <div className={className} style={style} onClick={onClick} {...rest}>{children}</div>;
   }
 
   const config = PRESETS[preset] || PRESETS.card;
+
+  // 开启焕新视觉 → 外层 div 控制布局，LiquidGlass 作为背景皮肤
   return (
-    <Suspense fallback={<Tag className={className} style={style} {...rest}>{children}</Tag>}>
-      <LiquidGlass {...config} onClick={onClick} className={className} style={style} {...rest}>
+    <div className={className} style={{ ...style, position: 'relative' }} onClick={onClick} {...rest}>
+      <Suspense fallback={null}>
+        <LiquidGlass
+          {...config}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 0,
+            pointerEvents: 'none',
+          }}
+        >
+          <div />
+        </LiquidGlass>
+      </Suspense>
+      <div style={{ position: 'relative', zIndex: 1 }}>
         {children}
-      </LiquidGlass>
-    </Suspense>
+      </div>
+    </div>
   );
 }
