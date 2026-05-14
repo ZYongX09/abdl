@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { authAPI, ratingsAPI, feelingsAPI } from '../api';
+import { PageLayout, PageHero } from '../components/PageLayout';
 
 const PROFILE_TABS = [
   { key: 'profile', icon: 'fa-address-card', label: '个人资料' },
@@ -74,14 +75,16 @@ export default function Profile() {
 
   if (!user) {
     return (
-      <div className="hero-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
-        <div style={{ fontSize: '2.5rem', color: 'var(--primary-dark)', marginBottom: 16 }}>
-          <i className="fa-solid fa-user-circle" />
+      <PageLayout maxWidth={480} className="mt-8">
+        <div className="hero-card text-center" style={{ padding: '48px 24px' }}>
+          <div style={{ fontSize: '2.5rem', color: 'var(--primary-dark)', marginBottom: 16 }}>
+            <i className="fa-solid fa-user-circle" />
+          </div>
+          <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--hero-text)', marginBottom: 8 }}>个人中心</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: 20, fontSize: '0.9rem' }}>登录后查看个人主页</p>
+          <Link to="/login" className="btn btn-primary"><i className="fa-solid fa-right-to-bracket" /> 去登录</Link>
         </div>
-        <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--hero-text)', marginBottom: 8 }}>个人中心</h2>
-        <p style={{ color: 'var(--text-muted)', marginBottom: 20, fontSize: '0.9rem' }}>登录后查看个人主页</p>
-        <Link to="/login" className="btn btn-primary"><i className="fa-solid fa-right-to-bracket" /> 去登录</Link>
-      </div>
+      </PageLayout>
     );
   }
 
@@ -133,7 +136,7 @@ export default function Profile() {
   const profileComplete = user.weight || user.waist || user.hip || user.style_preference;
 
   return (
-    <div style={{ maxWidth: 700, margin: '0 auto' }}>
+    <PageLayout maxWidth={700}>
       <div className="card">
         <div style={{ textAlign: 'center', marginBottom: 16 }}>
           <div className="avatar-container" onClick={handleAvatarClick} style={{
@@ -364,6 +367,6 @@ export default function Profile() {
           <span>关于</span>
         </Link>
       </div>
-    </div>
+    </PageLayout>
   );
 }

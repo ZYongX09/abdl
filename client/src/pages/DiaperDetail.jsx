@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { diapersAPI, ratingsAPI, feelingsAPI } from '../api';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
+import { PageLayout, PageHero } from '../components/PageLayout';
 
 const DIMS = [
   { key: 'absorption_score', label: '吸水量', fa: 'fa-droplet', desc: '实际兜尿量满意度' },
@@ -123,22 +124,28 @@ export default function DiaperDetail() {
   if (!diaper) return <div className="alert alert-error">纸尿裤不存在</div>;
 
   return (
-    <div>
-      <Link to="/diapers" className="btn btn-ghost btn-sm mb-3" style={{ color: 'var(--primary-dark)' }}><i className="fa-solid fa-arrow-left" /> 返回列表</Link>
+    <PageLayout>
+      <PageHero
+        icon="fa-solid fa-box-open"
+        title={`${diaper.brand} ${diaper.model}`}
+        subtitle={diaper.product_type}
+      >
+        <Link to="/diapers" className="btn btn-ghost btn-sm">
+          <i className="fa-solid fa-arrow-left" /> 返回
+        </Link>
+      </PageHero>
+
       <div className="card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <div style={{ flex: 1 }}>
-            <div className="brand">{diaper.brand}</div>
-            <h1 style={{ fontSize: '1.5rem', margin: '4px 0' }}>{diaper.model}</h1>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <button
+              className="btn btn-outline btn-sm"
+              onClick={() => { navigator.clipboard?.writeText(window.location.href).then(() => addToast('链接已复制到剪贴板', 'success', 2000)).catch(()=>{}); }}
+              title="复制本页链接" aria-label="复制纸尿裤链接"
+            >
+              <i className="fa-solid fa-share-nodes" /> 分享
+            </button>
           </div>
-          <button
-            className="btn btn-outline btn-sm"
-            onClick={() => { navigator.clipboard?.writeText(window.location.href).then(() => addToast('链接已复制到剪贴板', 'success', 2000)).catch(()=>{}); }}
-            title="复制本页链接" aria-label="复制纸尿裤链接"
-            style={{ flexShrink: 0, marginTop: 4 }}
-          >
-            <i className="fa-solid fa-share-nodes" /> 分享
-          </button>
         </div>
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginTop: 12 }}>
           <div style={{ flex: '0 0 160px' }}>
@@ -300,6 +307,6 @@ export default function DiaperDetail() {
         ))}
         {reviews.length===0 && <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: 20 }}>暂无评价</p>}
       </div>
-    </div>
+    </PageLayout>
   );
 }
