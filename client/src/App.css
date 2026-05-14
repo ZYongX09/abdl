@@ -525,9 +525,10 @@ body {
 
 
 /* ====== 滚动条 ====== */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); border: 2px solid transparent; background-clip: content-box; }
 
 /* ====== 键盘焦点样式 (无障碍) ====== */
 *:focus-visible {
@@ -610,22 +611,35 @@ div:focus-visible, span:focus-visible, main:focus-visible, section:focus-visible
 }
 .sidebar-mobile.open { left: 0; }
 
-/* ====== 卡片 ====== */
+/* ====== 卡片 — 与 daisyUI 兼容 ====== */
 .card {
   background: var(--bg-card);
-  border-radius: var(--radius);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
-  padding: 24px;
-  margin-bottom: 16px;
-  border: 1px solid transparent;
-  transition: transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
-  animation: fadeInUp 0.4s ease-out;
+  border: 1px solid var(--border);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  animation: cardSlideIn 0.5s ease-out both;
 }
 .card:hover {
-  box-shadow: 0 4px 16px rgba(168,216,240,0.2), 0 2px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 24px rgba(168,216,240,0.15), 0 2px 8px rgba(0,0,0,0.06);
   border-color: rgba(168,216,240,0.3);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* 交错动画 — 列表项逐个出现 */
+.stagger-item {
+  animation: cardSlideIn 0.4s ease-out both;
+}
+.stagger-item:nth-child(1) { animation-delay: 0s; }
+.stagger-item:nth-child(2) { animation-delay: 0.05s; }
+.stagger-item:nth-child(3) { animation-delay: 0.1s; }
+.stagger-item:nth-child(4) { animation-delay: 0.15s; }
+.stagger-item:nth-child(5) { animation-delay: 0.2s; }
+.stagger-item:nth-child(6) { animation-delay: 0.25s; }
+.stagger-item:nth-child(7) { animation-delay: 0.3s; }
+.stagger-item:nth-child(8) { animation-delay: 0.35s; }
+.stagger-item:nth-child(n+9) { animation-delay: 0.4s; }
 
 /* 骨架加载 */
 .skeleton {
@@ -767,15 +781,15 @@ select.form-control {
   gap: 16px;
 }
 .diaper-card {
-  padding: 20px; border-radius: var(--radius);
+  padding: 20px; border-radius: 1.25rem;
   background: var(--bg-card); box-shadow: var(--shadow);
-  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   cursor: pointer; text-decoration: none; color: var(--text); display: block;
-  animation: fadeInUp 0.4s ease-out; border: 1px solid transparent;
+  animation: cardSlideIn 0.5s ease-out both; border: 1px solid var(--border);
 }
 .diaper-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(168,216,240,0.2), 0 4px 12px rgba(0,0,0,0.08);
   border-color: var(--primary);
 }
 .diaper-card .brand { font-size: 0.75rem; color: var(--primary-dark); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
@@ -783,14 +797,14 @@ select.form-control {
 .diaper-card .meta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; font-size: 0.85rem; color: var(--text-light); }
 .score-badge {
   display: inline-block; background: var(--primary-light);
-  color: var(--primary-dark); padding: 2px 10px; border-radius: 12px;
+  color: var(--primary-dark); padding: 3px 12px; border-radius: 1rem;
   font-weight: 700; font-size: 0.85rem;
 }
 
 /* ====== 排行榜条目 ====== */
 .rank-item {
   display: flex; align-items: center; gap: 16px;
-  padding: 14px 16px; border-radius: var(--radius-sm); margin-bottom: 8px;
+  padding: 16px 20px; border-radius: 1rem; margin-bottom: 8px;
   background: var(--bg-card); box-shadow: 0 1px 6px rgba(168,216,240,0.12);
   transition: all 0.2s; animation: fadeInUp 0.35s ease-out;
 }
@@ -1551,10 +1565,37 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
 /* ====== 现代化增强动画 ====== */
 /* 页面切换过渡 */
 @keyframes pageSlideIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.page-enter { animation: pageSlideIn 0.35s ease-out; }
+.page-enter { animation: pageSlideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* 按钮交互增强 */
+.btn {
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn-primary {
+  box-shadow: 0 2px 8px rgba(168, 216, 240, 0.3);
+}
+.btn-primary:hover {
+  box-shadow: 0 4px 16px rgba(168, 216, 240, 0.4);
+  transform: translateY(-1px);
+}
+
+/* 链接交互 */
+a {
+  transition: color 0.2s ease;
+}
+
+/* Tag 标签 */
+.tag {
+  display: inline-block; padding: 3px 10px; border-radius: 0.625rem;
+  background: var(--tag-bg); color: var(--tag-color);
+  font-size: 0.78rem; font-weight: 500;
+}
 
 /* 交错入场 */
 @keyframes staggerFadeIn {
