@@ -76,161 +76,171 @@ export default function Settings() {
 
       {/* 外观 */}
       <div className="card">
-        <h3 style={{ marginBottom: 16 }}>
-          <i className="fa-solid fa-palette" /> 外观
-        </h3>
+        <div className="card-body">
+          <h3 className="card-title">
+            <i className="fa-solid fa-palette" /> 外观
+          </h3>
 
-        <div className="form-group">
-          <label>主题模式</label>
-          <div style={{ display: 'flex', gap: 8 }}>
-            {[
-              { key: 'light', label: '浅色', icon: 'fa-sun' },
-              { key: 'dark', label: '深色', icon: 'fa-moon' },
-              { key: 'colorful', label: '多彩', icon: 'fa-wand-magic-sparkles' },
-              { key: 'system', label: '跟随系统', icon: 'fa-display' },
-            ].map(opt => (
-              <button key={opt.key}
-                className={`btn btn-sm ${theme === opt.key ? 'btn-primary' : 'btn-outline'}`}
-                onClick={() => setTheme(opt.key)}>
-                <i className={`fa-solid ${opt.icon}`} /> {opt.label}
-              </button>
-            ))}
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">主题模式</span>
+            </label>
+            <div className="flex gap-2">
+              {[
+                { key: 'light', label: '浅色', icon: 'fa-sun' },
+                { key: 'dark', label: '深色', icon: 'fa-moon' },
+                { key: 'colorful', label: '多彩', icon: 'fa-wand-magic-sparkles' },
+                { key: 'system', label: '跟随系统', icon: 'fa-display' },
+              ].map(opt => (
+                <button key={opt.key}
+                  className={`btn btn-sm ${theme === opt.key ? 'btn-primary' : 'btn-outline'}`}
+                  onClick={() => setTheme(opt.key)}>
+                  <i className={`fa-solid ${opt.icon}`} /> {opt.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="form-group" style={{ marginTop: 16 }}>
-          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
-            <span>
-              <i className="fa-solid fa-film" style={{ marginRight: 8 }} />
-              交互动画
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 400 }}>关闭后所有过渡和动画效果将停止</div>
-            </span>
-            <button
-              className={`btn btn-sm ${animations ? 'btn-primary' : 'btn-outline'}`}
-              onClick={() => setAnimations(!animations)}
-              style={{ minWidth: 80, textAlign: 'center' }}>
-              {animations ? '已开启' : '已关闭'}
-            </button>
-          </label>
+          <div className="form-control mt-4">
+            <label className="label cursor-pointer justify-between">
+              <span className="label-text">
+                <i className="fa-solid fa-film mr-2" />
+                交互动画
+                <span className="label-text-alt block">关闭后所有过渡和动画效果将停止</span>
+              </span>
+              <button
+                className={`btn btn-sm ${animations ? 'btn-primary' : 'btn-outline'}`}
+                onClick={() => setAnimations(!animations)}>
+                {animations ? '已开启' : '已关闭'}
+              </button>
+            </label>
+          </div>
         </div>
       </div>
 
       {/* AI 隐私 */}
       <div className="card">
-        <h3 style={{ marginBottom: 16 }}>
-          <i className="fa-solid fa-shield-halved" /> AI 推荐隐私
-        </h3>
-        <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: 12 }}>
-          设置 AI 推荐时默认发送哪些个人数据（可在推荐页面临时修改）
-        </p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {[
-            { key: 'basic', label: '基本信息', desc: '年龄、地区', icon: 'fa-user' },
-            { key: 'body', label: '身材数据', desc: '体重、腰围、臀围', icon: 'fa-ruler' },
-            { key: 'prefs', label: '偏好款式', desc: '你偏好的纸尿裤款式', icon: 'fa-heart' },
-            { key: 'bio', label: '个人简介', desc: '个人资料中的简介', icon: 'fa-pen' },
-            { key: 'feelings', label: '使用感受记录', desc: '你对各款纸尿裤的感受评分', icon: 'fa-note-sticky' },
-          ].map(opt => (
-            <label key={opt.key} style={{
-              display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px',
-              borderRadius: 8, cursor: 'pointer',
-              background: aiPrivacy[opt.key] ? 'var(--primary-light)' : 'var(--input-bg)',
-              border: `1px solid ${aiPrivacy[opt.key] ? 'var(--primary)' : 'var(--border)'}`,
-              transition: 'all 0.2s',
-            }}>
-              <input type="checkbox" checked={aiPrivacy[opt.key]} onChange={() => toggleAiPrivacy(opt.key)}
-                style={{ accentColor: 'var(--primary)' }} />
-              <i className={`fa-solid ${opt.icon}`} style={{ color: 'var(--primary-dark)' }} />
-              <div>
-                <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{opt.label}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{opt.desc}</div>
-              </div>
-            </label>
-          ))}
+        <div className="card-body">
+          <h3 className="card-title">
+            <i className="fa-solid fa-shield-halved" /> AI 推荐隐私
+          </h3>
+          <p className="text-sm text-base-content/60 mb-3">
+            设置 AI 推荐时默认发送哪些个人数据（可在推荐页面临时修改）
+          </p>
+          <div className="flex flex-col gap-2">
+            {[
+              { key: 'basic', label: '基本信息', desc: '年龄、地区', icon: 'fa-user' },
+              { key: 'body', label: '身材数据', desc: '体重、腰围、臀围', icon: 'fa-ruler' },
+              { key: 'prefs', label: '偏好款式', desc: '你偏好的纸尿裤款式', icon: 'fa-heart' },
+              { key: 'bio', label: '个人简介', desc: '个人资料中的简介', icon: 'fa-pen' },
+              { key: 'feelings', label: '使用感受记录', desc: '你对各款纸尿裤的感受评分', icon: 'fa-note-sticky' },
+            ].map(opt => (
+              <label key={opt.key} className={`label cursor-pointer rounded-lg border transition-all ${
+                aiPrivacy[opt.key]
+                  ? 'bg-primary/10 border-primary'
+                  : 'bg-base-200 border-base-300'
+              }`}>
+                <div className="flex items-center gap-3">
+                  <input type="checkbox" checked={aiPrivacy[opt.key]} onChange={() => toggleAiPrivacy(opt.key)}
+                    className="checkbox checkbox-sm checkbox-primary" />
+                  <i className={`fa-solid ${opt.icon} text-primary`} />
+                  <div>
+                    <div className="font-semibold text-sm">{opt.label}</div>
+                    <div className="text-xs text-base-content/50">{opt.desc}</div>
+                  </div>
+                </div>
+              </label>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* 数据管理 */}
       <div className="card">
-        <h3 style={{ marginBottom: 16 }}>
-          <i className="fa-solid fa-database" /> 数据管理
-        </h3>
-        <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: 12 }}>
-          管理本地存储的数据。所有数据仅保存在你的浏览器中。
-        </p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {[
-            { type: 'ratings', label: '清除评分记录', desc: '删除你对纸尿裤的所有评分', icon: 'fa-star' },
-            { type: 'feelings', label: '清除使用感受', desc: '删除所有使用感受记录', icon: 'fa-heart' },
-            { type: 'history', label: '清除推荐历史', desc: '删除 AI 推荐历史记录', icon: 'fa-clock-rotate-left' },
-            { type: 'all', label: '清除全部缓存', desc: '清除帖子、评论等所有本地数据（保留账号和设置）', icon: 'fa-triangle-exclamation', danger: true },
-          ].map(item => (
-            <div key={item.type} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
-              <div>
-                <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>
-                  <i className={`fa-solid ${item.icon}`} style={{ marginRight: 6, color: item.danger ? 'var(--danger)' : 'var(--text-muted)' }} />
-                  {item.label}
+        <div className="card-body">
+          <h3 className="card-title">
+            <i className="fa-solid fa-database" /> 数据管理
+          </h3>
+          <p className="text-sm text-base-content/60 mb-3">
+            管理本地存储的数据。所有数据仅保存在你的浏览器中。
+          </p>
+          <div className="flex flex-col">
+            {[
+              { type: 'ratings', label: '清除评分记录', desc: '删除你对纸尿裤的所有评分', icon: 'fa-star' },
+              { type: 'feelings', label: '清除使用感受', desc: '删除所有使用感受记录', icon: 'fa-heart' },
+              { type: 'history', label: '清除推荐历史', desc: '删除 AI 推荐历史记录', icon: 'fa-clock-rotate-left' },
+              { type: 'all', label: '清除全部缓存', desc: '清除帖子、评论等所有本地数据（保留账号和设置）', icon: 'fa-triangle-exclamation', danger: true },
+            ].map(item => (
+              <div key={item.type} className="flex items-center justify-between gap-3 py-2 border-b border-base-300">
+                <div>
+                  <div className="font-semibold text-sm">
+                    <i className={`fa-solid ${item.icon} mr-1.5 ${item.danger ? 'text-error' : 'text-base-content/50'}`} />
+                    {item.label}
+                  </div>
+                  <div className="text-xs text-base-content/50">{item.desc}</div>
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{item.desc}</div>
+                <button className={`btn btn-sm ${item.danger ? 'btn-error' : 'btn-outline'}`}
+                  onClick={() => handleClearData(item.type)}>
+                  清除
+                </button>
               </div>
-              <button className={`btn btn-sm ${item.danger ? 'btn-danger' : 'btn-outline'}`}
-                onClick={() => handleClearData(item.type)}>
-                清除
-              </button>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
       {/* 关于 */}
       <div className="card">
-        <h3 style={{ marginBottom: 12 }}>
-          <i className="fa-solid fa-circle-info" /> 关于
-        </h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: '0.9rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: 'var(--text-muted)' }}>版本</span>
-            <span>v5.8.5</span>
+        <div className="card-body">
+          <h3 className="card-title">
+            <i className="fa-solid fa-circle-info" /> 关于
+          </h3>
+          <div className="flex flex-col gap-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-base-content/50">版本</span>
+              <span>v5.8.5</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-base-content/50">数据存储</span>
+              <span>浏览器 localStorage</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-base-content/50">AI 服务</span>
+              <span>DeepSeek</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-base-content/50">当前用户</span>
+              <span>{user ? '@' + user.username : '未登录'}</span>
+            </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: 'var(--text-muted)' }}>数据存储</span>
-            <span>浏览器 localStorage</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: 'var(--text-muted)' }}>AI 服务</span>
-            <span>DeepSeek</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: 'var(--text-muted)' }}>当前用户</span>
-            <span>{user ? '@' + user.username : '未登录'}</span>
-          </div>
-        </div>
 
-        {/* 删除账户 */}
-        {user && (
-        <div style={{ marginTop: 32, padding: 20, border: '1px solid var(--danger)', borderRadius: 'var(--radius)', background: 'rgba(232,131,124,0.05)' }}>
-          <h3 style={{ color: 'var(--danger)', marginTop: 0 }}><i className="fa-solid fa-triangle-exclamation" /> 危险操作</h3>
-          <p style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>删除账户将永久移除你的所有数据，包括帖子、评论、评分和使用感受。此操作不可撤销。</p>
-          <button
-            className="btn btn-danger"
-            style={{ marginTop: 8 }}
-            onClick={async () => {
-              if (!confirm('确定要永久删除你的账户吗？此操作不可撤销！')) return;
-              if (!confirm('再次确认：真的要删除账户吗？')) return;
-              try {
-                await authAPI.deleteAccount(user.id);
-                localStorage.removeItem('token');
-                addToast('账户已删除', 'success');
-                window.location.href = '/';
-              } catch (e) {
-                addToast('删除失败: ' + e.message, 'error');
-              }
-            }}
-          >
-            <i className="fa-solid fa-trash" /> 删除我的账户
-          </button>
+          {/* 删除账户 */}
+          {user && (
+          <div className="alert alert-error mt-8">
+            <div>
+              <h3 className="font-bold"><i className="fa-solid fa-triangle-exclamation" /> 危险操作</h3>
+              <p className="text-sm">删除账户将永久移除你的所有数据，包括帖子、评论、评分和使用感受。此操作不可撤销。</p>
+              <button
+                className="btn btn-sm btn-error mt-2"
+                onClick={async () => {
+                  if (!confirm('确定要永久删除你的账户吗？此操作不可撤销！')) return;
+                  if (!confirm('再次确认：真的要删除账户吗？')) return;
+                  try {
+                    await authAPI.deleteAccount(user.id);
+                    localStorage.removeItem('token');
+                    addToast('账户已删除', 'success');
+                    window.location.href = '/';
+                  } catch (e) {
+                    addToast('删除失败: ' + e.message, 'error');
+                  }
+                }}
+              >
+                <i className="fa-solid fa-trash" /> 删除我的账户
+              </button>
+            </div>
+          </div>
+          )}
         </div>
-        )}
       </div>
     </div>
   );
