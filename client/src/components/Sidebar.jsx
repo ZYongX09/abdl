@@ -202,7 +202,7 @@ export default function Sidebar() {
       </button>
 
       {/* Desktop sidebar - always visible, part of flex layout */}
-      <Glass preset="panel" className="sidebar sidebar-desktop">
+      <Glass preset="sidebar" className="sidebar sidebar-desktop">
         {sidebarContent}
       </Glass>
 

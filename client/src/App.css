@@ -1304,43 +1304,28 @@ li, label, section, article, nav, header, footer, main, aside, details, summary 
    实际用途：内容层级分离，卡片/侧栏/弹窗在背景上悬浮
    ================================================================ */
 
-/* 卡片/面板 — 高透毛玻璃 */
+/* 焕新视觉 — LiquidGlass 包装的组件透明背景 */
 .glass-enabled .card,
 .glass-enabled .diaper-card,
 .glass-enabled .rank-item,
 .glass-enabled .hero-card,
 .glass-enabled .modal {
-  background: rgba(255,255,255,0.65);
-  backdrop-filter: blur(12px) saturate(120%);
-  -webkit-backdrop-filter: blur(12px) saturate(120%);
-  border: 1px solid rgba(255,255,255,0.5);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-}
-
-.glass-enabled[data-theme="dark"] .card,
-.glass-enabled[data-theme="dark"] .diaper-card,
-.glass-enabled[data-theme="dark"] .rank-item,
-.glass-enabled[data-theme="dark"] .hero-card,
-.glass-enabled[data-theme="dark"] .modal {
-  background: rgba(25,25,36,0.72);
-  border-color: rgba(255,255,255,0.08);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
 }
 
 
 
-/* 侧边栏 — 毛玻璃 */
+/* 焕新视觉 — 侧边栏透明（LiquidGlass 效果层提供视觉） */
 .glass-enabled .sidebar-desktop,
 .glass-enabled .sidebar-mobile {
-  background: rgba(255,255,255,0.55);
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  border-right: 1px solid rgba(0,0,0,0.06);
-}
-.glass-enabled[data-theme="dark"] .sidebar-desktop,
-.glass-enabled[data-theme="dark"] .sidebar-mobile {
-  background: rgba(18,18,28,0.75);
-  border-right: 1px solid rgba(255,255,255,0.06);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-right: 1px solid rgba(255,255,255,0.1) !important;
 }
 
 /* 按钮 — 轻量模糊 */

@@ -125,7 +125,7 @@ export default function Home() {
   return (
     <div>
       {/* Header + Search */}
-      <Glass preset="card" className="hero-card">
+      <Glass preset="hero" className="hero-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
           <h2 style={{ margin: 0, color: 'var(--hero-text)', fontSize: '1.3rem' }}>
             <i className="fa-solid fa-magnifying-glass" /> 探索纸尿裤
@@ -292,14 +292,14 @@ export default function Home() {
                 {hotRankings.map((d, i) => (
                   <Link to={`/diaper/${d.id}`} key={d.id} className="stagger-item" style={{ textDecoration: 'none', color: 'inherit', minWidth: 200, animationDelay: `${i * 0.06}s` }}>
                     <div>
-                    <div className="diaper-card">
+                    <Glass preset="card" className="diaper-card">
                       <div className="brand">TOP {i + 1}</div>
                       <div className="model">{d.brand} {d.model}</div>
                       <div className="meta">
                         <span className="score-badge"><i className="fa-solid fa-star" style={{ color: 'var(--warning)' }} /> {Number(d.avg_score||0).toFixed(1)}</span>
                         <span>{d.sizes?.[0]?.label || ''}码</span>
                       </div>
-                    </div>
+                    </Glass>
                     </div>
                   </Link>
                 ))}
