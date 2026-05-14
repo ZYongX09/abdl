@@ -9,7 +9,9 @@
  */
 export function timeAgo(d) {
   if (!d) return '';
-  const diff = Date.now() - new Date(d).getTime();
+  const ts = new Date(d).getTime();
+  if (Number.isNaN(ts)) return '';
+  const diff = Date.now() - ts;
   if (diff < 0) return '刚刚';
   const s = Math.floor(diff / 1000);
   const m = Math.floor(diff / 60000);

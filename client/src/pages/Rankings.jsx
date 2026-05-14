@@ -42,8 +42,8 @@ export default function Rankings() {
         <i className="fa-solid fa-trophy text-warning" /> 排行榜
       </h2>
 
-      <div className="flex flex-col items-center gap-3 mb-5">
-        <div className="tabs tabs-boxed tabs-sm" role="tablist">
+      <div className="flex flex-col items-center gap-4 mb-6">
+        <div className="tabs tabs-boxed" role="tablist">
           {mainTabs.map(t => (
             <button key={t.key} role="tab" className={`tab ${tab === t.key ? 'tab-active' : ''}`}
               onClick={() => setTab(t.key)}>
@@ -58,12 +58,12 @@ export default function Rankings() {
           </span>
           <div className="flex-1 h-px bg-base-300" />
         </div>
-        <div className="flex flex-wrap gap-1.5 justify-center" role="tablist">
+        <div className="flex flex-wrap gap-2 justify-center" role="tablist">
           {dimTabs.map(t => (
             <button key={t.key} role="tab"
-              className={`btn btn-sm ${tab===t.key?'btn-primary':'btn-ghost'}`}
+              className={`btn btn-sm ${tab===t.key?'btn-primary':'btn-outline'}`}
               onClick={() => setTab(t.key)}>
-              <i className={`fa-solid ${t.fa} mr-0.5`} />{t.label}
+              <i className={`fa-solid ${t.fa} mr-1`} />{t.label}
             </button>
           ))}
         </div>
