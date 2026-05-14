@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { getRecommendStream } from '../api';
+import { PageLayout } from '../components/PageLayout';
 
 const DATA_OPTIONS = [
   { key: 'basic', label: '基本信息', desc: '年龄、地区', icon: 'fa-user' },
@@ -110,7 +111,7 @@ export default function Recommendations() {
   };
 
   return (
-    <div style={{ maxWidth: 720, margin: '0 auto' }}>
+    <PageLayout>
       {/* Permission Modal */}
       {showPermission && createPortal(
         <div className="modal-overlay" onClick={() => setShowPermission(false)}>
@@ -260,6 +261,6 @@ export default function Recommendations() {
           ))}
         </div>
       )}
-    </div>
+    </PageLayout>
   );
 }

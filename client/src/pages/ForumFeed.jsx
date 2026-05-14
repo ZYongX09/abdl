@@ -5,6 +5,7 @@ import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import GuessYouLike from '../components/GuessYouLike';
+import { PageHero } from '../components/PageLayout';
 import { timeAgo } from '../utils';
 
 export default function ForumFeed() {
