@@ -10,9 +10,12 @@
     "deploy": "vite build && npx wrangler pages deploy"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.3.0",
+    "daisyui": "^5.5.19",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.0"
+    "react-router-dom": "^6.26.0",
+    "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.0",

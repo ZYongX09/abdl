@@ -1,3 +1,8 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark, cupcake;
+}
+
 /* ============================================================
    ABDL Space v5 — 增强版全局样式
    主题色: #A8D8F0 (宝宝蓝) — 深色模式 + 动画优化
