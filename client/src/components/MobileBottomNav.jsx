@@ -14,7 +14,7 @@ export default function MobileBottomNav() {
   const { user } = useAuth();
 
   const isActive = (path) => {
-    if (path === '/') return location.pathname === '/' || location.pathname === '/diapers';
+    if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
   };
 
@@ -38,7 +38,6 @@ export default function MobileBottomNav() {
             >
               <div className="mobile-tab-icon-wrapper">
                 <i className={active ? tab.activeIcon : tab.icon} />
-                {active && <div className="mobile-tab-active-dot" />}
               </div>
               <span className="mobile-tab-label">{tab.label}</span>
             </Link>
