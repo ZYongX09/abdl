@@ -147,12 +147,12 @@ export default function DiaperDetail() {
             </button>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginTop: 12 }}>
-          <div style={{ flex: '0 0 160px' }}>
-            <img src={diaper.image_url||'https://placehold.co/160x160/A8D8F0/white?text=No+Image'} alt={diaper.model} loading="lazy" style={{ width: '100%', borderRadius: 12 }} onError={(e) => { e.target.src = 'https://placehold.co/160x160/A8D8F0/white?text=No+Image'; }} />
+        <div className="flex gap-5 flex-wrap mt-3">
+          <div className="flex-shrink-0">
+            <img src={diaper.image_url||'https://placehold.co/160x160/A8D8F0/white?text=No+Image'} alt={diaper.model} loading="lazy" className="w-40 rounded-xl" onError={(e) => { e.target.src = 'https://placehold.co/160x160/A8D8F0/white?text=No+Image'; }} />
           </div>
-          <div style={{ flex: 1, minWidth: 250 }}>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '8px 0' }}>
+          <div className="flex-1 min-w-[250px]">
+            <div className="flex gap-2 flex-wrap mt-2">
               <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-tag" /> {diaper.product_type}</span>
               <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-ruler" /> 厚{diaper.thickness}/5</span>
               {diaper.absorbency_adult && <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-droplet" /> {diaper.absorbency_adult}</span>}
@@ -201,16 +201,18 @@ export default function DiaperDetail() {
         <div className="card">
           <h3>{myRating ? <><i className="fa-solid fa-pen" /> 修改评分</> : <><i className="fa-solid fa-star" /> 评价纸尿裤（1-10分）</>}</h3>
           {msg && <div className={`alert ${msg.includes('成功')?'alert-success':'alert-danger'}`}>{msg}</div>}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12, margin: '12px 0' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 my-3">
             {DIMS.map(d => (
-              <div key={d.key} className="rating-dim-card" style={{ padding: '10px 14px', borderRadius: 10 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-                  <span style={{ fontWeight: 600, fontSize: '0.9rem' }}><i className={`fa-solid ${d.fa}`} /> {d.label}</span>
-                  <span className="rating-dim-score" style={{ fontSize: '1.1rem', fontWeight: 800 }}>{scores[d.key] || '-'}</span>
+              <div key={d.key} className="rating-dim-card p-3 rounded-xl">
+                <div className="flex justify-between mb-1">
+                  <span className="font-semibold text-sm"><i className={`fa-solid ${d.fa}`} /> {d.label}</span>
+                  <span className="rating-dim-score text-lg font-extrabold">{scores[d.key] || '-'}</span>
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>{d.desc}</div>
-                <input type="range" min="1" max="10" value={scores[d.key]||5} onChange={e => setScore(d.key, Number(e.target.value))} style={{ width: '100%' }} />
-                <div className="range-labels" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem' }}><span>1</span><span>5</span><span>10</span></div>
+                <div className="text-xs text-base-content/40 mb-1">{d.desc}</div>
+                <input type="range" min="1" max="10" value={scores[d.key]||5} onChange={e => setScore(d.key, Number(e.target.value))} className="range range-primary range-sm" />
+                <div className="range-labels flex justify-between text-xs">
+                  <span>1</span><span>5</span><span>10</span>
+                </div>
               </div>
             ))}
           </div>
@@ -235,20 +237,20 @@ export default function DiaperDetail() {
           </div>
           {selectedSize && (
             <>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12, margin: '12px 0' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
                 {FEELING_DIMS.map(d => (
-                  <div key={d.key} className="feeling-dim-card" style={{ padding: '10px 14px', borderRadius: 10 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-                      <span style={{ fontWeight: 600, fontSize: '0.9rem' }}><i className={`fa-solid ${d.icon}`} /> {d.label}</span>
-                      <span style={{ fontSize: '1.1rem', fontWeight: 800, color: feelings[d.key] > 0 ? 'var(--success)' : feelings[d.key] < 0 ? 'var(--danger)' : 'var(--text-muted)' }}>
+                  <div key={d.key} className="feeling-dim-card p-3 rounded-xl">
+                    <div className="flex justify-between mb-1">
+                      <span className="font-semibold text-sm"><i className={`fa-solid ${d.icon}`} /> {d.label}</span>
+                      <span className="text-lg font-extrabold" style={{ color: feelings[d.key] > 0 ? 'var(--success)' : feelings[d.key] < 0 ? 'var(--danger)' : 'var(--text-muted)' }}>
                         {feelings[d.key] != null ? (feelings[d.key] > 0 ? '+' : '') + feelings[d.key] : '-'}
                       </span>
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>{d.desc}</div>
+                    <div className="text-xs text-base-content/40 mb-1">{d.desc}</div>
                     <input type="range" min="-5" max="5" step="1" value={feelings[d.key] ?? 0}
                       onChange={e => setFeeling(d.key, Number(e.target.value))}
-                      style={{ width: '100%' }} />
-                    <div className="range-labels" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem' }}>
+                      className="range range-sm" />
+                    <div className="range-labels flex justify-between text-xs">
                       <span>{d.lowLabel} -5</span><span>0 中性</span><span>{d.highLabel} +5</span>
                     </div>
                   </div>
@@ -267,16 +269,16 @@ export default function DiaperDetail() {
       {feelingsList.length > 0 && (
         <div className="card">
           <h3><i className="fa-solid fa-users" /> 用户感受汇总 ({feelingsList.length})</h3>
-          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 12 }}>
+          <div className="flex flex-wrap gap-3 mt-3">
             {FEELING_DIMS.map(d => {
               const val = feelingsStats?.[d.key] || 0;
               return (
-                <div key={d.key} className="rating-dim-card" style={{ flex: '1 1 140px', textAlign: 'center', padding: 12, borderRadius: 10 }}>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}><i className={`fa-solid ${d.icon}`} /> {d.label}</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: val > 1 ? 'var(--success)' : val < -1 ? 'var(--danger)' : 'var(--warning)' }}>
+                <div key={d.key} className="rating-dim-card flex-1 min-w-[140px] text-center p-3 rounded-xl">
+                  <div className="text-xs text-base-content/40"><i className={`fa-solid ${d.icon}`} /> {d.label}</div>
+                  <div className="text-xl font-extrabold" style={{ color: val > 1 ? 'var(--success)' : val < -1 ? 'var(--danger)' : 'var(--warning)' }}>
                     {val > 0 ? '+' : ''}{val.toFixed(1)}
                   </div>
-                  <div className="score-bar" style={{ marginTop: 4 }}>
+                  <div className="score-bar mt-1">
                     <div className="score-bar-fill feel-bar" style={{
                       width: `${(val + 5) * 10}%`,
                       background: val > 0

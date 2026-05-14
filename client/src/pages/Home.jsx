@@ -195,19 +195,19 @@ export default function Home() {
 
       {/* Compare mode header */}
       {compareMode && (
-        <div className="card" style={{ padding: 12, marginBottom: 12, background: 'var(--primary-light)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
-            <span style={{ fontSize: '0.9rem' }}>
+        <div className="alert alert-info">
+          <div className="flex items-center justify-between flex-wrap gap-2 w-full">
+            <span className="text-sm">
               <i className="fa-solid fa-code-compare" /> 选择 2-4 款对比 (已选 {compareSelected.length}/4)
             </span>
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div className="flex gap-2">
               {compareSelected.length >= 2 && (
                 <button className="btn btn-accent btn-sm" onClick={doCompare} disabled={compareLoading}>
                   {compareLoading ? <i className="fa-solid fa-spinner fa-spin" /> : <i className="fa-solid fa-chart-simple" />}
                   开始对比
                 </button>
               )}
-              <button className="btn btn-outline btn-sm" onClick={() => { setCompareSelected([]); setCompareResult([]); }}>
+              <button className="btn btn-ghost btn-sm" onClick={() => { setCompareSelected([]); setCompareResult([]); }}>
                 <i className="fa-solid fa-rotate-left" /> 清空
               </button>
             </div>
@@ -217,10 +217,11 @@ export default function Home() {
 
       {/* Compare Results */}
       {compareResult.length > 0 && (
-        <div className="card" style={{ marginBottom: 16 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <h3 style={{ margin: 0 }}><i className="fa-solid fa-table-list" /> 对比结果</h3>
-            <button className="btn btn-outline btn-sm" onClick={() => setCompareResult([])}>
+        <div className="card">
+          <div className="card-body">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="card-title"><i className="fa-solid fa-table-list" /> 对比结果</h3>
+            <button className="btn btn-ghost btn-sm" onClick={() => setCompareResult([])}>
               <i className="fa-solid fa-xmark" /> 关闭
             </button>
           </div>
@@ -256,17 +257,19 @@ export default function Home() {
               </tbody>
             </table>
           </div>
-          <div style={{ marginTop: 12, display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
+          <div className="flex flex-wrap gap-4 justify-center items-center mt-3">
             <MiniRadar diapers={compareResult} />
-            <div style={{ fontSize: '0.85rem' }}>
+            <div className="text-sm">
               {compareResult.map((d, i) => (
-                <div key={d.id} style={{ marginBottom: 4 }}>
-                  <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%',
-                    background: ['#A8D8F0','#FFB7C5','#7BC67E','#F0C040'][i], marginRight: 6 }} />
+                <div key={d.id} className="mb-1">
+                  <span className="inline-block w-2.5 h-2.5 rounded-full mr-1.5" style={{
+                    background: ['#A8D8F0','#FFB7C5','#7BC67E','#F0C040'][i]
+                  }} />
                   {d.brand} {d.model}
                 </div>
               ))}
             </div>
+          </div>
           </div>
         </div>
       )}
@@ -282,11 +285,11 @@ export default function Home() {
           ) : (
             <>
           {hotRankings.length > 0 && !compareMode && (
-            <div style={{ marginBottom: 24 }}>
-              <h3 style={{ marginBottom: 12 }}><i className="fa-solid fa-fire" /> 热门 TOP 5</h3>
-              <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8 }}>
+            <div className="mb-6">
+              <h3 className="mb-3 font-bold"><i className="fa-solid fa-fire" style={{ color: 'var(--danger)' }} /> 热门 TOP 5</h3>
+              <div className="flex gap-3 overflow-x-auto pb-2">
                 {hotRankings.map((d, i) => (
-                  <Link to={`/diaper/${d.id}`} key={d.id} className="stagger-item" style={{ textDecoration: 'none', color: 'inherit', minWidth: 200, animationDelay: `${i * 0.06}s` }}>
+                  <Link to={`/diaper/${d.id}`} key={d.id} className="stagger-item no-underline text-inherit" style={{ minWidth: 200, animationDelay: `${i * 0.06}s` }}>
                     <div>
                     <div className="diaper-card">
                       <div className="brand">TOP {i + 1}</div>
@@ -303,7 +306,7 @@ export default function Home() {
             </div>
           )}
 
-          <h3 style={{ marginBottom: 12 }}>
+          <h3 className="mb-3 font-bold">
             <i className="fa-solid fa-box" /> 全部纸尿裤 ({diapers.length})
           </h3>
           <div className="diaper-grid">

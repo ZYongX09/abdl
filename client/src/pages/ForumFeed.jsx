@@ -5,7 +5,7 @@ import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import GuessYouLike from '../components/GuessYouLike';
-import { PageHero } from '../components/PageLayout';
+import { PageLayout, PageHero } from '../components/PageLayout';
 import { timeAgo } from '../utils';
 
 export default function ForumFeed() {
@@ -72,7 +72,7 @@ export default function ForumFeed() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <PageLayout maxWidth={680}>
       {/* Hero Header */}
       <PageHero
         icon="fa-regular fa-comments"
@@ -206,6 +206,6 @@ export default function ForumFeed() {
           </button>
         </div>
       )}
-    </div>
+    </PageLayout>
   );
 }

@@ -3,6 +3,7 @@ import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { messagesAPI, forumAPI } from '../api';
 import { useAuth } from '../AuthContext';
 import LoadingSkeleton from '../components/LoadingSkeleton';
+import { PageLayout, PageHeroCenter } from '../components/PageLayout';
 import { timeAgo } from '../utils';
 
 const typeLabels = { comment: '评论了你的帖子', reply: '回复了你的评论', like: '赞了你的' };
@@ -100,14 +101,16 @@ export default function MessagesPage() {
   };
 
   if (!user) return (
-    <div className="hero-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
-      <div style={{ fontSize: '2.5rem', color: 'var(--primary-dark)', marginBottom: 16 }}>
-        <i className="fa-solid fa-envelope" />
+    <PageLayout maxWidth={480} className="mt-8">
+      <PageHeroCenter
+        icon="fa-solid fa-envelope"
+        title="私信 & 通知"
+        subtitle="登录后查看私信和通知"
+      />
+      <div className="text-center">
+        <Link to="/login" className="btn btn-primary"><i className="fa-solid fa-right-to-bracket" /> 去登录</Link>
       </div>
-      <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--hero-text)', marginBottom: 8 }}>私信 & 通知</h2>
-      <p style={{ color: 'var(--text-muted)', marginBottom: 20, fontSize: '0.9rem' }}>登录后查看私信和通知</p>
-      <Link to="/login" className="btn btn-primary"><i className="fa-solid fa-right-to-bracket" /> 去登录</Link>
-    </div>
+    </PageLayout>
   );
 
   const isNotifChat = activeOther?.id === NOTIF_SYSTEM_ID;

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { forumAPI } from '../api';
 import { useAuth } from '../AuthContext';
+import { PageLayout, PageHeroCenter } from '../components/PageLayout';
 import { timeAgo } from '../utils';
 
 const typeIcons = { comment: 'fa-comment', reply: 'fa-reply', like: 'fa-heart' };
@@ -25,14 +26,16 @@ export default function Notifications() {
   };
 
   if (!user) return (
-    <div className="hero-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
-      <div style={{ fontSize: '2.5rem', color: 'var(--primary-dark)', marginBottom: 16 }}>
-        <i className="fa-solid fa-bell" />
+    <PageLayout maxWidth={480} className="mt-8">
+      <PageHeroCenter
+        icon="fa-solid fa-bell"
+        title="通知"
+        subtitle="登录后查看通知"
+      />
+      <div className="text-center">
+        <Link to="/login" className="btn btn-primary"><i className="fa-solid fa-right-to-bracket" /> 去登录</Link>
       </div>
-      <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--hero-text)', marginBottom: 8 }}>通知</h2>
-      <p style={{ color: 'var(--text-muted)', marginBottom: 20, fontSize: '0.9rem' }}>登录后查看通知</p>
-      <Link to="/login" className="btn btn-primary"><i className="fa-solid fa-right-to-bracket" /> 去登录</Link>
-    </div>
+    </PageLayout>
   );
   if (loading) return <div className="flex justify-center py-16"><span className="loading loading-spinner loading-lg text-primary"></span></div>;
 
@@ -43,7 +46,7 @@ export default function Notifications() {
   };
 
   return (
-    <div className="max-w-xl mx-auto">
+    <PageLayout maxWidth={600}>
       <h2 className="text-xl font-bold mb-4"><i className="fa-solid fa-bell text-primary" /> 通知</h2>
       {notifs.length === 0 ? (
         <div className="text-center py-16 text-base-content/40">
@@ -72,6 +75,6 @@ export default function Notifications() {
           ))}
         </div>
       )}
-    </div>
+    </PageLayout>
   );
 }

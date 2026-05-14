@@ -14,25 +14,25 @@ export default function GuessYouLike() {
   if (loading || items.length === 0) return null;
 
   return (
-    <div className="hero-card" style={{ marginBottom: 16 }}>
-      <h3 style={{ marginBottom: 12 }}>
+    <div className="hero-card">
+      <h3 className="font-bold mb-3">
         <i className="fa-solid fa-lightbulb" style={{ color: 'var(--warning)' }} /> 猜你喜欢 · 为你甄选
       </h3>
-      <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8, alignItems: 'stretch' }}>
-        {items.map(d => (
-          <Link to={`/diaper/${d.id}`} key={d.id} style={{ textDecoration: 'none', color: 'inherit', minWidth: 200, maxWidth: 220, flex: '0 0 auto' }}>
+      <div className="flex gap-3 overflow-x-auto pb-2 items-stretch">
+        {items.map((d, i) => (
+          <Link to={`/diaper/${d.id}`} key={d.id} className="stagger-item no-underline text-inherit" style={{ minWidth: 200, maxWidth: 220, flex: '0 0 auto', animationDelay: `${i * 0.06}s` }}>
             <div className="diaper-card" style={{ padding: 14, height: '100%', display: 'flex', flexDirection: 'column' }}>
               <div className="brand">{d.brand}</div>
               <div className="model" style={{ fontSize: '1rem' }}>{d.model}</div>
-              <div className="meta" style={{ marginTop: 4 }}>
+              <div className="meta mt-1">
                 {d.avg_score > 0 && (
                   <span className="badge badge-warning badge-sm gap-1">
-                    <i className="fa-solid fa-star" style={{ color: 'var(--warning)', fontSize: '0.7rem' }} /> {Number(d.avg_score).toFixed(1)}
+                    <i className="fa-solid fa-star" /> {Number(d.avg_score).toFixed(1)}
                   </span>
                 )}
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{d.rating_count}评</span>
+                <span className="text-xs text-base-content/40">{d.rating_count}评</span>
               </div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--primary-dark)', marginTop: 6 }}>
+              <div className="text-xs mt-auto pt-2" style={{ color: 'var(--primary-dark)' }}>
                 <i className="fa-solid fa-thumbs-up" /> {d.reason}
               </div>
             </div>

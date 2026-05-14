@@ -1612,10 +1612,10 @@ a {
 }
 /* 基础入场动画 — stagger-item 有自己的延迟控制 */
 .card:not(.stagger-item), .diaper-card:not(.stagger-item), .rank-item:not(.stagger-item) {
-  animation: cardFloatIn 0.4s ease-out forwards;
+  animation: cardFloatIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 .stagger-item {
-  animation: cardFloatIn 0.4s ease-out both;
+  animation: cardFloatIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* ====== 认证页面装饰 ====== */
@@ -1796,4 +1796,140 @@ a {
   /* 禁用折射光扫掠 (::before) 和棱镜色散边框 (::after) */
   /* 禁用焦散层（hero-card 内注入的 div） */
   /* 保留基本毛玻璃效果 */
+}
+
+/* ====== 迭代 13: 视觉精致化 ====== */
+
+/* 侧边栏活跃链接发光效果 */
+.sidebar-link.active {
+  box-shadow: 0 2px 12px rgba(168, 216, 240, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* 卡片入场时的微光效果 */
+@keyframes cardShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Hero card 增强：渐变光效 */
+.hero-card {
+  position: relative;
+  overflow: hidden;
+}
+.hero-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 40%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.08) 60%,
+    transparent 100%
+  );
+  animation: heroShimmer 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes heroShimmer {
+  0% { left: -100%; }
+  50% { left: 150%; }
+  100% { left: 150%; }
+}
+[data-theme="dark"] .hero-card::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(168, 216, 240, 0.04) 40%,
+    rgba(168, 216, 240, 0.08) 50%,
+    rgba(168, 216, 240, 0.04) 60%,
+    transparent 100%
+  );
+}
+
+/* 按钮点击涟漪增强 — 更明显的水波扩散 */
+.btn {
+  --ripple-color: rgba(255, 255, 255, 0.35);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* 卡片 hover 统一微交互：边框渐变高亮 */
+.card:hover {
+  border-color: rgba(168, 216, 240, 0.35);
+}
+.diaper-card:hover {
+  border-color: var(--primary);
+}
+
+/* 移动端卡片触控增强 */
+@media (max-width: 768px) {
+  .card:active {
+    transform: scale(0.985);
+    transition: transform 0.1s ease;
+  }
+  .diaper-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  /* 移动端禁用 hero shimmer 动画节省性能 */
+  .hero-card::after {
+    display: none;
+  }
+}
+
+/* 滚动进度条渐变动画 */
+.scroll-progress {
+  background: linear-gradient(90deg, var(--primary), var(--accent), var(--primary));
+  background-size: 200% 100%;
+  animation: progressGradient 3s linear infinite;
+}
+@keyframes progressGradient {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* 评分维度卡片 hover 增强 */
+.rating-dim-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.rating-dim-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(168, 216, 240, 0.2);
+}
+
+/* 感受维度卡片 hover 增强 */
+.feeling-dim-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.feeling-dim-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 183, 197, 0.2);
+}
+
+/* 多彩主题下 hero shimmer 更明显 */
+[data-theme="colorful"] .hero-card::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.12) 40%,
+    rgba(255, 255, 255, 0.22) 50%,
+    rgba(255, 255, 255, 0.12) 60%,
+    transparent 100%
+  );
+}
+
+/* 搜索栏输入框聚焦增强 */
+.join .input:focus {
+  z-index: 1;
+  position: relative;
+}
+
+/* 骨架屏更平滑的动画 */
+@keyframes shimmerSmooth {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }

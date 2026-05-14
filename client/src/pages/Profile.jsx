@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { authAPI, ratingsAPI, feelingsAPI } from '../api';
-import { PageLayout, PageHero } from '../components/PageLayout';
+import { PageLayout, PageHero, PageHeroCenter } from '../components/PageLayout';
 
 const PROFILE_TABS = [
   { key: 'profile', icon: 'fa-address-card', label: '个人资料' },
@@ -76,12 +76,12 @@ export default function Profile() {
   if (!user) {
     return (
       <PageLayout maxWidth={480} className="mt-8">
-        <div className="hero-card text-center" style={{ padding: '48px 24px' }}>
-          <div style={{ fontSize: '2.5rem', color: 'var(--primary-dark)', marginBottom: 16 }}>
-            <i className="fa-solid fa-user-circle" />
-          </div>
-          <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--hero-text)', marginBottom: 8 }}>个人中心</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: 20, fontSize: '0.9rem' }}>登录后查看个人主页</p>
+        <PageHeroCenter
+          icon="fa-solid fa-user-circle"
+          title="个人中心"
+          subtitle="登录后查看个人主页"
+        />
+        <div className="text-center">
           <Link to="/login" className="btn btn-primary"><i className="fa-solid fa-right-to-bracket" /> 去登录</Link>
         </div>
       </PageLayout>
@@ -264,12 +264,10 @@ export default function Profile() {
         {activeTab === 'reviews' && (
           <div>
             {myReviews.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 20 }}>
-                <div className="empty-state">
-                  <div className="icon"><i className="fa-regular fa-comment-dots" /></div>
-                  <h3>还没有评价过任何纸尿裤</h3>
-                  <p>去纸尿裤页面留下你的评价吧</p>
-                </div>
+              <div className="empty-state">
+                <div className="icon"><i className="fa-regular fa-comment-dots" /></div>
+                <h3>还没有评价过任何纸尿裤</h3>
+                <p>去纸尿裤页面留下你的评价吧</p>
               </div>
             ) : (
               myReviews.map(r => {
@@ -277,17 +275,17 @@ export default function Profile() {
                 const dims = ['absorption_score','fit_score','comfort_score','thickness_score','appearance_score','value_score'];
                 const avgScore = dims.filter(k => r[k] != null).reduce((sum, k) => sum + (r[k] || 0), 0) / (dims.filter(k => r[k] != null).length || 1);
                 return (
-                <div key={r.id} style={{ padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div key={r.id} className="py-3 border-b border-base-300">
+                  <div className="flex justify-between items-center">
                     <strong>
-                      {d ? <Link to={`/diaper/${d.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>{d.brand} {d.model}</Link> : `纸尿裤 #${r.diaper_id}`}
+                      {d ? <Link to={`/diaper/${d.id}`} className="no-underline text-inherit hover:underline">{d.brand} {d.model}</Link> : `纸尿裤 #${r.diaper_id}`}
                     </strong>
-                    <span style={{ color: 'var(--warning)', fontWeight: 600 }}>
+                    <span className="text-warning font-semibold">
                       <i className="fa-solid fa-star" /> {avgScore.toFixed(1)}/10
                     </span>
                   </div>
-                  {r.review && <p style={{ margin: '4px 0', color: 'var(--text)' }}>{r.review}</p>}
-                  <small style={{ color: 'var(--text-muted)' }}>{new Date(r.created_at).toLocaleDateString('zh-CN')}</small>
+                  {r.review && <p className="my-1 text-sm">{r.review}</p>}
+                  <small className="text-base-content/40">{new Date(r.created_at).toLocaleDateString('zh-CN')}</small>
                 </div>
               )})
             )}
@@ -297,12 +295,12 @@ export default function Profile() {
         {activeTab === 'feelings' && (
           <div>
             {myFeelings.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 20 }}>
+              <div className="text-center py-5">
                 <div className="empty-state">
                   <div className="icon"><i className="fa-solid fa-heart" /></div>
                   <h3>还没有记录过使用感受</h3>
                 </div>
-                <Link to="/diapers" className="btn btn-primary btn-sm" style={{ marginTop: 12 }}>
+                <Link to="/diapers" className="btn btn-primary btn-sm mt-3">
                   去探索纸尿裤
                 </Link>
               </div>
@@ -310,26 +308,22 @@ export default function Profile() {
               myFeelings.map(f => {
                 const d = diaperMap[f.diaper_id];
                 return (
-                <div key={f.id} style={{ padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div key={f.id} className="py-3 border-b border-base-300">
+                  <div className="flex justify-between items-center">
                     <strong>
-                      <Link to={`/diaper/${f.diaper_id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                      <Link to={`/diaper/${f.diaper_id}`} className="no-underline text-inherit">
                         <i className="fa-solid fa-box" /> {d ? `${d.brand} ${d.model}` : `纸尿裤 #${f.diaper_id}`}
                       </Link>
                       <span className="badge badge-ghost badge-sm ml-2">{f.size}码</span>
                     </strong>
-                    <small style={{ color: 'var(--text-muted)' }}>{new Date(f.created_at).toLocaleDateString('zh-CN')}</small>
+                    <small className="text-base-content/40">{new Date(f.created_at).toLocaleDateString('zh-CN')}</small>
                   </div>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 6 }}>
+                  <div className="flex gap-2 flex-wrap mt-2">
                     {Object.entries(FEELING_LABELS).map(([key, label]) => {
                       const val = f[key];
                       if (val == null) return null;
                       return (
-                        <span key={key} style={{
-                          padding: '2px 10px', borderRadius: 12, fontSize: '0.78rem', fontWeight: 600,
-                          background: val > 0 ? 'var(--success-bg)' : val < 0 ? 'var(--feeling-bg)' : 'var(--input-bg)',
-                          color: val > 0 ? 'var(--success)' : val < 0 ? 'var(--danger)' : 'var(--text-muted)',
-                        }}>
+                        <span key={key} className={`badge badge-sm ${val > 0 ? 'badge-success' : val < 0 ? 'badge-error' : 'badge-ghost'}`}>
                           {label}: {val > 0 ? '+' : ''}{val}
                         </span>
                       );

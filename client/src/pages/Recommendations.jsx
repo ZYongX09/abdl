@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { getRecommendStream } from '../api';
-import { PageLayout } from '../components/PageLayout';
+import { PageLayout, PageHeroCenter } from '../components/PageLayout';
 
 const DATA_OPTIONS = [
   { key: 'basic', label: '基本信息', desc: '年龄、地区', icon: 'fa-user' },
@@ -40,14 +40,16 @@ export default function Recommendations() {
 
   if (!user) {
     return (
-      <div className="hero-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
-        <div style={{ fontSize: '2.5rem', color: 'var(--primary-dark)', marginBottom: 16 }}>
-          <i className="fa-solid fa-robot" />
+      <PageLayout maxWidth={480} className="mt-8">
+        <PageHeroCenter
+          icon="fa-solid fa-robot"
+          title="AI 智能推荐"
+          subtitle="请先登录以获取个性化推荐"
+        />
+        <div className="text-center">
+          <Link to="/login" className="btn btn-primary"><i className="fa-solid fa-right-to-bracket" /> 去登录</Link>
         </div>
-        <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--hero-text)', marginBottom: 8 }}>AI 智能推荐</h2>
-        <p style={{ color: 'var(--text-muted)', marginBottom: 20, fontSize: '0.9rem' }}>请先登录以获取个性化推荐</p>
-        <Link to="/login" className="btn btn-primary"><i className="fa-solid fa-right-to-bracket" /> 去登录</Link>
-      </div>
+      </PageLayout>
     );
   }
 
@@ -172,16 +174,13 @@ export default function Recommendations() {
         document.body
       )}
 
-      <div className="hero-card" style={{ textAlign: 'center' }}>
-        <div className="flex items-center gap-3 justify-center" style={{ marginBottom: 8 }}>
-          <div style={{ fontSize: '1.8rem', color: 'var(--primary-dark)' }}>
-            <i className="fa-solid fa-robot" />
-          </div>
-          <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--hero-text)', margin: 0 }}>AI 智能推荐</h2>
-        </div>
-        <p style={{ color: 'var(--text-muted)', marginBottom: 16, fontSize: '0.9rem' }}>
-          根据你的身材数据和偏好，AI 为你挑选最合适的纸尿裤
-        </p>
+      <PageHeroCenter
+        icon="fa-solid fa-robot"
+        title="AI 智能推荐"
+        subtitle="根据你的身材数据和偏好，AI 为你挑选最合适的纸尿裤"
+      />
+      <div className="card">
+        <div className="card-body">
         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 16, flexWrap: 'wrap' }}>
           {user.weight && <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-weight-scale" /> {user.weight}kg</span>}
           {user.waist && <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-ruler" /> 腰围 {user.waist}cm</span>}
@@ -194,16 +193,19 @@ export default function Recommendations() {
           </div>
         )}
         {error && <div className="alert alert-error" style={{ marginBottom: 12 }}><i className="fa-solid fa-circle-exclamation" /> {error}</div>}
-        <button className="btn btn-accent" style={{ fontSize: '1.1rem', padding: '12px 40px' }} onClick={openPermission} disabled={streaming}>
-          {streaming ? <><i className="fa-solid fa-spinner fa-spin" /> 分析中...</> : <><i className="fa-solid fa-wand-magic-sparkles" /> 开始推荐</>}
-        </button>
+          <button className="btn btn-accent w-full" style={{ fontSize: '1.05rem', padding: '12px 24px' }} onClick={openPermission} disabled={streaming}>
+            {streaming ? <><i className="fa-solid fa-spinner fa-spin" /> 分析中...</> : <><i className="fa-solid fa-wand-magic-sparkles" /> 开始推荐</>}
+          </button>
+        </div>
       </div>
 
       {/* Streaming output */}
       {statusText && (
-        <div className="card word-break" style={{ marginBottom: 16, maxHeight: 300, overflowY: 'auto', background: 'var(--rating-bg)', fontSize: '0.9rem', lineHeight: 1.6, fontFamily: 'var(--font)' }}>
-          {statusText.split('\n').map((line, i) => <p key={i} style={{ margin: 0 }}>{line}</p>)}
-          <div ref={chatEndRef} />
+        <div className="card">
+          <div className="card-body word-break text-sm leading-relaxed" style={{ maxHeight: 300, overflowY: 'auto', background: 'var(--rating-bg)' }}>
+            {statusText.split('\n').map((line, i) => <p key={i} className="m-0">{line}</p>)}
+            <div ref={chatEndRef} />
+          </div>
         </div>
       )}
 
