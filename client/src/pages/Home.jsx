@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { diapersAPI, rankingsAPI, compareAPI } from '../api';
 import LoadingSkeleton from '../components/LoadingSkeleton';
+import { PageLayout, PageHero } from '../components/PageLayout';
 
 
 const DIMS = [
@@ -122,27 +123,23 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <PageLayout>
       {/* Header + Search */}
-      <div className="hero-card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
-          <div className="flex items-center gap-3">
-            <div style={{ fontSize: '1.6rem', color: 'var(--primary-dark)' }}>
-              <i className="fa-solid fa-box-open" />
-            </div>
-            <div>
-              <h2 style={{ margin: 0, color: 'var(--hero-text)', fontSize: '1.25rem', fontWeight: 800 }}>
-                探索纸尿裤
-              </h2>
-              <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-light)' }}>发现最适合你的纸尿裤</p>
-            </div>
-          </div>
-          <button className={`btn btn-sm ${compareMode ? 'btn-primary' : 'btn-outline'}`}
-            onClick={() => { setCompareMode(!compareMode); setCompareSelected([]); setCompareResult([]); }}>
-            <i className="fa-solid fa-code-compare" /> {compareMode ? '退出对比' : '对比模式'}
-          </button>
-        </div>
-        <div className="flex flex-wrap gap-2">
+      <PageHero
+        icon="fa-solid fa-box-open"
+        title="探索纸尿裤"
+        subtitle="发现最适合你的纸尿裤"
+      >
+        <button className={`btn btn-sm ${compareMode ? 'btn-primary' : 'btn-outline'}`}
+          onClick={() => { setCompareMode(!compareMode); setCompareSelected([]); setCompareResult([]); }}>
+          <i className="fa-solid fa-code-compare" /> {compareMode ? '退出对比' : '对比模式'}
+        </button>
+      </PageHero>
+
+      {/* Search & Filters */}
+      <div className="card">
+        <div className="card-body gap-3">
+          <div className="flex flex-wrap gap-2">
           <input className="input input-bordered flex-1 min-w-[180px]" placeholder="搜索品牌、型号..." value={search}
             onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearch()} />
           <select className="select select-bordered" value={brandFilter} onChange={e => setBrandFilter(e.target.value)}>
@@ -193,6 +190,7 @@ export default function Home() {
             </button>
           </div>
         )}
+        </div>
       </div>
 
       {/* Compare mode header */}
@@ -360,6 +358,6 @@ export default function Home() {
           )}
         </>
       )}
-    </div>
+    </PageLayout>
   );
 }

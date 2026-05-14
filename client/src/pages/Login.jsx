@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { PageLayout, PageHeroCenter } from '../components/PageLayout';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -29,15 +30,12 @@ export default function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 auth-page-wrapper">
-      {/* Hero Header */}
-      <div className="hero-card text-center py-6 mb-4">
-        <div style={{ fontSize: '2.8rem', marginBottom: 8 }}>
-          <i className="fa-solid fa-baby" style={{ color: 'var(--primary-dark)' }} />
-        </div>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--hero-text)', marginBottom: 4 }}>欢迎回来</h1>
-        <p style={{ fontSize: '0.9rem', color: 'var(--text-light)' }}>登录你的 ABDL Space 账号</p>
-      </div>
+    <PageLayout maxWidth={480} className="mt-8 auth-page-wrapper">
+      <PageHeroCenter
+        icon="fa-solid fa-baby"
+        title="欢迎回来"
+        subtitle="登录你的 ABDL Space 账号"
+      />
 
       <div className="card">
         <div className="card-body">
@@ -76,6 +74,6 @@ export default function Login() {
           </p>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

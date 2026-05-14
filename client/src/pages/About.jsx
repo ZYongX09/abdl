@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { PageLayout, PageHeroCenter } from '../components/PageLayout';
 
 const VERSION = '5.8.5';
 
@@ -16,14 +17,12 @@ export default function About() {
   const [showChangelog, setShowChangelog] = useState(true);
 
   return (
-    <div className="max-w-2xl mx-auto flex flex-col gap-5">
-      {/* Hero */}
-      <div className="hero-card text-center py-8 rounded-2xl">
-        <div className="text-5xl mb-2"><i className="fa-solid fa-baby text-primary" /></div>
-        <h1 className="text-2xl font-bold mb-2">ABDL Space</h1>
-        <p className="text-base-content/60"><i className="fa-solid fa-code-branch mr-1" /> {VERSION}</p>
-        <p className="text-sm text-base-content/40 mt-2">纸尿裤评测与推荐平台 — 帮助成年用户找到最适合的纸尿裤</p>
-      </div>
+    <PageLayout>
+      <PageHeroCenter
+        icon="fa-solid fa-baby"
+        title="ABDL Space"
+        subtitle={`v${VERSION} · 纸尿裤评测与推荐平台`}
+      />
 
       {/* Changelog */}
       <div className="card">
@@ -106,9 +105,9 @@ export default function About() {
         </div>
       </div>
 
-      <div className="text-center mb-8">
+      <div className="text-center pb-4">
         <Link to="/" className="btn btn-outline"><i className="fa-solid fa-house mr-1" /> 返回首页</Link>
       </div>
-    </div>
+    </PageLayout>
   );
 }

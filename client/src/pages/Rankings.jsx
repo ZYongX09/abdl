@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { rankingsAPI } from '../api';
 import LoadingSkeleton from '../components/LoadingSkeleton';
+import { PageLayout, PageHeroCenter } from '../components/PageLayout';
 
 const DIM_TABS = [
   { key: 'hot', fa: 'fa-fire', label: '热门' },
@@ -27,15 +28,12 @@ export default function Rankings() {
 
 
   return (
-    <div className="max-w-2xl mx-auto">
-      {/* Hero Header */}
-      <div className="hero-card mb-5" style={{ padding: '20px 24px', textAlign: 'center' }}>
-        <div style={{ fontSize: '2rem', marginBottom: 8, color: 'var(--primary-dark)' }}>
-          <i className="fa-solid fa-trophy" />
-        </div>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--hero-text)', margin: 0 }}>排行榜</h2>
-        <p style={{ fontSize: '0.8rem', color: 'var(--text-light)', margin: '4px 0 0' }}>发现最受欢迎、吸收力最强的纸尿裤</p>
-      </div>
+    <PageLayout>
+      <PageHeroCenter
+        icon="fa-solid fa-trophy"
+        title="排行榜"
+        subtitle="发现最受欢迎、吸收力最强的纸尿裤"
+      />
 
       <div className="flex flex-col items-center gap-4 mb-8">
         <div className="join" role="tablist">
@@ -92,6 +90,6 @@ export default function Rankings() {
           ))}
         </div>
       )}
-    </div>
+    </PageLayout>
   );
 }

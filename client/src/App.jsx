@@ -137,7 +137,7 @@ export default function App() {
       <Sidebar />
       <div className="app-main-content">
 
-        <div className="container page-enter" key={location.pathname} style={{ maxWidth: 800, padding: '24px 20px' }}>
+        <div className="container page-enter" key={location.pathname} style={{ maxWidth: 860, padding: '24px 20px' }}>
           <ErrorBoundary>
           <Routes>
             <Route path="/" element={<ForumFeed />} />

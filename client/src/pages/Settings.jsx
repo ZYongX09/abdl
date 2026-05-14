@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
 import { authAPI } from '../api';
+import { PageLayout, PageHero } from '../components/PageLayout';
 
 
 function getStoredSetting(key, fallback) {
@@ -65,19 +66,12 @@ export default function Settings() {
   };
 
   return (
-    <div style={{ maxWidth: 700, margin: '0 auto' }} className="flex flex-col gap-5">
-      {/* Hero Header */}
-      <div className="hero-card">
-        <div className="flex items-center gap-3">
-          <div style={{ fontSize: '1.6rem', color: 'var(--primary-dark)' }}>
-            <i className="fa-solid fa-gear" />
-          </div>
-          <div>
-            <h2 style={{ margin: 0, color: 'var(--hero-text)', fontSize: '1.25rem', fontWeight: 800 }}>设置</h2>
-            <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-light)' }}>个性化你的 ABDL Space 体验</p>
-          </div>
-        </div>
-      </div>
+    <PageLayout>
+      <PageHero
+        icon="fa-solid fa-gear"
+        title="设置"
+        subtitle="个性化你的 ABDL Space 体验"
+      />
 
       {msg && (
         <div className="alert alert-success" style={{ animation: 'fadeInUp 0.3s ease-out' }}>
@@ -250,6 +244,6 @@ export default function Settings() {
           )}
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

@@ -1327,12 +1327,12 @@ body, .card, .diaper-card, .rank-item, .hero-card, .modal,
 .register-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0 16px;
+  gap: 12px 16px;
 }
 @media (max-width: 480px) {
   .register-grid {
     grid-template-columns: 1fr;
-    gap: 0;
+    gap: 8px 0;
   }
 }
 
@@ -1614,20 +1614,27 @@ a {
   opacity: 0.06;
 }
 
-/* ====== Hero Card 增强 ====== */
+/* ====== PageLayout 组件样式 ====== */
 .hero-card {
   position: relative;
   overflow: hidden;
   cursor: default;
 }
 .hero-card h2 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: var(--hero-text);
   margin: 0;
 }
 .hero-card p {
   margin: 0;
+}
+
+/* ====== Hero Card 增强 ====== */
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  cursor: default;
 }
 
 /* ====== 推荐结果卡片悬停 ====== */

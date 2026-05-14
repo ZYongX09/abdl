@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { PageLayout, PageHeroCenter } from '../components/PageLayout';
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -57,15 +58,13 @@ export default function Register() {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 auth-page-wrapper">
-      {/* Hero Header */}
-      <div className="hero-card text-center py-6 mb-4">
-        <div style={{ fontSize: '2.8rem', marginBottom: 8 }}>
-          <i className="fa-solid fa-user-plus" style={{ color: 'var(--accent-dark)' }} />
-        </div>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--hero-text)', marginBottom: 4 }}>加入 ABDL Space</h1>
-        <p style={{ fontSize: '0.9rem', color: 'var(--text-light)' }}>创建账号，开始你的纸尿裤评测之旅</p>
-      </div>
+    <PageLayout maxWidth={540} className="mt-8 auth-page-wrapper">
+      <PageHeroCenter
+        icon="fa-solid fa-user-plus"
+        iconColor="var(--accent-dark)"
+        title="加入 ABDL Space"
+        subtitle="创建账号，开始你的纸尿裤评测之旅"
+      />
 
       <div className="card">
         <div className="card-body">
@@ -112,7 +111,7 @@ export default function Register() {
             <p className="text-sm text-base-content/60 mb-4">
               <i className="fa-solid fa-circle-info mr-1" /> 以下信息帮助 AI 为你推荐最合适的纸尿裤（可后续补充）
             </p>
-            <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="register-grid mb-4">
               <div className="form-control">
                 <label className="label"><span className="label-text">年龄</span></label>
                 <input className="input input-bordered w-full" type="number" value={form.age} onChange={update('age')} placeholder="岁" />
@@ -148,6 +147,6 @@ export default function Register() {
           </p>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }
