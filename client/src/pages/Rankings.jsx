@@ -6,13 +6,7 @@ import LoadingSkeleton from '../components/LoadingSkeleton';
 const DIM_TABS = [
   { key: 'hot', fa: 'fa-fire', label: '热门' },
   { key: 'absorbency', fa: 'fa-droplet', label: '吸收' },
-  { key: 'popular', fa: 'fa-eye', label: '关注' },
-  { key: 'absorption_score', fa: 'fa-droplet', label: '吸水量' },
-  { key: 'fit_score', fa: 'fa-ruler', label: '贴合度' },
-  { key: 'comfort_score', fa: 'fa-face-smile', label: '舒适度' },
-  { key: 'thickness_score', fa: 'fa-cube', label: '厚度' },
-  { key: 'appearance_score', fa: 'fa-palette', label: '外观' },
-  { key: 'value_score', fa: 'fa-gem', label: '性价比' },
+  { key: 'popular', fa: 'fa-eye', label: '人气' },
 ];
 
 const MEDAL_COLORS = ['#F0C040', '#B0B0B0', '#CD7F32'];
@@ -26,15 +20,11 @@ export default function Rankings() {
   useEffect(() => {
     setLoading(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    const isDim = !['hot','absorbency','popular'].includes(tab);
-    const api = isDim ? rankingsAPI.dimension(tab)
-      : tab==='hot' ? rankingsAPI.hot() : tab==='absorbency' ? rankingsAPI.absorbency() : rankingsAPI.popular();
+    const api = tab==='hot' ? rankingsAPI.hot() : tab==='absorbency' ? rankingsAPI.absorbency() : rankingsAPI.popular();
     api.then(data => { setRankings(data.rankings || []); setCached(data.cached || false); })
       .catch(console.error).finally(() => setLoading(false));
   }, [tab]);
 
-  const mainTabs = DIM_TABS.filter(t => ['hot','absorbency','popular'].includes(t.key));
-  const dimTabs = DIM_TABS.filter(t => !['hot','absorbency','popular'].includes(t.key));
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -44,24 +34,8 @@ export default function Rankings() {
 
       <div className="flex flex-col items-center gap-4 mb-6">
         <div className="tabs tabs-boxed" role="tablist">
-          {mainTabs.map(t => (
+          {DIM_TABS.map(t => (
             <button key={t.key} role="tab" className={`tab ${tab === t.key ? 'tab-active' : ''}`}
-              onClick={() => setTab(t.key)}>
-              <i className={`fa-solid ${t.fa} mr-1`} />{t.label}
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-3 w-full max-w-xs">
-          <div className="flex-1 h-px bg-base-300" />
-          <span className="text-xs text-base-content/50 whitespace-nowrap">
-            <i className="fa-solid fa-bars-staggered mr-1" /> 按维度评分排序
-          </span>
-          <div className="flex-1 h-px bg-base-300" />
-        </div>
-        <div className="flex flex-wrap gap-2 justify-center" role="tablist">
-          {dimTabs.map(t => (
-            <button key={t.key} role="tab"
-              className={`btn btn-sm ${tab===t.key?'btn-primary':'btn-outline'}`}
               onClick={() => setTab(t.key)}>
               <i className={`fa-solid ${t.fa} mr-1`} />{t.label}
             </button>
