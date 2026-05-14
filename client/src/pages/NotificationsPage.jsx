@@ -2,16 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { forumAPI } from '../api';
 import { useAuth } from '../AuthContext';
+import { timeAgo } from '../utils';
 
-function timeAgo(d) {
-  if (!d) return '';
-  const diff = Date.now()-new Date(d).getTime();
-  const m=Math.floor(diff/60000),h=Math.floor(diff/3600000),day=Math.floor(diff/86400000);
-  if(m<1)return'刚刚';if(m<60)return`${m}分钟前`;if(h<24)return`${h}小时前`;if(day<7)return`${day}天前`;
-  return new Date(d).toLocaleDateString('zh-CN');
-}
-
-const typeLabels = { comment: '评论了你的帖子', reply: '回复了你的评论', like: '赞了你的' };
 const typeIcons = { comment: 'fa-comment', reply: 'fa-reply', like: 'fa-heart' };
 
 export default function Notifications() {
@@ -33,11 +25,11 @@ export default function Notifications() {
   };
 
   if (!user) return <div style={{textAlign:'center',padding:60}}><h2><i className="fa-solid fa-circle-exclamation" /> 请先登录</h2></div>;
-  if (loading) return <div className="loading-spinner"><div className="spinner" /><span>加载通知</span></div>;
+  if (loading) return <div className="loading-spinner" role="status" aria-live="polite"><div className="spinner" /><span>加载通知</span></div>;
 
   const getLink = (n) => {
-    if (n.type === 'like' && n.target_type === 'post') return `/forum/${n.target_id}`;
-    if (n.post_id) return `/forum/${n.post_id}`;
+    if (n.type === 'like') return `/forum/${n.related_id}`;
+    if (n.type === 'comment' || n.type === 'reply') return `/forum/${n.related_id}`;
     return '#';
   };
 
@@ -69,8 +61,7 @@ export default function Notifications() {
                 </span>
                 <div style={{ flex: 1 }}>
                   <span style={{ fontWeight: n.read?400:600 }}>
-                    <strong>{n.from_username}</strong> {typeLabels[n.type] || '互动了你的内容'}
-                    {n.type === 'like' && (n.target_type==='post'?'帖子':'评论')}
+                    {n.message || '互动了你的内容'}
                   </span>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 2 }}>
                     {timeAgo(n.created_at)}

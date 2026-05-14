@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { forumAPI, messagesAPI } from '../api';
 
 function SearchBar({ onSearch }) {
   const [q, setQ] = useState('');
@@ -55,6 +56,25 @@ export default function Sidebar() {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileSidebarRef = useRef(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (!user) { setUnreadCount(0); return; }
+    const load = async () => {
+      try {
+        const [notifs, convs] = await Promise.all([
+          forumAPI.notifications().catch(() => ({ notifications: [] })),
+          messagesAPI.conversations().catch(() => ({ conversations: [] })),
+        ]);
+        const notifUnread = (notifs.notifications || []).filter(n => !n.read).length;
+        const msgUnread = (convs.conversations || []).reduce((s, c) => s + (c.unread || 0), 0);
+        setUnreadCount(notifUnread + msgUnread);
+      } catch {}
+    };
+    load();
+    const iv = setInterval(load, 60000);
+    return () => clearInterval(iv);
+  }, [user]);
 
   const isActive = (path) => location.pathname === path;
   const closeMobile = () => setMobileOpen(false);
@@ -98,7 +118,7 @@ export default function Sidebar() {
     { path: '/rankings', label: '排行榜', icon: 'fa-solid fa-trophy' },
     { path: '/recommend', label: 'AI推荐', icon: 'fa-solid fa-robot' },
     ...(user ? [
-      { path: '/messages', label: '私信 & 通知', icon: 'fa-regular fa-envelope' },
+      { path: '/messages', label: '私信 & 通知', icon: 'fa-regular fa-envelope', badge: unreadCount },
     ] : []),
     { path: '/settings', label: '设置', icon: 'fa-solid fa-gear' },
     ...(user?.role === 'admin' ? [{ path: '/admin', label: '管理后台', icon: 'fa-solid fa-screwdriver-wrench' }] : []),
@@ -125,7 +145,12 @@ export default function Sidebar() {
             className={isActive(l.path) ? 'sidebar-link active' : 'sidebar-link'}
           >
             <i className={l.icon} style={{ fontSize: '1.15rem', width: 24, textAlign: 'center' }} />
-            <span>{l.label}</span>
+            <span style={{ flex: 1 }}>{l.label}</span>
+            {l.badge > 0 && (
+              <span className="notif-badge" style={{ position: 'static', minWidth: 20, height: 20, fontSize: '11px', flexShrink: 0 }}>
+                {l.badge > 99 ? '99+' : l.badge}
+              </span>
+            )}
           </Link>
         ))}
       </nav>

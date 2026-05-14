@@ -136,7 +136,7 @@ export default function ComparePage() {
       </div>
 
       {loading && compared.length === 0 && (
-        <div className="loading-spinner"><div className="spinner" /><span>对比中…</span></div>
+        <div className="loading-spinner" role="status" aria-live="polite"><div className="spinner" /><span>对比中…</span></div>
       )}
 
       {!loading && compared.length === 0 && selected.length >= 2 && (

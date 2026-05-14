@@ -131,7 +131,7 @@ export default function TermWiki() {
       )}
 
       {loading ? (
-        <div className="loading-spinner"><div className="spinner" /><span>加载术语</span></div>
+        <div className="loading-spinner" role="status" aria-live="polite"><div className="spinner" /><span>加载术语</span></div>
       ) : (
         <div>
           <p style={{ color: 'var(--text-muted)', marginBottom: 16 }}>共 {terms.length} 个术语</p>

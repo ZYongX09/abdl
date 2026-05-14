@@ -206,8 +206,8 @@ export default function PostDetail() {
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                <Link to={`/user/${c.user_id}`} style={{ fontWeight: 600, textDecoration: 'none', color: 'var(--text)', fontSize: '0.9rem' }}>
-                  {c.username}
+                <Link to={`/user/${c.user?.id || c.user_id}`} style={{ fontWeight: 600, textDecoration: 'none', color: 'var(--text)', fontSize: '0.9rem' }}>
+                  {c.user?.username || c.username}
                 </Link>
                 <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{timeAgo(c.created_at)}</span>
               </div>
@@ -223,15 +223,15 @@ export default function PostDetail() {
                   <i className={`fa-heart ${c.has_liked ? 'fa-solid' : 'fa-regular'}`} /> {c.like_count}
                 </button>
                 <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
-                  onClick={() => { setReplyTo(c.id); setCommentText(`@${c.username} `); }}>
+                  onClick={() => { setReplyTo(c.id); setCommentText(`@${c.user?.username || c.username} `); }}>
                   <i className="fa-solid fa-reply" /> 回复
                 </button>
               </div>
               {nestedComments[c.id]?.map(sub => (
                 <div key={sub.id} style={{ marginLeft: 24, marginTop: 8, padding: '8px 0', borderTop: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                    <Link to={`/user/${sub.user_id}`} style={{ fontWeight: 600, textDecoration: 'none', color: 'var(--text)', fontSize: '0.85rem' }}>
-                      {sub.username}
+                    <Link to={`/user/${sub.user?.id || sub.user_id}`} style={{ fontWeight: 600, textDecoration: 'none', color: 'var(--text)', fontSize: '0.85rem' }}>
+                      {sub.user?.username || sub.username}
                     </Link>
                     <span style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>{timeAgo(sub.created_at)}</span>
                   </div>

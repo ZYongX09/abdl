@@ -3,15 +3,7 @@ import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { messagesAPI, forumAPI } from '../api';
 import { useAuth } from '../AuthContext';
 import LoadingSkeleton from '../components/LoadingSkeleton';
-
-function timeAgo(d) {
-  if (!d) return '';
-  const diff = Date.now() - new Date(d).getTime();
-  const m = Math.floor(diff / 60000), h = Math.floor(diff / 3600000), day = Math.floor(diff / 86400000);
-  if (m < 1) return '刚刚'; if (m < 60) return `${m}分钟前`;
-  if (h < 24) return `${h}小时前`; if (day < 7) return `${day}天前`;
-  return new Date(d).toLocaleDateString('zh-CN');
-}
+import { timeAgo } from '../utils';
 
 const typeLabels = { comment: '评论了你的帖子', reply: '回复了你的评论', like: '赞了你的' };
 const typeIcons = { comment: 'fa-comment', reply: 'fa-reply', like: 'fa-heart' };

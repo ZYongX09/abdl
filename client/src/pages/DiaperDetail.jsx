@@ -119,7 +119,7 @@ export default function DiaperDetail() {
     } catch(e) { setMsg(e.message); }
   };
 
-  if (loading) return <div className="loading-spinner"><div className="spinner" /><span>加载中</span></div>;
+  if (loading) return <div className="loading-spinner" role="status" aria-live="polite"><div className="spinner" /><span>加载中</span></div>;
   if (!diaper) return <div className="alert alert-danger">纸尿裤不存在</div>;
 
   return (

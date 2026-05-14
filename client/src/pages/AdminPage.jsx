@@ -276,7 +276,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          {loading ? <div className="loading-spinner"><div className="spinner" /><span>加载中</span></div> : (
+          {loading ? <div className="loading-spinner" role="status" aria-live="polite"><div className="spinner" /><span>加载中</span></div> : (
             <div>
               <p style={{ color: 'var(--text-muted)', marginBottom: 8 }}>共 {diapers.length} 款</p>
               {diapers.map(d => (
@@ -338,7 +338,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          {loading ? <div className="loading-spinner"><div className="spinner" /><span>加载中</span></div> : (
+          {loading ? <div className="loading-spinner" role="status" aria-live="polite"><div className="spinner" /><span>加载中</span></div> : (
             wikis.map(w => (
               <div key={w.id} className="card" style={{ marginBottom: 8, padding: 12 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -366,7 +366,7 @@ export default function AdminPage() {
       {tab === 'requests' && (
         <div>
           <h3><i className="fa-solid fa-pen-to-square" /> Wiki 编辑申请</h3>
-          {loading ? <div className="loading-spinner"><div className="spinner" /><span>加载中</span></div> : requests.length === 0 ? (
+          {loading ? <div className="loading-spinner" role="status" aria-live="polite"><div className="spinner" /><span>加载中</span></div> : requests.length === 0 ? (
             <p style={{ color: 'var(--text-muted)', padding: 20, textAlign: 'center' }}>暂无待审批申请</p>
           ) : (
             requests.map(r => (
@@ -521,7 +521,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          {loading ? <div className="loading-spinner"><div className="spinner" /><span>加载中</span></div> : (
+          {loading ? <div className="loading-spinner" role="status" aria-live="polite"><div className="spinner" /><span>加载中</span></div> : (
             terms.map(t => (
               <div key={t.id} className="card" style={{ marginBottom: 8, padding: 12 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

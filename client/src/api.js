@@ -133,10 +133,10 @@ export const diapersAPI = {
       if (params.search) qs.set('search', params.search);
       if (params.brand) qs.set('brand', params.brand);
       if (params.size) qs.set('size', params.size);
-      // 后端 avg_score 排序会 500，暂用 id 兜底；thickness/rating_count 正常
-      const sortMap = { popularity: 'id', avg_price: 'id', thickness: 'thickness', avg_score: 'id' };
+      // 后端支持: id / avg_score / rating_count / thickness
+      const sortMap = { popularity: 'id', avg_price: 'id', thickness: 'thickness', avg_score: 'avg_score', rating_count: 'rating_count' };
       const sort = sortMap[params.sort] || 'id';
-      const orderMap = { popularity: 'ASC', avg_price: 'ASC', thickness: 'DESC', avg_score: 'DESC' };
+      const orderMap = { popularity: 'ASC', avg_price: 'ASC', thickness: 'DESC', avg_score: 'DESC', rating_count: 'DESC' };
       qs.set('sort', sort);
       qs.set('order', orderMap[params.sort] || 'ASC');
       if (params.page) qs.set('page', params.page);
@@ -256,7 +256,16 @@ export const ratingsAPI = {
     return { message: '评分成功', review_status: 'approved' };
   },
   getForDiaper: async (id) => {
-    if (USE_API) return apiFetch(`/api/diapers/${id}/ratings`);
+    if (USE_API) {
+      const data = await apiFetch(`/api/diapers/${id}/ratings`);
+      // 后端返回 stats.dimensions[x].avg，前端组件使用 .weighted
+      if (data.stats?.dimensions) {
+        for (const k of Object.keys(data.stats.dimensions)) {
+          data.stats.dimensions[k].weighted = data.stats.dimensions[k].avg;
+        }
+      }
+      return data;
+    }
     if (!_diapers) await loadData();
     const ratings = LS.get('ratings') || {};
     const reviews = Object.values(ratings).filter(r => r.diaper_id === Number(id));
@@ -277,7 +286,16 @@ export const ratingsAPI = {
     return { reviews };
   },
   getStats: async (id) => {
-    if (USE_API) return apiFetch(`/api/diapers/${id}/ratings`);
+    if (USE_API) {
+      const data = await apiFetch(`/api/diapers/${id}/ratings`);
+      // 后端返回 stats.dimensions[x].avg，前端组件使用 .weighted
+      if (data.stats?.dimensions) {
+        for (const k of Object.keys(data.stats.dimensions)) {
+          data.stats.dimensions[k].weighted = data.stats.dimensions[k].avg;
+        }
+      }
+      return { stats: data.stats };
+    }
     const d = await ratingsAPI.getForDiaper(id);
     return { stats: d.stats };
   },
@@ -494,20 +512,30 @@ export const levelsAPI = {
   all: () => loadJSON('/data/levels.json'),
 };
 
-// ====== 术语（localStorage 读写） ======
+// ====== 术语 ======
 export const termWikiAPI = {
   list: async (params = {}) => {
+    if (USE_API) {
+      const qs = new URLSearchParams();
+      if (params.search) qs.set('search', params.search);
+      if (params.category) qs.set('category', params.category);
+      return apiFetch(`/api/terms?${qs}`);
+    }
     if (!_terms) await loadData();
     let list = [..._terms];
-    // Merge in any user-added terms
     const custom = LS.get('customTerms') || [];
     list = [...list, ...custom];
     if (params.search) { const s = params.search.toLowerCase(); list = list.filter(t => t.term.toLowerCase().includes(s) || t.definition.toLowerCase().includes(s)); }
     if (params.category) list = list.filter(t => t.category === params.category);
     return { terms: list };
   },
-  categories: async () => { if (!_terms) await loadData(); return { categories: [...new Set(_terms.map(t => t.category))] }; },
+  categories: async () => {
+    if (USE_API) return apiFetch('/api/terms/categories');
+    if (!_terms) await loadData();
+    return { categories: [...new Set(_terms.map(t => t.category))] };
+  },
   create: async (form) => {
+    if (USE_API) return apiFetch('/api/terms', { method: 'POST', body: JSON.stringify(form) });
     const user = LS.get('currentUser');
     if (!user || user.role !== 'admin') throw new Error('仅管理员可添加术语');
     if (!form.term || !form.definition) throw new Error('术语名称和定义为必填');
@@ -518,6 +546,7 @@ export const termWikiAPI = {
     return { message: '术语已添加', term };
   },
   update: async (id, form) => {
+    if (USE_API) return apiFetch(`/api/terms/${id}`, { method: 'PATCH', body: JSON.stringify(form) });
     const user = LS.get('currentUser');
     if (!user || user.role !== 'admin') throw new Error('仅管理员可编辑术语');
     if (!form.term || !form.definition) throw new Error('术语名称和定义为必填');
@@ -529,6 +558,7 @@ export const termWikiAPI = {
     return { message: '术语已更新' };
   },
   delete: async (id) => {
+    if (USE_API) return apiFetch(`/api/terms/${id}`, { method: 'DELETE' });
     const user = LS.get('currentUser');
     if (!user || user.role !== 'admin') throw new Error('仅管理员可删除术语');
     let custom = LS.get('customTerms') || [];
@@ -760,25 +790,50 @@ export const messagesAPI = {
   unread: () => ({ unread: 0 }),
 };
 
-// ====== 管理员（localStorage简化版） ======
+// ====== 管理员 ======
 export const adminAPI = {
-  stats: () => {
+  stats: async () => {
+    if (USE_API) return apiFetch('/api/admin/stats');
     const users = LS.get('users')||{};
     const posts = LS.get('posts')||[];
     const ratings = LS.get('ratings')||{};
     return { users: Object.keys(users).length, posts: posts.length, comments: Object.keys(LS.get('comments')||{}).length, diapers: 11, ratings: Object.keys(ratings).length };
   },
-  users: () => {
+  users: async () => {
+    if (USE_API) return apiFetch('/api/admin/users');
     const users = LS.get('users')||{};
     return { users: Object.values(users).map(u => ({ ...u, password: undefined, post_count: 0, comment_count: 0 })) };
   },
-  banUser: () => ({ message: '功能简化中' }),
-  deleteUser: (id) => ({ message: '已删除' }),
-  posts: () => { const p = LS.get('posts')||[]; const comments = LS.get('comments')||{}; const likes = LS.get('likes')||{}; const users = LS.get('users')||{}; return { posts: p.map(post => { const u = Object.values(users).find(u => u.id === post.user_id); return { ...post, username: u?.username || '已注销', comment_count: Object.values(comments).filter(c => c.post_id === post.id).length, like_count: Object.values(likes).filter(l => l.target_type === 'post' && l.target_id === post.id).length }; }) }; },
-  pinPost: () => ({ message: '已置顶' }),
-  deletePost: (id) => { let p = LS.get('posts')||[]; p = p.filter(x => x.id !== id); LS.set('posts', p); return { message: '已删除' }; },
-  comments: () => ({ comments: [] }),
-  deleteComment: () => ({ message: '已删除' }),
+  banUser: async (id) => {
+    if (USE_API) return apiFetch(`/api/admin/users/${id}/ban`, { method: 'POST' });
+    return { message: '功能简化中' };
+  },
+  deleteUser: async (id) => {
+    if (USE_API) return apiFetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+    return { message: '已删除' };
+  },
+  posts: async () => {
+    if (USE_API) {
+      const data = await apiFetch('/api/posts?limit=100');
+      return { posts: data.posts };
+    }
+    const p = LS.get('posts')||[]; const comments = LS.get('comments')||{}; const likes = LS.get('likes')||{}; const users = LS.get('users')||{}; return { posts: p.map(post => { const u = Object.values(users).find(u => u.id === post.user_id); return { ...post, username: u?.username || '已注销', comment_count: Object.values(comments).filter(c => c.post_id === post.id).length, like_count: Object.values(likes).filter(l => l.target_type === 'post' && l.target_id === post.id).length }; }) }; },
+  pinPost: async (id) => {
+    if (USE_API) return apiFetch(`/api/admin/posts/${id}/pin`, { method: 'POST' });
+    return { message: '已置顶' };
+  },
+  deletePost: async (id) => {
+    if (USE_API) return apiFetch(`/api/admin/posts/${id}`, { method: 'DELETE' });
+    let p = LS.get('posts')||[]; p = p.filter(x => x.id !== id); LS.set('posts', p); return { message: '已删除' };
+  },
+  comments: async () => {
+    // 后端暂无统一评论列表接口
+    return { comments: [] };
+  },
+  deleteComment: async (id) => {
+    if (USE_API) return apiFetch(`/api/admin/comments/${id}`, { method: 'DELETE' });
+    return { message: '已删除' };
+  },
   aiCompleteDiaper: async (diaperData) => {
     const key = import.meta.env.VITE_DEEPSEEK_KEY;
     if (!key) throw new Error('API key 未配置');
@@ -813,12 +868,32 @@ ${JSON.stringify(_diapers?.map(d => ({ brand: d.brand, model: d.model, product_t
   },
 };
 
-// ====== Wiki（占位，后续调用 B's API） ======
+// ====== Wiki（展示摘要 + 跳转合作方页面） ======
+// Wiki 主要由 B 站点（朋友项目）实现，这里只做引流展示
+const WIKI_BASE_URL = import.meta.env.VITE_WIKI_BASE_URL || 'https://abdl-space.pages.dev';
+
 export const wikiAPI = {
-  list: () => ({ wikis: [] }),
-  get: () => (null),
-  save: () => ({ message: 'Wiki 由合作方提供' }),
-  delete: () => {},
+  /** 获取 Wiki 页面列表（用于纸尿裤详情页展示摘要） */
+  list: async (params = {}) => {
+    if (USE_API) {
+      const qs = new URLSearchParams();
+      if (params.diaper_id) qs.set('diaper_id', params.diaper_id);
+      if (params.page) qs.set('page', params.page);
+      if (params.limit) qs.set('limit', params.limit);
+      return apiFetch(`/api/pages?${qs}`);
+    }
+    return { pages: [], pagination: { page: 1, limit: 20, total: 0, totalPages: 0 } };
+  },
+  /** 获取单个 Wiki 页面详情 */
+  get: async (slug) => {
+    if (USE_API) return apiFetch(`/api/pages/${slug}`);
+    return null;
+  },
+  /** Wiki 编辑/创建/删除跳转到合作方站点 */
+  getWikiUrl: (slug) => `${WIKI_BASE_URL}/wiki/${slug}`,
+  getDiaperWikiUrl: (diaperId) => `${WIKI_BASE_URL}/wiki?diaper_id=${diaperId}`,
+  save: () => { throw new Error('Wiki 编辑请前往 B 站点操作'); },
+  delete: () => { throw new Error('Wiki 删除请前往 B 站点操作'); },
   requestEdit: () => {},
   pendingRequests: () => ({ requests: [] }),
   approveRequest: () => {},

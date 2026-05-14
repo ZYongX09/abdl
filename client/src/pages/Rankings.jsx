@@ -26,6 +26,7 @@ export default function Rankings() {
 
   useEffect(() => {
     setLoading(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     const isDim = !['hot','absorbency','popular'].includes(tab);
     const api = isDim ? rankingsAPI.dimension(tab)
       : tab==='hot' ? rankingsAPI.hot() : tab==='absorbency' ? rankingsAPI.absorbency() : rankingsAPI.popular();
@@ -44,9 +45,11 @@ export default function Rankings() {
         <i className="fa-solid fa-trophy" /> 排行榜
       </h2>
       <div style={{ marginBottom: 20 }}>
-        <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 10 }}>
+        <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 10 }} role="tablist" aria-label="排行榜分类">
           {DIM_TABS.filter(t => ['hot','absorbency','popular'].includes(t.key)).map(t => (
             <button key={t.key}
+              role="tab"
+              aria-selected={tab===t.key}
               className={`btn ${tab===t.key?'btn-primary':'btn-outline'} btn-sm`}
               onClick={() => setTab(t.key)}>
               <i className={`fa-solid ${t.fa}`} style={{ marginRight: 4 }} />{t.label}
@@ -60,9 +63,11 @@ export default function Rankings() {
           </span>
           <span style={{ flex: '1', height: 1, background: 'var(--border)', maxWidth: 140 }} />
         </div>
-        <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }} role="tablist" aria-label="维度评分排序">
           {DIM_TABS.filter(t => !['hot','absorbency','popular'].includes(t.key)).map(t => (
             <button key={t.key}
+              role="tab"
+              aria-selected={tab===t.key}
               className={`btn ${tab===t.key?'btn-primary':'btn-outline'} btn-sm`}
               onClick={() => setTab(t.key)}>
               <i className={`fa-solid ${t.fa}`} style={{ marginRight: 4 }} />{t.label}
