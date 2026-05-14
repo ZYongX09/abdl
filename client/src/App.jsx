@@ -6,6 +6,7 @@ import BackToTop from './components/BackToTop';
 import ErrorBoundary from './components/ErrorBoundary';
 import GlobalMouseTracker from './components/GlobalMouseTracker';
 import LiquidScroll from './components/LiquidScroll';
+import GlassOverlay from './components/GlassOverlay';
 import ForumFeed from './pages/ForumFeed';
 import PostDetail from './pages/PostDetail';
 import NotificationsPage from './pages/NotificationsPage';
@@ -132,6 +133,7 @@ export default function App() {
     <div className="app-layout">
       <GlobalMouseTracker />
       <LiquidScroll />
+      <GlassOverlay />
       <ScrollToTop />
       <Sidebar />
       <div className="app-main-content">
