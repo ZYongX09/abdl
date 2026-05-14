@@ -32,7 +32,7 @@ export default function Rankings() {
         <i className="fa-solid fa-trophy text-warning" /> 排行榜
       </h2>
 
-      <div className="flex flex-col items-center gap-4 mb-6">
+      <div className="flex flex-col items-center gap-4 mb-8">
         <div className="join" role="tablist">
           {DIM_TABS.map(t => (
             <button key={t.key} role="tab"
@@ -58,7 +58,7 @@ export default function Rankings() {
           <p>暂无数据</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           {rankings.map((item, i) => (
             <Link to={`/diaper/${item.id}`} key={item.id} className="no-underline text-inherit">
               <div className="rank-item stagger-item flex items-center gap-4 p-4 rounded-xl" style={{ animationDelay: `${i * 0.06}s` }}>

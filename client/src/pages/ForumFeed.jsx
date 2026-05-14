@@ -91,7 +91,7 @@ export default function ForumFeed() {
       <GuessYouLike />
 
       {/* Search */}
-      <div className="join mb-4 w-full">
+      <div className="join mb-6 w-full">
         <input className="input input-bordered join-item flex-1" placeholder="搜索帖子内容..." value={search}
           onChange={e=>setSearch(e.target.value)} onKeyDown={e=>e.key==='Enter'&&loadPosts()} />
         <button className="btn btn-primary btn-sm join-item" onClick={() => loadPosts()}>
@@ -108,19 +108,19 @@ export default function ForumFeed() {
               placeholder="分享你的想法..." value={content} onChange={e=>setContent(e.target.value)}
               maxLength={5000} onInput={autoResize} />
             <div className="flex justify-between items-center">
-              <span className={`text-xs ${content.length > 4500 ? 'text-error' : content.length > 3500 ? 'text-warning' : 'text-base-content/40'}`}>
+              <span className={`text-sm ${content.length > 4500 ? 'text-error' : content.length > 3500 ? 'text-warning' : 'text-base-content/40'}`}>
                 {content.length}/5000
               </span>
-              <div className="flex gap-2 items-center">
-                <label className="btn btn-outline btn-xs gap-1 cursor-pointer">
+              <div className="flex gap-3 items-center">
+                <label className="btn btn-outline btn-sm gap-3 cursor-pointer">
                   <i className="fa-solid fa-image" /> 图片
                   <input type="file" accept="image/*" onChange={e=>setImage(e.target.files[0])} className="hidden" />
                 </label>
                 {image && (
                   <div className="relative inline-block">
                     <img src={URL.createObjectURL(image)} alt="预览" className="w-12 h-12 object-cover rounded-lg border border-base-300" />
-                    <button onClick={() => setImage(null)} className="absolute -top-1.5 -right-1.5 btn btn-error btn-xs w-5 h-5 min-h-0 p-0 rounded-full" title="移除">
-                      <i className="fa-solid fa-xmark text-xs" />
+                    <button onClick={() => setImage(null)} className="absolute -top-1.5 -right-1.5 btn btn-error btn-sm w-5 h-5 min-h-0 p-0 rounded-full" title="移除">
+                      <i className="fa-solid fa-xmark text-sm" />
                     </button>
                   </div>
                 )}
@@ -137,7 +137,7 @@ export default function ForumFeed() {
       {loading && posts.length === 0 ? <LoadingSkeleton type="feed" count={4} /> : posts.length === 0 ? (
         <div className="text-center py-16 text-base-content/40">
           <i className="fa-solid fa-feather text-4xl mb-3 block" />
-          <h3 className="font-semibold mb-1">{search ? '没有找到匹配的帖子' : '还没有帖子'}</h3>
+          <h3 className="font-semibold mb-3">{search ? '没有找到匹配的帖子' : '还没有帖子'}</h3>
           <p className="text-sm">{search ? '试试换个关键词搜索' : '成为第一个发帖的人吧'}</p>
         </div>
       ) : (
@@ -152,40 +152,40 @@ export default function ForumFeed() {
                     </div>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
+                    <div className="flex items-center gap-3 flex-wrap">
                       <Link to={`/user/${p.user?.id}`} className="font-bold text-sm no-underline hover:underline">
                         {p.user?.username}
                       </Link>
                       {user && p.user?.id !== user.id && (
-                        <Link to={`/messages?to=${encodeURIComponent(p.user?.username)}`} className="btn btn-ghost btn-xs" title="发私信">
+                        <Link to={`/messages?to=${encodeURIComponent(p.user?.username)}`} className="btn btn-ghost btn-sm" title="发私信">
                           <i className="fa-solid fa-paper-plane" />
                         </Link>
                       )}
-                      <span className="text-xs text-base-content/40">@{p.user?.username} · {timeAgo(p.created_at)}</span>
+                      <span className="text-sm text-base-content/40">@{p.user?.username} · {timeAgo(p.created_at)}</span>
                     </div>
                     <Link to={`/forum/${p.id}`} className="no-underline text-inherit">
                       <p className="my-2 whitespace-pre-wrap leading-relaxed text-sm">{p.content}</p>
                     </Link>
                     {p.images?.length > 0 && (
-                      <div className="grid grid-cols-3 gap-1 mb-2">
+                      <div className="grid grid-cols-3 gap-3 mb-3">
                         {p.images.map((img, i) => <img key={i} src={img.image_url} alt="" loading="lazy" className="w-full h-28 object-cover rounded-lg" onError={(e) => { e.target.style.display = 'none'; }} />)}
                       </div>
                     )}
                     {p.diaper && (
-                      <Link to={`/diaper/${p.diaper.id}`} className="badge badge-ghost badge-sm gap-1 no-underline">
+                      <Link to={`/diaper/${p.diaper.id}`} className="badge badge-ghost badge-sm gap-3 no-underline">
                         <i className="fa-solid fa-tag" /> {p.diaper.brand} {p.diaper.model}
                       </Link>
                     )}
                     <div className="flex gap-6 mt-2">
                       <button onClick={() => handleLike(p.id)}
-                        className={`btn btn-ghost btn-xs gap-1 ${p.has_liked ? 'text-error' : 'text-base-content/40'}`}>
+                        className={`btn btn-ghost btn-sm gap-3 ${p.has_liked ? 'text-error' : 'text-base-content/40'}`}>
                         <i className={`${p.has_liked ? 'fa-solid' : 'fa-regular'} fa-heart`} /> {p.like_count}
                       </button>
-                      <Link to={`/forum/${p.id}`} className="btn btn-ghost btn-xs gap-1 text-base-content/40 no-underline">
+                      <Link to={`/forum/${p.id}`} className="btn btn-ghost btn-sm gap-3 text-base-content/40 no-underline">
                         <i className="fa-regular fa-comment" /> {p.comment_count}
                       </Link>
                       <button onClick={() => navigator.clipboard?.writeText(window.location.origin + '/forum/' + p.id).then(() => addToast('链接已复制', 'success', 2000)).catch(()=>{})}
-                        className="btn btn-ghost btn-xs gap-1 text-base-content/40">
+                        className="btn btn-ghost btn-sm gap-3 text-base-content/40">
                         <i className="fa-solid fa-share-nodes" /> 分享
                       </button>
                     </div>

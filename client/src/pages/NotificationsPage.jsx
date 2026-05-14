@@ -42,7 +42,7 @@ export default function Notifications() {
           <p>暂无通知</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           {notifs.map((n, i) => (
             <Link to={getLink(n)} key={n.id} className="no-underline text-inherit">
               <div className={`flex items-center gap-3 p-3 rounded-xl border transition-all hover:-translate-y-0.5 hover:shadow ${
@@ -55,7 +55,7 @@ export default function Notifications() {
                   <span className={`text-sm ${n.read ? 'font-normal' : 'font-semibold'}`}>
                     {n.message || '互动了你的内容'}
                   </span>
-                  <div className="text-xs text-base-content/40 mt-0.5">{timeAgo(n.created_at)}</div>
+                  <div className="text-sm text-base-content/40 mt-0.5">{timeAgo(n.created_at)}</div>
                 </div>
                 {!n.read && <div className="w-2 h-2 rounded-full bg-primary" />}
               </div>

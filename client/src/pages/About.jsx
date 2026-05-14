@@ -20,7 +20,7 @@ export default function About() {
       {/* Hero */}
       <div className="hero-card text-center py-8 rounded-2xl">
         <div className="text-5xl mb-2"><i className="fa-solid fa-baby text-primary" /></div>
-        <h1 className="text-2xl font-bold mb-1">ABDL Space</h1>
+        <h1 className="text-2xl font-bold mb-2">ABDL Space</h1>
         <p className="text-base-content/60"><i className="fa-solid fa-code-branch mr-1" /> {VERSION}</p>
         <p className="text-sm text-base-content/40 mt-2">纸尿裤评测与推荐平台 — 帮助成年用户找到最适合的纸尿裤</p>
       </div>
@@ -38,9 +38,9 @@ export default function About() {
             <div className="flex flex-col">
               {CHANGELOG.map((entry, i) => (
                 <div key={entry.version} className={`py-4 ${i < CHANGELOG.length - 1 ? 'border-b border-base-300' : ''}`}>
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center gap-3 mb-2">
                     <span className="badge badge-primary badge-sm">{entry.version}</span>
-                    <span className="text-xs text-base-content/40">{entry.date}</span>
+                    <span className="text-sm text-base-content/40">{entry.date}</span>
                   </div>
                   <ul className="list-disc list-inside">
                     {entry.changes.map((c, j) => (
@@ -68,9 +68,9 @@ export default function About() {
               { name: 'GitHub', icon: 'fa-brands fa-github', desc: '代码托管' },
             ].map(tech => (
               <div key={tech.name} className="text-center p-3 rounded-xl bg-base-200 border border-base-300">
-                <div className="text-2xl text-primary mb-1"><i className={tech.icon} /></div>
+                <div className="text-2xl text-primary mb-2"><i className={tech.icon} /></div>
                 <div className="font-semibold text-sm">{tech.name}</div>
-                <div className="text-xs text-base-content/40">{tech.desc}</div>
+                <div className="text-sm text-base-content/40">{tech.desc}</div>
               </div>
             ))}
           </div>
@@ -81,7 +81,7 @@ export default function About() {
       <div className="card">
         <div className="card-body">
           <h3 className="card-title"><i className="fa-solid fa-keyboard" /> 快捷键</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
               { keys: 'Ctrl+Shift+T', desc: '切换深色/浅色模式' },
               { keys: 'Alt+1~8', desc: '快速导航到各页面' },
@@ -100,7 +100,7 @@ export default function About() {
       <div className="card">
         <div className="card-body text-center">
           <p className="text-sm text-base-content/60 mb-2"><i className="fa-solid fa-shield-halved mr-1" /> 隐私说明</p>
-          <p className="text-xs text-base-content/40">
+          <p className="text-sm text-base-content/40">
             AI 推荐功能由 DeepSeek 提供支持。用户可选择发送哪些数据。所有评分和感受数据仅存储在本地浏览器中。
           </p>
         </div>

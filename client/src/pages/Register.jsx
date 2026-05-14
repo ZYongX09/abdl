@@ -92,7 +92,7 @@ export default function Register() {
                       background: strengthColors[passwordStrength]
                     }} />
                   </div>
-                  <span className="text-xs mt-1 block" style={{ color: strengthColors[passwordStrength] }}>
+                  <span className="text-sm mt-1 block" style={{ color: strengthColors[passwordStrength] }}>
                     密码强度: {strengthLabels[passwordStrength]}
                   </span>
                 </div>
