@@ -286,7 +286,7 @@ export default function Home() {
                       <div className="brand">TOP {i + 1}</div>
                       <div className="model">{d.brand} {d.model}</div>
                       <div className="meta">
-                        <span className="score-badge"><i className="fa-solid fa-star" style={{ color: 'var(--warning)' }} /> {Number(d.avg_score||0).toFixed(1)}</span>
+                        <span className="badge badge-warning badge-sm gap-1"><i className="fa-solid fa-star" /> {Number(d.avg_score||0).toFixed(1)}</span>
                         <span>{d.sizes?.[0]?.label || ''}码</span>
                       </div>
                     </div>
@@ -329,16 +329,16 @@ export default function Home() {
                   </div>
                   <div className="model">{d.model}</div>
                   <div className="meta">
-                    <span className="tag">{d.product_type}</span>
+                    <span className="badge badge-ghost badge-sm">{d.product_type}</span>
                     {d.sizes && d.sizes.length > 0 && (
-                      <span className="tag">{d.sizes.map(s=>s.label).join(' / ')}</span>
+                      <span className="badge badge-ghost badge-sm">{d.sizes.map(s=>s.label).join(' / ')}</span>
                     )}
-                    <span className="tag"><i className="fa-solid fa-layer-group" /> 厚 {d.thickness}/5</span>
-                    {d.absorbency_adult && <span className="tag"><i className="fa-solid fa-droplet" /> {d.absorbency_adult}</span>}
+                    <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-layer-group" /> 厚 {d.thickness}/5</span>
+                    {d.absorbency_adult && <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-droplet" /> {d.absorbency_adult}</span>}
                   </div>
                   <div className="meta" style={{ marginTop: 8 }}>
                     {d.avg_score > 0 && (
-                      <span className="score-badge"><i className="fa-solid fa-star" style={{ color: 'var(--warning)' }} /> {Number(d.avg_score).toFixed(1)}</span>
+                      <span className="badge badge-warning badge-sm gap-1"><i className="fa-solid fa-star" /> {Number(d.avg_score).toFixed(1)}</span>
                     )}
                     <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{d.rating_count} 评价</span>
                     {d.avg_price && <span style={{ fontWeight: 600 }}>{d.avg_price}</span>}

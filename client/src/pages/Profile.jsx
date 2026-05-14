@@ -163,8 +163,8 @@ export default function Profile() {
 
           <h2 style={{ marginTop: 4 }}>{user.username}</h2>
           <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 8 }}>
-            {user.role === 'admin' && <span className="tag" style={{ background: 'var(--accent)', color: 'white' }}>管理员</span>}
-            <span className="tag">注册于 {new Date(user.created_at).toLocaleDateString('zh-CN')}</span>
+            {user.role === 'admin' && <span className="badge badge-accent badge-sm">管理员</span>}
+            <span className="badge badge-ghost badge-sm">注册于 {new Date(user.created_at).toLocaleDateString('zh-CN')}</span>
           </div>
           {!profileComplete && (
             <div className="alert alert-info" style={{ marginTop: 16 }}>
@@ -309,7 +309,7 @@ export default function Profile() {
                       <Link to={`/diaper/${f.diaper_id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
                         <i className="fa-solid fa-box" /> {d ? `${d.brand} ${d.model}` : `纸尿裤 #${f.diaper_id}`}
                       </Link>
-                      <span className="tag" style={{ marginLeft: 8 }}>{f.size}码</span>
+                      <span className="badge badge-ghost badge-sm ml-2">{f.size}码</span>
                     </strong>
                     <small style={{ color: 'var(--text-muted)' }}>{new Date(f.created_at).toLocaleDateString('zh-CN')}</small>
                   </div>

@@ -88,11 +88,11 @@ export default function UserPage() {
         <h2 style={{ margin: '4px 0' }}>{profile.username}</h2>
         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 6, flexWrap: 'wrap' }}>
           {profile.role === 'admin' && (
-            <span className="tag" style={{ background: 'var(--accent)', color: 'white' }}>
+            <span className="badge badge-accent badge-sm">
               <i className="fa-solid fa-shield-halved" /> 管理员
             </span>
           )}
-          <span className="tag">
+          <span className="badge badge-ghost badge-sm">
             <i className="fa-solid fa-calendar" /> {joinDate} 加入
           </span>
         </div>

@@ -146,16 +146,16 @@ export default function DiaperDetail() {
           </div>
           <div style={{ flex: 1, minWidth: 250 }}>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '8px 0' }}>
-              <span className="tag"><i className="fa-solid fa-tag" /> {diaper.product_type}</span>
-              <span className="tag"><i className="fa-solid fa-ruler" /> 厚{diaper.thickness}/5</span>
-              {diaper.absorbency_adult && <span className="tag"><i className="fa-solid fa-droplet" /> {diaper.absorbency_adult}</span>}
-              {diaper.avg_price && <span className="tag"><i className="fa-solid fa-coins" /> {diaper.avg_price}</span>}
+              <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-tag" /> {diaper.product_type}</span>
+              <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-ruler" /> 厚{diaper.thickness}/5</span>
+              {diaper.absorbency_adult && <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-droplet" /> {diaper.absorbency_adult}</span>}
+              {diaper.avg_price && <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-coins" /> {diaper.avg_price}</span>}
             </div>
             {diaper.sizes?.length>0 && (
               <div style={{ marginTop: 8 }}>
                 <strong><i className="fa-solid fa-ruler-combined" /> 尺码：</strong>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 4 }}>
-                  {diaper.sizes.map(s => <span key={s.label} className="tag">{s.label} ({s.waist_min}-{s.waist_max}cm)</span>)}
+                  {diaper.sizes.map(s => <span key={s.label} className="badge badge-ghost badge-sm">{s.label} ({s.waist_min}-{s.waist_max}cm)</span>)}
                 </div>
               </div>
             )}
@@ -289,11 +289,11 @@ export default function DiaperDetail() {
         {reviews.map(r => (
           <div key={r.id} style={{ padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <strong>{r.username}{r.role==='admin' && <span className="tag" style={{ background: 'var(--feeling-bg)', color: 'var(--danger)', marginLeft: 6, fontSize: '0.7rem' }}>管理员</span>}</strong>
+              <strong>{r.username}{r.role==='admin' && <span className="badge badge-error badge-sm ml-1">管理员</span>}</strong>
               <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{new Date(r.created_at).toLocaleDateString('zh-CN')}</span>
             </div>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '4px 0' }}>
-              {DIMS.map(d => r[d.key] != null && <span key={d.key} className="tag" style={{fontSize:'0.7rem'}}><i className={`fa-solid ${d.fa}`} /> {r[d.key]}</span>)}
+              {DIMS.map(d => r[d.key] != null && <span key={d.key} className="badge badge-ghost badge-xs"><i className={`fa-solid ${d.fa}`} /> {r[d.key]}</span>)}
             </div>
             {r.review && <p style={{ margin: '4px 0', color: 'var(--text)', fontSize: '0.9rem' }}>{r.review}</p>}
           </div>

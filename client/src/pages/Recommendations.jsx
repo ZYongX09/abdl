@@ -174,10 +174,10 @@ export default function Recommendations() {
           根据你的身材数据和偏好，AI 为你挑选最合适的纸尿裤
         </p>
         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 16, flexWrap: 'wrap' }}>
-          {user.weight && <span className="tag"><i className="fa-solid fa-weight-scale" /> {user.weight}kg</span>}
-          {user.waist && <span className="tag"><i className="fa-solid fa-ruler" /> 腰围 {user.waist}cm</span>}
-          {user.hip && <span className="tag"><i className="fa-solid fa-ruler" /> 臀围 {user.hip}cm</span>}
-          {user.style_preference && <span className="tag"><i className="fa-solid fa-heart" /> {user.style_preference}</span>}
+          {user.weight && <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-weight-scale" /> {user.weight}kg</span>}
+          {user.waist && <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-ruler" /> 腰围 {user.waist}cm</span>}
+          {user.hip && <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-ruler" /> 臀围 {user.hip}cm</span>}
+          {user.style_preference && <span className="badge badge-ghost badge-sm"><i className="fa-solid fa-heart" /> {user.style_preference}</span>}
         </div>
         {profileWarning && (
           <div className="alert alert-info" style={{ marginBottom: 12, fontSize: '0.9rem' }}>

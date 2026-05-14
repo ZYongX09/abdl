@@ -26,7 +26,7 @@ export default function GuessYouLike() {
               <div className="model" style={{ fontSize: '1rem' }}>{d.model}</div>
               <div className="meta" style={{ marginTop: 4 }}>
                 {d.avg_score > 0 && (
-                  <span className="score-badge">
+                  <span className="badge badge-warning badge-sm gap-1">
                     <i className="fa-solid fa-star" style={{ color: 'var(--warning)', fontSize: '0.7rem' }} /> {Number(d.avg_score).toFixed(1)}
                   </span>
                 )}
