@@ -24,7 +24,16 @@ export default function Notifications() {
     } catch(e) {} finally { setLoading(false); }
   };
 
-  if (!user) return <div className="text-center py-16"><h2><i className="fa-solid fa-circle-exclamation" /> 请先登录</h2></div>;
+  if (!user) return (
+    <div className="hero-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
+      <div style={{ fontSize: '2.5rem', color: 'var(--primary-dark)', marginBottom: 16 }}>
+        <i className="fa-solid fa-bell" />
+      </div>
+      <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--hero-text)', marginBottom: 8 }}>通知</h2>
+      <p style={{ color: 'var(--text-muted)', marginBottom: 20, fontSize: '0.9rem' }}>登录后查看通知</p>
+      <Link to="/login" className="btn btn-primary"><i className="fa-solid fa-right-to-bracket" /> 去登录</Link>
+    </div>
+  );
   if (loading) return <div className="flex justify-center py-16"><span className="loading loading-spinner loading-lg text-primary"></span></div>;
 
   const getLink = (n) => {

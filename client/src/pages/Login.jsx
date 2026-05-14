@@ -31,7 +31,7 @@ export default function Login() {
   return (
     <div className="max-w-md mx-auto mt-10 auth-page-wrapper">
       {/* Hero Header */}
-      <div className="hero-card text-center py-6 mb-4" style={{ background: 'var(--hero-bg)', borderRadius: '1.25rem' }}>
+      <div className="hero-card text-center py-6 mb-4">
         <div style={{ fontSize: '2.8rem', marginBottom: 8 }}>
           <i className="fa-solid fa-baby" style={{ color: 'var(--primary-dark)' }} />
         </div>

@@ -124,11 +124,19 @@ export default function Home() {
   return (
     <div>
       {/* Header + Search */}
-      <div className="card bg-primary/10 border border-primary/20">
+      <div className="hero-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
-          <h2 style={{ margin: 0, color: 'var(--hero-text)', fontSize: '1.3rem' }}>
-            <i className="fa-solid fa-magnifying-glass" /> 探索纸尿裤
-          </h2>
+          <div className="flex items-center gap-3">
+            <div style={{ fontSize: '1.6rem', color: 'var(--primary-dark)' }}>
+              <i className="fa-solid fa-box-open" />
+            </div>
+            <div>
+              <h2 style={{ margin: 0, color: 'var(--hero-text)', fontSize: '1.25rem', fontWeight: 800 }}>
+                探索纸尿裤
+              </h2>
+              <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-light)' }}>发现最适合你的纸尿裤</p>
+            </div>
+          </div>
           <button className={`btn btn-sm ${compareMode ? 'btn-primary' : 'btn-outline'}`}
             onClick={() => { setCompareMode(!compareMode); setCompareSelected([]); setCompareResult([]); }}>
             <i className="fa-solid fa-code-compare" /> {compareMode ? '退出对比' : '对比模式'}

@@ -59,7 +59,7 @@ export default function Register() {
   return (
     <div className="max-w-lg mx-auto mt-10 auth-page-wrapper">
       {/* Hero Header */}
-      <div className="hero-card text-center py-6 mb-4" style={{ background: 'var(--hero-bg)', borderRadius: '1.25rem' }}>
+      <div className="hero-card text-center py-6 mb-4">
         <div style={{ fontSize: '2.8rem', marginBottom: 8 }}>
           <i className="fa-solid fa-user-plus" style={{ color: 'var(--accent-dark)' }} />
         </div>

@@ -39,10 +39,13 @@ export default function Recommendations() {
 
   if (!user) {
     return (
-      <div style={{ textAlign: 'center', padding: 60 }}>
-        <h2><i className="fa-solid fa-robot" /> AI 智能推荐</h2>
-        <p style={{ color: 'var(--text-muted)', marginTop: 12 }}>请先登录以获取个性化推荐</p>
-        <Link to="/login" className="btn btn-primary" style={{ marginTop: 20 }}>去登录</Link>
+      <div className="hero-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
+        <div style={{ fontSize: '2.5rem', color: 'var(--primary-dark)', marginBottom: 16 }}>
+          <i className="fa-solid fa-robot" />
+        </div>
+        <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--hero-text)', marginBottom: 8 }}>AI 智能推荐</h2>
+        <p style={{ color: 'var(--text-muted)', marginBottom: 20, fontSize: '0.9rem' }}>请先登录以获取个性化推荐</p>
+        <Link to="/login" className="btn btn-primary"><i className="fa-solid fa-right-to-bracket" /> 去登录</Link>
       </div>
     );
   }
@@ -122,7 +125,7 @@ export default function Recommendations() {
             <h4 style={{ marginBottom: 12, marginTop: 16 }}>请选择要发送给 AI 的数据：</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {DATA_OPTIONS.map(opt => (
-                <label key={opt.key} style={{
+                <label key={opt.key} className="rec-privacy-option" style={{
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '10px 14px', borderRadius: 10,
                   background: dataSelection[opt.key] ? 'var(--primary-light)' : 'var(--input-bg)',
@@ -169,7 +172,12 @@ export default function Recommendations() {
       )}
 
       <div className="hero-card" style={{ textAlign: 'center' }}>
-        <h2 style={{ fontSize: '1.6rem', marginBottom: 8 }}><i className="fa-solid fa-robot" /> AI 智能推荐</h2>
+        <div className="flex items-center gap-3 justify-center" style={{ marginBottom: 8 }}>
+          <div style={{ fontSize: '1.8rem', color: 'var(--primary-dark)' }}>
+            <i className="fa-solid fa-robot" />
+          </div>
+          <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--hero-text)', margin: 0 }}>AI 智能推荐</h2>
+        </div>
         <p style={{ color: 'var(--text-muted)', marginBottom: 16, fontSize: '0.9rem' }}>
           根据你的身材数据和偏好，AI 为你挑选最合适的纸尿裤
         </p>
@@ -207,7 +215,7 @@ export default function Recommendations() {
           <div style={{ display: 'grid', gap: 12 }}>
             {result.recommendations.map((rec, i) => (
               <Link key={i} to={`/diaper/${rec.diaper_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 18 }}>
+                <div className="card rec-result-card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 18 }}>
                   <div style={{
                     width: 48, height: 48, borderRadius: '50%', background: 'var(--primary-light)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',

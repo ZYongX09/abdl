@@ -66,9 +66,18 @@ export default function Settings() {
 
   return (
     <div style={{ maxWidth: 700, margin: '0 auto' }} className="flex flex-col gap-5">
-      <h2 style={{ marginBottom: 20 }}>
-        <i className="fa-solid fa-gear" /> 设置
-      </h2>
+      {/* Hero Header */}
+      <div className="hero-card">
+        <div className="flex items-center gap-3">
+          <div style={{ fontSize: '1.6rem', color: 'var(--primary-dark)' }}>
+            <i className="fa-solid fa-gear" />
+          </div>
+          <div>
+            <h2 style={{ margin: 0, color: 'var(--hero-text)', fontSize: '1.25rem', fontWeight: 800 }}>设置</h2>
+            <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-light)' }}>个性化你的 ABDL Space 体验</p>
+          </div>
+        </div>
+      </div>
 
       {msg && (
         <div className="alert alert-success" style={{ animation: 'fadeInUp 0.3s ease-out' }}>
@@ -137,7 +146,7 @@ export default function Settings() {
               { key: 'bio', label: '个人简介', desc: '个人资料中的简介', icon: 'fa-pen' },
               { key: 'feelings', label: '使用感受记录', desc: '你对各款纸尿裤的感受评分', icon: 'fa-note-sticky' },
             ].map(opt => (
-              <label key={opt.key} className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all" style={{
+              <label key={opt.key} className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all rec-privacy-option" style={{
                 background: aiPrivacy[opt.key] ? 'var(--primary-light)' : 'var(--input-bg)',
                 border: `1px solid ${aiPrivacy[opt.key] ? 'var(--primary)' : 'var(--border)'}`,
               }}>
@@ -170,7 +179,7 @@ export default function Settings() {
               { type: 'history', label: '清除推荐历史', desc: '删除 AI 推荐历史记录', icon: 'fa-clock-rotate-left' },
               { type: 'all', label: '清除全部缓存', desc: '清除帖子、评论等所有本地数据（保留账号和设置）', icon: 'fa-triangle-exclamation', danger: true },
             ].map(item => (
-              <div key={item.type} className="flex items-center justify-between gap-4 py-3.5 border-b border-base-300">
+              <div key={item.type} className="flex items-center justify-between gap-4 py-3.5 border-b border-base-300 setting-item">
                 <div>
                   <div className="font-semibold text-base">
                     <i className={`fa-solid ${item.icon} mr-1.5 ${item.danger ? 'text-error' : 'text-base-content/50'}`} />

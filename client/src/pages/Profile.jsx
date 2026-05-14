@@ -74,9 +74,13 @@ export default function Profile() {
 
   if (!user) {
     return (
-      <div style={{ textAlign: 'center', padding: 60 }}>
-        <h2><i className="fa-solid fa-circle-exclamation" /> 请先登录</h2>
-        <p className="text-muted" style={{ marginTop: 12 }}>登录后查看个人主页</p>
+      <div className="hero-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
+        <div style={{ fontSize: '2.5rem', color: 'var(--primary-dark)', marginBottom: 16 }}>
+          <i className="fa-solid fa-user-circle" />
+        </div>
+        <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--hero-text)', marginBottom: 8 }}>个人中心</h2>
+        <p style={{ color: 'var(--text-muted)', marginBottom: 20, fontSize: '0.9rem' }}>登录后查看个人主页</p>
+        <Link to="/login" className="btn btn-primary"><i className="fa-solid fa-right-to-bracket" /> 去登录</Link>
       </div>
     );
   }

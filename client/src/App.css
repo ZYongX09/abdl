@@ -1618,6 +1618,46 @@ a {
 .hero-card {
   position: relative;
   overflow: hidden;
+  cursor: default;
+}
+.hero-card h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--hero-text);
+  margin: 0;
+}
+.hero-card p {
+  margin: 0;
+}
+
+/* ====== 推荐结果卡片悬停 ====== */
+.rec-result-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.rec-result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary);
+}
+
+/* ====== 设置项悬停增强 ====== */
+.setting-item {
+  transition: background 0.2s ease;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin: 0 -12px;
+}
+.setting-item:hover {
+  background: var(--primary-light);
+}
+
+/* ====== 隐私选项悬停 ====== */
+.rec-privacy-option:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(168,216,240,0.2);
+}
+.rec-privacy-option:active {
+  transform: scale(0.98);
 }
 .hero-card::before {
   content: '';
